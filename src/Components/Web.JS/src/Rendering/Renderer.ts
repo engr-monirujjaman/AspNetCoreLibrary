@@ -4,6 +4,7 @@ import '../Environment';
 import { RenderBatch } from './RenderBatch/RenderBatch';
 import { BrowserRenderer } from './BrowserRenderer';
 import { toLogicalElement, LogicalElement } from './LogicalElements';
+import { clearMonoPlatformStringCache } from '../Platform/Mono/MonoPlatform';
 
 interface BrowserRendererRegistry {
   [browserRendererId: number]: BrowserRenderer;
@@ -32,6 +33,8 @@ export function attachRootComponentToElement(elementSelector: string, componentI
 }
 
 export function renderBatch(browserRendererId: number, batch: RenderBatch): void {
+  clearMonoPlatformStringCache();
+
   const browserRenderer = browserRenderers[browserRendererId];
   if (!browserRenderer) {
     throw new Error(`There is no browser renderer with ID ${browserRendererId}.`);

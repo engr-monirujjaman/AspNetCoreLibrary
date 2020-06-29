@@ -12,12 +12,8 @@
     }
 
     internal void RenderHeader(RenderTreeBuilder __builder)
-    {
-        <th>@Title</th>
-    }
+    {<th>@Title</th>}
 
     internal void RenderCell(RenderTreeBuilder __builder, TRowData rowData)
-    {
-        <td>@ChildContent(rowData)</td>
-    }
+    {<td>@ChildContent(rowData)</td>}
 }
