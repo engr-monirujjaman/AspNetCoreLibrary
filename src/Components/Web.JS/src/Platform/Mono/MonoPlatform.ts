@@ -12,6 +12,11 @@ const appBinDirName = 'appBinDir';
 const uint64HighOrderShift = Math.pow(2, 32);
 const maxSafeNumberHighPart = Math.pow(2, 21) - 1; // The high-order int32 from Number.MAX_SAFE_INTEGER
 
+const stringCache = new Map<number, string | null>();
+export function clearMonoPlatformStringCache() {
+  stringCache.clear();
+}
+
 // Memory access helpers
 // The implementations are exactly equivalent to what the global getValue(addr, type) function does,
 // except without having to parse the 'type' parameter, and with less risk of mistakes at the call site
@@ -119,7 +124,13 @@ export const monoPlatform: Platform = {
       return unboxedValue;
     }
 
-    return BINDING.conv_string(fieldValue as any as System_String);
+    if (stringCache.has(fieldValue)) {
+      return stringCache.get(fieldValue)!;
+    }
+
+    const result = BINDING.conv_string(fieldValue as any as System_String);
+    stringCache.set(fieldValue, result);
+    return result;
   },
 
   readStructField: function readStructField<T extends Pointer>(baseAddress: Pointer, fieldOffset?: number): T {
