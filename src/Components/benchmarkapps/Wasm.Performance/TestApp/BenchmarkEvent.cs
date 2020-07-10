@@ -9,7 +9,7 @@ namespace Wasm.Performance.TestApp
     {
         public static void Send(IJSRuntime jsRuntime, string name)
         {
-            ((IJSInProcessRuntime)jsRuntime).Invoke<object>(
+            ((IJSInProcessRuntime)jsRuntime)?.Invoke<object>(
                 "receiveBenchmarkEvent",
                 name);
         }
