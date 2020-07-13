@@ -448,7 +448,7 @@ namespace Microsoft.AspNetCore.Components.Rendering
         /// </summary>
         /// <param name="sequence">An integer that represents the position of the instruction in the source code.</param>
         /// <param name="frame">A <see cref="RenderTreeFrame"/> holding the name and value of the attribute.</param>
-        public void AddAttribute(int sequence, in RenderTreeFrame frame)
+        public void AddAttribute(int sequence, RenderTreeFrame frame)
         {
             ProfilingStart();
             if (frame.FrameType != RenderTreeFrameType.Attribute)
@@ -748,7 +748,7 @@ namespace Microsoft.AspNetCore.Components.Rendering
         public ArrayRange<RenderTreeFrame> GetFrames() =>
             _entries.ToRange();
 
-        private void Append(in RenderTreeFrame frame)
+        private void Append(RenderTreeFrame frame)
         {
             var frameType = frame.FrameType;
             _entries.Append(frame);

@@ -64,7 +64,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
         /// <param name="item">The item to append.</param>
         /// <returns>The index of the appended item.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // Just like System.Collections.Generic.List<T>
-        public int Append(in T item)
+        public int Append(T item)
         {
             if (_itemsInUse == _itemsBufferLength)
             {
