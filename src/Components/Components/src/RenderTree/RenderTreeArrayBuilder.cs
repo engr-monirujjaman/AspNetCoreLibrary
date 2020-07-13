@@ -48,5 +48,20 @@ namespace Microsoft.AspNetCore.Components.RenderTree
             item.Sequence = sequence;
             item.FrameType = RenderTreeFrameType.Region;
         }
+
+        public void AppendAttribute(int sequence, string name, object? value)
+        {
+            if (_itemsInUse == _itemsBufferLength)
+            {
+                GrowBuffer(_items.Length * 2);
+            }
+
+            ref var item = ref _items[_itemsInUse++];
+
+            item.Sequence = sequence;
+            item.FrameType = RenderTreeFrameType.Attribute;
+            item.AttributeName = name;
+            item.AttributeValue = value;
+        }
     }
 }
