@@ -30,6 +30,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
         // The following fields are memory mapped to the WASM client. Do not re-order or use auto-properties.
         protected T[] _items;
         protected int _itemsInUse;
+        protected int _itemsBufferLength;
 
         private static readonly T[] Empty = Array.Empty<T>();
         private readonly ArrayPool<T> _arrayPool;
@@ -44,6 +45,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
             _arrayPool = arrayPool ?? ArrayPool<T>.Shared;
             _minCapacity = minCapacity;
             _items = Empty;
+            _itemsBufferLength = 0;
         }
 
         /// <summary>
@@ -56,17 +58,6 @@ namespace Microsoft.AspNetCore.Components.RenderTree
         /// </summary>
         public T[] Buffer => _items;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected int AppendUninitialized()
-        {
-            if (_itemsInUse == _items.Length)
-            {
-                GrowBuffer(_items.Length * 2);
-            }
-
-            return _itemsInUse++;
-        }
-
         /// <summary>
         /// Appends a new item, automatically resizing the underlying array if necessary.
         /// </summary>
@@ -75,7 +66,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // Just like System.Collections.Generic.List<T>
         public int Append(in T item)
         {
-            if (_itemsInUse == _items.Length)
+            if (_itemsInUse == _itemsBufferLength)
             {
                 GrowBuffer(_items.Length * 2);
             }
@@ -90,7 +81,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
             // Expand storage if needed. Using same doubling approach as would
             // be used if you inserted the items one-by-one.
             var requiredCapacity = _itemsInUse + length;
-            if (_items.Length < requiredCapacity)
+            if (_itemsBufferLength < requiredCapacity)
             {
                 var candidateCapacity = Math.Max(_items.Length * 2, _minCapacity);
                 while (candidateCapacity < requiredCapacity)
@@ -151,7 +142,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
             }
 
             // Same expansion logic as elsewhere
-            if (_itemsInUse == _items.Length)
+            if (_itemsInUse == _itemsBufferLength)
             {
                 GrowBuffer(_items.Length * 2);
             }
@@ -170,6 +161,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
         {
             ReturnBuffer();
             _items = Empty;
+            _itemsBufferLength = 0;
             _itemsInUse = 0;
         }
 
@@ -194,6 +186,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
             // Return the old buffer and start using the new buffer
             ReturnBuffer();
             _items = newItems;
+            _itemsBufferLength = newItems.Length;
         }
 
         private void ReturnBuffer()
@@ -214,6 +207,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
                 _disposed = true;
                 ReturnBuffer();
                 _items = Empty;
+                _itemsBufferLength = 0;
                 _itemsInUse = 0;
             }
         }

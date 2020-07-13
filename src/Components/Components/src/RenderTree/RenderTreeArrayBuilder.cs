@@ -10,7 +10,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
     {
         public void AppendElement(int sequence, string elementName)
         {
-            if (_itemsInUse == _items.Length)
+            if (_itemsInUse == _itemsBufferLength)
             {
                 GrowBuffer(_items.Length * 2);
             }
@@ -24,7 +24,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
 
         public void AppendText(int sequence, string text)
         {
-            if (_itemsInUse == _items.Length)
+            if (_itemsInUse == _itemsBufferLength)
             {
                 GrowBuffer(_items.Length * 2);
             }
@@ -38,7 +38,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
 
         public void AppendRegion(int sequence)
         {
-            if (_itemsInUse == _items.Length)
+            if (_itemsInUse == _itemsBufferLength)
             {
                 GrowBuffer(_items.Length * 2);
             }
