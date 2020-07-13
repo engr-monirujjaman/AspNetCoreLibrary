@@ -24,7 +24,7 @@ namespace Microsoft.AspNetCore.Components.Rendering
         private readonly static object BoxedFalse = false;
         private readonly static string ComponentReferenceCaptureInvalidParentMessage = $"Component reference captures may only be added as children of frames of type {RenderTreeFrameType.Component}";
 
-        private readonly ArrayBuilder<RenderTreeFrame> _entries = new ArrayBuilder<RenderTreeFrame>();
+        private readonly RenderTreeArrayBuilder _entries = new RenderTreeArrayBuilder();
         private readonly Stack<int> _openElementIndices = new Stack<int>();
         private RenderTreeFrameType? _lastNonAttributeFrameType;
         private bool _hasSeenAddMultipleAttributes;
@@ -55,7 +55,9 @@ namespace Microsoft.AspNetCore.Components.Rendering
             }
 
             _openElementIndices.Push(_entries.Count);
-            Append(RenderTreeFrame.Element(sequence, elementName));
+            _entries.AppendElement(sequence, elementName);
+            _lastNonAttributeFrameType = RenderTreeFrameType.Element;
+            //Append(RenderTreeFrame.Element(sequence, elementName));
             ProfilingEnd();
         }
 
@@ -76,7 +78,7 @@ namespace Microsoft.AspNetCore.Components.Rendering
             }
 
             ref var entry = ref _entries.Buffer[indexOfEntryBeingClosed];
-            entry = entry.WithElementSubtreeLength(_entries.Count - indexOfEntryBeingClosed);
+            entry.ElementSubtreeLength = _entries.Count - indexOfEntryBeingClosed;
             ProfilingEnd();
         }
 
@@ -100,7 +102,9 @@ namespace Microsoft.AspNetCore.Components.Rendering
         public void AddContent(int sequence, string? textContent)
         {
             ProfilingStart();
-            Append(RenderTreeFrame.Text(sequence, textContent ?? string.Empty));
+            _entries.AppendText(sequence, textContent ?? string.Empty);
+            _lastNonAttributeFrameType = RenderTreeFrameType.Text;
+            //Append(RenderTreeFrame.Text(sequence, textContent ?? string.Empty));
             ProfilingEnd();
         }
 
@@ -148,6 +152,14 @@ namespace Microsoft.AspNetCore.Components.Rendering
         /// <param name="markupContent">Content for the new markup frame.</param>
         public void AddContent(int sequence, MarkupString markupContent)
             => AddMarkupContent(sequence, markupContent.Value);
+
+        /// <summary>
+        /// Appends a frame representing numeric content.
+        /// </summary>
+        /// <param name="sequence">An integer that represents the position of the instruction in the source code.</param>
+        /// <param name="content">Content for the new text frame.</param>
+        public void AddContent(int sequence, int content)
+            => AddContent(sequence, content.ToString());
 
         /// <summary>
         /// Appends a frame representing text content.
@@ -599,7 +611,7 @@ namespace Microsoft.AspNetCore.Components.Rendering
             }
 
             ref var entry = ref _entries.Buffer[indexOfEntryBeingClosed];
-            entry = entry.WithComponentSubtreeLength(_entries.Count - indexOfEntryBeingClosed);
+            entry.ComponentSubtreeLength = _entries.Count - indexOfEntryBeingClosed;
             ProfilingEnd();
         }
 
@@ -660,7 +672,9 @@ namespace Microsoft.AspNetCore.Components.Rendering
             }
 
             _openElementIndices.Push(_entries.Count);
-            Append(RenderTreeFrame.Region(sequence));
+            _entries.AppendRegion(sequence);
+            _lastNonAttributeFrameType = RenderTreeFrameType.Region;
+            //Append(RenderTreeFrame.Region(sequence));
             ProfilingEnd();
         }
 
@@ -673,7 +687,7 @@ namespace Microsoft.AspNetCore.Components.Rendering
             ProfilingStart();
             var indexOfEntryBeingClosed = _openElementIndices.Pop();
             ref var entry = ref _entries.Buffer[indexOfEntryBeingClosed];
-            entry = entry.WithRegionSubtreeLength(_entries.Count - indexOfEntryBeingClosed);
+            entry.RegionSubtreeLength = _entries.Count - indexOfEntryBeingClosed;
             ProfilingEnd();
         }
 

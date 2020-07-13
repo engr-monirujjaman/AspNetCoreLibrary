@@ -28,8 +28,8 @@ namespace Microsoft.AspNetCore.Components.RenderTree
     internal class ArrayBuilder<T> : IDisposable
     {
         // The following fields are memory mapped to the WASM client. Do not re-order or use auto-properties.
-        private T[] _items;
-        private int _itemsInUse;
+        protected T[] _items;
+        protected int _itemsInUse;
 
         private static readonly T[] Empty = Array.Empty<T>();
         private readonly ArrayPool<T> _arrayPool;
@@ -55,6 +55,17 @@ namespace Microsoft.AspNetCore.Components.RenderTree
         /// Gets the underlying buffer.
         /// </summary>
         public T[] Buffer => _items;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected int AppendUninitialized()
+        {
+            if (_itemsInUse == _items.Length)
+            {
+                GrowBuffer(_items.Length * 2);
+            }
+
+            return _itemsInUse++;
+        }
 
         /// <summary>
         /// Appends a new item, automatically resizing the underlying array if necessary.
@@ -162,7 +173,7 @@ namespace Microsoft.AspNetCore.Components.RenderTree
             _itemsInUse = 0;
         }
 
-        private void GrowBuffer(int desiredCapacity)
+        protected void GrowBuffer(int desiredCapacity)
         {
             // When we dispose, we set the count back to zero and return the array.
             //

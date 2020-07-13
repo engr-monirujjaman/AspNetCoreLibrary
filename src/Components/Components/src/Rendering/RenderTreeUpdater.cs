@@ -92,7 +92,7 @@ namespace Microsoft.AspNetCore.Components.Rendering
                             var otherFrameEndIndexExcl = otherFrameIndex + otherFrameSubtreeLength;
                             if (otherFrameEndIndexExcl > elementFrameIndex) // i.e., contains the element we're inserting into
                             {
-                                otherFrame = otherFrame.WithElementSubtreeLength(otherFrameSubtreeLength + 1);
+                                otherFrame.ElementSubtreeLength = otherFrameSubtreeLength + 1;
                             }
                             break;
                         }
