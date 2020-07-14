@@ -20,6 +20,36 @@ namespace Microsoft.AspNetCore.Components.Reflection
         private readonly static ConcurrentDictionary<Type, WritersForType> _cachedWritersByType
             = new ConcurrentDictionary<Type, WritersForType>();
 
+        private static bool TryGetWriter(WriterEntry[] entries, string key, out IPropertySetter value)
+        {
+            int minNum = 0;
+            int maxNum = entries.Length - 1;
+            var comparer = StringComparer.Ordinal;
+
+            while (minNum <= maxNum)
+            {
+                int mid = (minNum + maxNum) / 2;
+                ref var entryAtMidpoint = ref entries[mid];
+                var comparisonResult = comparer.Compare(key, entryAtMidpoint.Key);
+                if (comparisonResult < 0)
+                {
+                    maxNum = mid - 1;
+                }
+                else if (comparisonResult > 0)
+                {
+                    minNum = mid + 1;
+                }
+                else
+                {
+                    value = entryAtMidpoint.Value;
+                    return true;
+                }
+            }
+
+            value = default!;
+            return false;
+        }
+
         public static void SetProperties(in ParameterView parameters, object target)
         {
             if (target == null)
@@ -41,7 +71,8 @@ namespace Microsoft.AspNetCore.Components.Reflection
                 foreach (var parameter in parameters)
                 {
                     var parameterName = parameter.Name;
-                    if (!writers.WritersByName.TryGetValue(parameterName, out var writer))
+
+                    if (!TryGetWriter(writers.WritersByName, parameterName, out var writer))
                     {
                         // Case 1: There is nowhere to put this value.
                         ThrowForUnknownIncomingParameterName(targetType, parameterName);
@@ -82,7 +113,7 @@ namespace Microsoft.AspNetCore.Components.Reflection
                         isCaptureUnmatchedValuesParameterSetExplicitly = true;
                     }
 
-                    if (writers.WritersByName.TryGetValue(parameterName, out var writer))
+                    if (TryGetWriter(writers.WritersByName, parameterName, out var writer))
                     {
                         if (!writer.Cascading && parameter.Cascading)
                         {
@@ -247,7 +278,7 @@ namespace Microsoft.AspNetCore.Components.Reflection
         {
             public WritersForType(Type targetType)
             {
-                WritersByName = new Dictionary<string, IPropertySetter>(StringComparer.OrdinalIgnoreCase);
+                var writersByNameDict = new Dictionary<string, IPropertySetter>();
                 foreach (var propertyInfo in GetCandidateBindableProperties(targetType))
                 {
                     var parameterAttribute = propertyInfo.GetCustomAttribute<ParameterAttribute>();
@@ -267,14 +298,14 @@ namespace Microsoft.AspNetCore.Components.Reflection
 
                     var propertySetter = MemberAssignment.CreatePropertySetter(targetType, propertyInfo, cascading: cascadingParameterAttribute != null);
 
-                    if (WritersByName.ContainsKey(propertyName))
+                    if (writersByNameDict.ContainsKey(propertyName))
                     {
                         throw new InvalidOperationException(
                             $"The type '{targetType.FullName}' declares more than one parameter matching the " +
                             $"name '{propertyName.ToLowerInvariant()}'. Parameter names are case-insensitive and must be unique.");
                     }
 
-                    WritersByName.Add(propertyName, propertySetter);
+                    writersByNameDict.Add(propertyName, propertySetter);
 
                     if (parameterAttribute != null && parameterAttribute.CaptureUnmatchedValues)
                     {
@@ -296,13 +327,24 @@ namespace Microsoft.AspNetCore.Components.Reflection
                         CaptureUnmatchedValuesPropertyName = propertyInfo.Name;
                     }
                 }
+
+                WritersByName = writersByNameDict
+                    .Select(kv => new WriterEntry { Key = kv.Key, Value = kv.Value })
+                    .OrderBy(e => e.Key)
+                    .ToArray();
             }
 
-            public Dictionary<string, IPropertySetter> WritersByName { get; }
+            public WriterEntry[] WritersByName { get; }
 
             public IPropertySetter? CaptureUnmatchedValuesWriter { get; }
 
             public string? CaptureUnmatchedValuesPropertyName { get; }
+        }
+
+        private struct WriterEntry
+        {
+            public string Key;
+            public IPropertySetter Value;
         }
     }
 }
