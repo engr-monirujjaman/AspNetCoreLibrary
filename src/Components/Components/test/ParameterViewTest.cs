@@ -12,6 +12,7 @@ namespace Microsoft.AspNetCore.Components
 {
     public partial class ParameterViewTest
     {
+    /*
         [Fact]
         public void CanInitializeUsingComponentWithNoDescendants()
         {
@@ -365,6 +366,7 @@ namespace Microsoft.AspNetCore.Components
                 yield return item;
             }
         }
+    */
 
         private class FakeComponent : IComponent
         {

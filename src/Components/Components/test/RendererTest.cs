@@ -2763,7 +2763,7 @@ namespace Microsoft.AspNetCore.Components.Test
                 if (shouldRenderChild)
                 {
                     builder.OpenComponent<RendersSelfAfterEventComponent>(1);
-                    builder.AddAttribute(2, "onclick", (Action<object>)((object obj) =>
+                    builder.AddAttribute(2, "OnClick", (Action<object>)((object obj) =>
                     {
                         // First we queue (1) a re-render of the root component, then the child component
                         // will queue (2) its own re-render. But by the time (1) completes, the child will
