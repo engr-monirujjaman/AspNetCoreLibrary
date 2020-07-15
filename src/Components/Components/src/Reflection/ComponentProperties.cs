@@ -7,9 +7,36 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.AspNetCore.Components.Reflection
 {
+    internal readonly struct ObjectWithReferenceEquality : IEquatable<ObjectWithReferenceEquality>
+    {
+        private readonly object _value;
+
+        public ObjectWithReferenceEquality(object value)
+        {
+            _value = value;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is ObjectWithReferenceEquality other
+                ? ReferenceEquals(_value, other._value) : false;
+        }
+
+        public bool Equals([AllowNull] ObjectWithReferenceEquality other)
+        {
+            return ReferenceEquals(_value, other._value);
+        }
+
+        public override int GetHashCode()
+        {
+            return RuntimeHelpers.GetHashCode(_value);
+        }
+    }
+
     internal static class ComponentProperties
     {
         private const BindingFlags _bindablePropertyFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase;
@@ -19,36 +46,6 @@ namespace Microsoft.AspNetCore.Components.Reflection
         // and we don't have the ability to represent it in our data structures.
         private readonly static ConcurrentDictionary<Type, WritersForType> _cachedWritersByType
             = new ConcurrentDictionary<Type, WritersForType>();
-
-        private static bool TryGetWriter(WriterEntry[] entries, string key, out IPropertySetter value)
-        {
-            int minNum = 0;
-            int maxNum = entries.Length - 1;
-            var comparer = StringComparer.Ordinal;
-
-            while (minNum <= maxNum)
-            {
-                int mid = (minNum + maxNum) / 2;
-                ref var entryAtMidpoint = ref entries[mid];
-                var comparisonResult = comparer.Compare(key, entryAtMidpoint.Key);
-                if (comparisonResult < 0)
-                {
-                    maxNum = mid - 1;
-                }
-                else if (comparisonResult > 0)
-                {
-                    minNum = mid + 1;
-                }
-                else
-                {
-                    value = entryAtMidpoint.Value;
-                    return true;
-                }
-            }
-
-            value = default!;
-            return false;
-        }
 
         public static void SetProperties(in ParameterView parameters, object target)
         {
@@ -72,7 +69,7 @@ namespace Microsoft.AspNetCore.Components.Reflection
                 {
                     var parameterName = parameter.Name;
 
-                    if (!TryGetWriter(writers.WritersByName, parameterName, out var writer))
+                    if (!writers.TryGetValue(parameterName, out var writer))
                     {
                         // Case 1: There is nowhere to put this value.
                         ThrowForUnknownIncomingParameterName(targetType, parameterName);
@@ -113,7 +110,7 @@ namespace Microsoft.AspNetCore.Components.Reflection
                         isCaptureUnmatchedValuesParameterSetExplicitly = true;
                     }
 
-                    if (TryGetWriter(writers.WritersByName, parameterName, out var writer))
+                    if (writers.TryGetValue(parameterName, out var writer))
                     {
                         if (!writer.Cascading && parameter.Cascading)
                         {
@@ -278,7 +275,7 @@ namespace Microsoft.AspNetCore.Components.Reflection
         {
             public WritersForType(Type targetType)
             {
-                var writersByNameDict = new Dictionary<string, IPropertySetter>();
+                var writersByNameDict = new Dictionary<string, IPropertySetter>(StringComparer.OrdinalIgnoreCase);
                 foreach (var propertyInfo in GetCandidateBindableProperties(targetType))
                 {
                     var parameterAttribute = propertyInfo.GetCustomAttribute<ParameterAttribute>();
@@ -328,23 +325,27 @@ namespace Microsoft.AspNetCore.Components.Reflection
                     }
                 }
 
-                WritersByName = writersByNameDict
-                    .Select(kv => new WriterEntry { Key = kv.Key, Value = kv.Value })
-                    .OrderBy(e => e.Key)
-                    .ToArray();
+                _writersByName = writersByNameDict;
             }
 
-            public WriterEntry[] WritersByName { get; }
+            private readonly Dictionary<string, IPropertySetter> _writersByName;
+            private readonly Dictionary<ObjectWithReferenceEquality, IPropertySetter> _cachedLookups = new Dictionary<ObjectWithReferenceEquality, IPropertySetter>();
 
             public IPropertySetter? CaptureUnmatchedValuesWriter { get; }
 
             public string? CaptureUnmatchedValuesPropertyName { get; }
-        }
 
-        private struct WriterEntry
-        {
-            public string Key;
-            public IPropertySetter Value;
+            public bool TryGetValue(string parameterName, out IPropertySetter setter)
+            {
+                var key = new ObjectWithReferenceEquality(parameterName);
+                if (!_cachedLookups.TryGetValue(key, out setter!))
+                {
+                    _writersByName.TryGetValue(parameterName, out setter!);
+                    _cachedLookups.Add(key, setter);
+                }
+
+                return setter != null;
+            }
         }
     }
 }
