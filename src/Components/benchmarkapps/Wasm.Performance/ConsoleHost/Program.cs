@@ -22,6 +22,7 @@ namespace Wasm.Performance.ConsoleHost
             });
 
             Commands.Add(new GridScenario());
+            Commands.Add(new NoOpComponentScenario());
         }
     }
 }
