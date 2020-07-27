@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Components.Profiling;
 using Microsoft.AspNetCore.Components.RenderTree;
@@ -28,7 +29,7 @@ namespace Microsoft.AspNetCore.Components.Rendering
         private readonly Stack<int> _openElementIndices = new Stack<int>();
         private RenderTreeFrameType? _lastNonAttributeFrameType;
         private bool _hasSeenAddMultipleAttributes;
-        private Dictionary<string, int>? _seenAttributeNames;
+        private SimpleStringIntDict? _seenAttributeNames;
 
         /// <summary>
         /// The reserved parameter name used for supplying child content.
@@ -782,41 +783,39 @@ namespace Microsoft.AspNetCore.Components.Rendering
             }
 
             // Now that we've found the last attribute, we can iterate backwards and process duplicates.
-            var seenAttributeNames = (_seenAttributeNames ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
+            var seenAttributeNames = (_seenAttributeNames ??= new SimpleStringIntDict());
             for (var i = last; i >= first; i--)
             {
                 ref var frame = ref buffer[i];
                 Debug.Assert(frame.FrameType == RenderTreeFrameType.Attribute, $"Frame type is {frame.FrameType} at {i}");
 
-                if (!seenAttributeNames.TryGetValue(frame.AttributeName, out var index))
+                if (!seenAttributeNames.TryAdd(frame.AttributeName, i, out var index))
                 {
-                    // This is the first time seeing this attribute name. Add to the dictionary and move on.
-                    seenAttributeNames.Add(frame.AttributeName, i);
-                }
-                else if (index < i)
-                {
-                    // This attribute is overriding a "silent frame" where we didn't create a frame for an AddAttribute call.
-                    // This is the case for a null event handler, or bool false value.
-                    //
-                    // We need to update our tracking, in case the attribute appeared 3 or more times.
-                    seenAttributeNames[frame.AttributeName] = i;
-                }
-                else if (index > i)
-                {
-                    // This attribute has been overridden. For now, blank out its name to *mark* it. We'll do a pass
-                    // later to wipe it out.
-                    frame = default;
-                }
-                else
-                {
-                    // OK so index == i. How is that possible? Well it's possible for a "silent frame" immediately
-                    // followed by setting the same attribute. Think of it this way, when we create a "silent frame"
-                    // we have to track that attribute name with *some* index.
-                    //
-                    // The only index value we can safely use is _entries.Count (next available). This is fine because
-                    // we never use these indexes to look stuff up, only for comparison.
-                    //
-                    // That gets you here, and there's no action to take.
+                    if (index < i)
+                    {
+                        // This attribute is overriding a "silent frame" where we didn't create a frame for an AddAttribute call.
+                        // This is the case for a null event handler, or bool false value.
+                        //
+                        // We need to update our tracking, in case the attribute appeared 3 or more times.
+                        seenAttributeNames.Replace(frame.AttributeName, index);
+                    }
+                    else if (index > i)
+                    {
+                        // This attribute has been overridden. For now, blank out its name to *mark* it. We'll do a pass
+                        // later to wipe it out.
+                        frame = default;
+                    }
+                    else
+                    {
+                        // OK so index == i. How is that possible? Well it's possible for a "silent frame" immediately
+                        // followed by setting the same attribute. Think of it this way, when we create a "silent frame"
+                        // we have to track that attribute name with *some* index.
+                        //
+                        // The only index value we can safely use is _entries.Count (next available). This is fine because
+                        // we never use these indexes to look stuff up, only for comparison.
+                        //
+                        // That gets you here, and there's no action to take.
+                    }
                 }
             }
 
@@ -856,8 +855,8 @@ namespace Microsoft.AspNetCore.Components.Rendering
                 return;
             }
 
-            var seenAttributeNames = (_seenAttributeNames ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
-            seenAttributeNames[name] = _entries.Count; // See comment in ProcessAttributes for why this is OK.
+            var seenAttributeNames = (_seenAttributeNames ??= new SimpleStringIntDict());
+            seenAttributeNames.TryAdd(name, _entries.Count, out _); // See comment in ProcessAttributes for why this is OK.
         }
 
         void IDisposable.Dispose()
@@ -879,5 +878,83 @@ namespace Microsoft.AspNetCore.Components.Rendering
         [Conditional("Profile_RenderTreeBuilder")]
         private static void ProfilingEnd([CallerMemberName] string? name = null)
             => ComponentsProfiling.Instance.End(name);
+
+        private class SimpleStringIntDict
+        {
+            private string[] _keys = new string[100];
+            private int[] _values = new int[100];
+
+            public bool TryAdd(string key, int value, out int existingValue)
+            {
+                if (TryFindIndex(key, out var index))
+                {
+                    existingValue = _values[index];
+                    return false;
+                }
+                else if (index >= 0)
+                {
+                    _keys[index] = key;
+                    _values[index] = value;
+                    existingValue = default;
+                    return true;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Storage is full");
+                }
+            }
+
+            public void Replace(string key, int value)
+            {
+                if (TryFindIndex(key, out var index))
+                {
+                    _values[index] = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Key not found");
+                }
+            }
+
+            public void Clear()
+            {
+                Array.Clear(_keys, 0, _keys.Length);
+                Array.Clear(_values, 0, _values.Length);
+            }
+
+            private bool TryFindIndex(string key, out int existingIndexOrInsertionPosition)
+            {
+                var numBuckets = _keys.Length;
+                var startIndex = key.Length == 0 ? 0 : char.ToLowerInvariant(key[key.Length / 2]);
+                startIndex = startIndex * 31 + char.ToLowerInvariant(key[0]);
+                startIndex = startIndex % numBuckets;
+                var candidateIndex = startIndex;
+
+                do
+                {
+                    var candidateKey = _keys[candidateIndex];
+                    if (candidateKey == null)
+                    {
+                        existingIndexOrInsertionPosition = candidateIndex;
+                        return false;
+                    }
+
+                    if (string.Equals(candidateKey, key, StringComparison.OrdinalIgnoreCase))
+                    {
+                        existingIndexOrInsertionPosition = candidateIndex;
+                        return true;
+                    }
+
+                    if (++candidateIndex >= numBuckets)
+                    {
+                        candidateIndex = 0;
+                    }
+                }
+                while (candidateIndex != startIndex);
+
+                existingIndexOrInsertionPosition = -1;
+                return false;
+            }
+        }
     }
 }
