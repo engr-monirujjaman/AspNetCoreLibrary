@@ -75,6 +75,7 @@
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.ConcurrencyLimiter" ProjectPath="$(RepoRoot)src\Middleware\ConcurrencyLimiter\src\Microsoft.AspNetCore.ConcurrencyLimiter.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.Cors" ProjectPath="$(RepoRoot)src\Middleware\CORS\src\Microsoft.AspNetCore.Cors.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.Diagnostics.Abstractions" ProjectPath="$(RepoRoot)src\Middleware\Diagnostics.Abstractions\src\Microsoft.AspNetCore.Diagnostics.Abstractions.csproj" />
+    <ProjectReferenceProvider Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.CodeGenerator" ProjectPath="$(RepoRoot)src\Middleware\Diagnostics.EntityFrameworkCore.CodeGenerator\src\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.CodeGenerator.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" ProjectPath="$(RepoRoot)src\Middleware\Diagnostics.EntityFrameworkCore\src\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.Diagnostics" ProjectPath="$(RepoRoot)src\Middleware\Diagnostics\src\Microsoft.AspNetCore.Diagnostics.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.HeaderPropagation" ProjectPath="$(RepoRoot)src\Middleware\HeaderPropagation\src\Microsoft.AspNetCore.HeaderPropagation.csproj" />

@@ -18,6 +18,7 @@
       "src\\Middleware\\Diagnostics\\test\\UnitTests\\Microsoft.AspNetCore.Diagnostics.Tests.csproj",
       "src\\Middleware\\Diagnostics.Abstractions\\src\\Microsoft.AspNetCore.Diagnostics.Abstractions.csproj",
       "src\\Middleware\\Diagnostics.EntityFrameworkCore\\src\\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.csproj",
+      "src\\Middleware\\Diagnostics.EntityFrameworkCore.CodeGenerator\\src\\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.CodeGenerator.csproj",
       "src\\Middleware\\Diagnostics.EntityFrameworkCore\\test\\FunctionalTests\\Diagnostics.EFCore.FunctionalTests.csproj",
       "src\\Middleware\\Diagnostics.EntityFrameworkCore\\test\\UnitTests\\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.Tests.csproj",
       "src\\Middleware\\MiddlewareAnalysis\\samples\\MiddlewareAnalysisSample\\MiddlewareAnalysisSample.csproj",
