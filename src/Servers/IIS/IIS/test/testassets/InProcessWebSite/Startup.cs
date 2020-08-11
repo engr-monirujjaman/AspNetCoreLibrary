@@ -390,6 +390,15 @@ namespace TestSite
             }
         }
 
+        private async Task LargeResponseBody2(HttpContext ctx)
+        {
+            if (int.TryParse(ctx.Request.Query["length"], out var length))
+            {
+                var bytes = Encoding.ASCII.GetBytes(new string('a', length));
+                await ctx.Response.Body.WriteAsync(bytes);
+            }
+        }
+
 #if !FORWARDCOMPAT
         private Task UnflushedResponsePipe(HttpContext ctx)
         {
@@ -832,6 +841,32 @@ namespace TestSite
         private async Task LargeResponseFile(HttpContext ctx)
         {
             var tempFile = System.IO.Path.GetTempFileName();
+            var fileContent = new string('a', 200000);
+            var fileStream = File.OpenWrite(tempFile);
+
+            for (var i = 0; i < 1000; i++)
+            {
+                await fileStream.WriteAsync(Encoding.UTF8.GetBytes(fileContent), 0, fileContent.Length);
+            }
+            fileStream.Close();
+
+            await ctx.Response.SendFileAsync(tempFile, 0, null);
+
+            // Try to delete the file from the temp directory. If it fails, don't report an error
+            // to the application. File should eventually be cleaned up from the temp directory
+            // by OS.
+            try
+            {
+                File.Delete(tempFile);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private async Task LargeResponseFile2(HttpContext ctx)
+        {
+            var tempFile = System.IO.Path.GetTempFileName() + ".css";
             var fileContent = new string('a', 200000);
             var fileStream = File.OpenWrite(tempFile);
 

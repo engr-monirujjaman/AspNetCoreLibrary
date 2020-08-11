@@ -112,7 +112,7 @@ namespace Microsoft.AspNetCore.Server.IIS.Core.IO
                 var next = _nextOperation;
                 _nextOperation = null;
                 _runningOperation = null;
-
+                 
                 if (next != null)
                 {
                     if (_stopped)

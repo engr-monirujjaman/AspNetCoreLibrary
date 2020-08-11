@@ -126,6 +126,15 @@ namespace Microsoft.AspNetCore.Server.IIS
             HttpApiTypes.HTTP_DATA_CHUNK* pDataChunks,
             int nChunks,
             PFN_WEBSOCKET_ASYNC_COMPLETION pfnCompletionCallback,
+            bool fMoreData,
+            IntPtr pvCompletionContext,
+            out bool fCompletionExpected);
+
+        [DllImport(AspNetCoreModuleDll)]
+        private static extern unsafe int http_websockets_flush_bytes(
+            IntPtr pInProcessHandler,
+            PFN_WEBSOCKET_ASYNC_COMPLETION pfnCompletionCallback,
+            bool fMoreData,
             IntPtr pvCompletionContext,
             out bool fCompletionExpected);
 
@@ -263,10 +272,21 @@ namespace Microsoft.AspNetCore.Server.IIS
             HttpApiTypes.HTTP_DATA_CHUNK* pDataChunks,
             int nChunks,
             PFN_WEBSOCKET_ASYNC_COMPLETION pfnCompletionCallback,
+            bool fMoreData,
             IntPtr pvCompletionContext,
             out bool fCompletionExpected)
         {
-            return http_websockets_write_bytes(pInProcessHandler, pDataChunks, nChunks, pfnCompletionCallback, pvCompletionContext, out fCompletionExpected);
+            return http_websockets_write_bytes(pInProcessHandler, pDataChunks, nChunks, pfnCompletionCallback, fMoreData, pvCompletionContext, out fCompletionExpected);
+        }
+
+        internal static unsafe int HttpWebsocketsFlushBytes(
+            IntPtr pInProcessHandler,
+            PFN_WEBSOCKET_ASYNC_COMPLETION pfnCompletionCallback,
+            bool fMoreData,
+            IntPtr pvCompletionContext,
+            out bool fCompletionExpected)
+        {
+            return http_websockets_flush_bytes(pInProcessHandler, pfnCompletionCallback, fMoreData, pvCompletionContext, out fCompletionExpected);
         }
 
         public static void HttpEnableWebsockets(IntPtr pInProcessHandler)

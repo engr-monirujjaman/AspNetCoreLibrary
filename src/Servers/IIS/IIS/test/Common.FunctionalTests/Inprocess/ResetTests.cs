@@ -372,7 +372,6 @@ namespace Microsoft.AspNetCore.Server.IIS.FunctionalTests
             return headers;
         }
 
-
         private IISDeploymentParameters GetHttpsDeploymentParameters()
         {
             var port = TestPortHelper.GetNextSSLPort();

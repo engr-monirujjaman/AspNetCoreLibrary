@@ -27,10 +27,26 @@ namespace Microsoft.AspNetCore.Server.IIS.FunctionalTests.InProcess
             Assert.Equal(new string('a', query), await _fixture.Client.GetStringAsync($"/LargeResponseBody?length={query}"));
         }
 
+        [ConditionalTheory]
+        [InlineData(65000)]
+        [InlineData(1000000)]
+        [InlineData(10000000)]
+        [InlineData(100000000)]
+        public async Task LargeResponseBodyTest_CheckAllResponseBodyBytesWritten2(int query)
+        {
+            Assert.Equal(new string('a', query), await _fixture.Client.GetStringAsync($"/LargeResponseBody2?length={query}"));
+        }
+
         [ConditionalFact]
         public async Task LargeResponseBodyFromFile_CheckAllResponseBodyBytesWritten()
         {
             Assert.Equal(200000000, (await _fixture.Client.GetStringAsync($"/LargeResponseFile")).Length);
+        }
+
+        [ConditionalFact]
+        public async Task LargeResponseBodyFromFile_CheckAllResponseBodyBytesWritten2()
+        {
+            Assert.Equal(200000000, (await _fixture.Client.GetStringAsync($"/LargeResponseFile2")).Length);
         }
     }
 }

@@ -388,6 +388,7 @@ http_websockets_write_bytes(
     _In_ HTTP_DATA_CHUNK* pDataChunks,
     _In_ DWORD dwChunks,
     _In_ PFN_ASYNC_COMPLETION pfnCompletionCallback,
+    _In_ BOOL fMoreData,
     _In_ VOID* pvCompletionContext,
     _In_ BOOL* pfCompletionExpected
 )
@@ -395,7 +396,6 @@ http_websockets_write_bytes(
     IHttpResponse2* pHttpResponse = (IHttpResponse2*)pInProcessHandler->QueryHttpContext()->GetResponse();
 
     BOOL fAsync = TRUE;
-    BOOL fMoreData = TRUE;
     DWORD dwBytesSent;
 
     HRESULT hr = pHttpResponse->WriteEntityChunks(
@@ -408,6 +408,11 @@ http_websockets_write_bytes(
         &dwBytesSent,
         pfCompletionExpected);
 
+    if (*pfCompletionExpected)
+    {
+        hr = 0;
+    }
+
     return hr;
 }
 
@@ -416,6 +421,7 @@ HRESULT
 http_websockets_flush_bytes(
     _In_ IN_PROCESS_HANDLER* pInProcessHandler,
     _In_ PFN_ASYNC_COMPLETION pfnCompletionCallback,
+    _In_ BOOL fMoreData,
     _In_ VOID* pvCompletionContext,
     _In_ BOOL* pfCompletionExpected
 )
@@ -423,7 +429,6 @@ http_websockets_flush_bytes(
     IHttpResponse2* pHttpResponse = (IHttpResponse2*)pInProcessHandler->QueryHttpContext()->GetResponse();
 
     BOOL fAsync = TRUE;
-    BOOL fMoreData = TRUE;
     DWORD dwBytesSent;
 
     HRESULT hr = pHttpResponse->Flush(
@@ -433,6 +438,11 @@ http_websockets_flush_bytes(
         pvCompletionContext,
         &dwBytesSent,
         pfCompletionExpected);
+
+    if (*pfCompletionExpected)
+    {
+        hr = 0;
+    }
     return hr;
 }
 

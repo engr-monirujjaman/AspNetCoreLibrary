@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -101,6 +102,9 @@ namespace NativeIISSample
                 {
                     await context.Response.WriteAsync(key + Environment.NewLine);
                 }
+
+                var bytes = Encoding.ASCII.GetBytes(new string('a', 1000000));
+                await context.Response.Body.WriteAsync(bytes);
             });
         }
 
