@@ -136,7 +136,10 @@ namespace Microsoft.AspNetCore.Server.IIS.Core.IO
                 var context = (Http2FlushOperation)GCHandle.FromIntPtr(completionContext).Target;
 
                 NativeMethods.HttpGetCompletionInfo(completionInfo, out var cbBytes, out var hr);
-
+                if (hr != 0)
+                {
+                    Console.WriteLine("invoke operation failed");
+                }
                 var continuation = context.Complete(hr, cbBytes);
                 continuation.Invoke();
 
@@ -165,7 +168,10 @@ namespace Microsoft.AspNetCore.Server.IIS.Core.IO
                 _thisHandle = GCHandle.Alloc(this);
 
                 hr = NativeMethods.HttpWebsocketsFlushBytes(_requestHandler, FlushCallback, _moreData, (IntPtr)_thisHandle, out var fCompletionExpected);
-
+                if (hr != 0)
+                {
+                    Console.WriteLine("invoke operation failed");
+                }
                 return !fCompletionExpected;
             }
 
@@ -184,7 +190,10 @@ namespace Microsoft.AspNetCore.Server.IIS.Core.IO
                 var context = (Http2ReadOperation)GCHandle.FromIntPtr(completionContext).Target;
 
                 NativeMethods.HttpGetCompletionInfo(completionInfo, out var cbBytes, out var hr);
-
+                if (hr != 0)
+                {
+                    Console.WriteLine("invoke operation failed");
+                }
                 var continuation = context.Complete(hr, cbBytes);
 
                 continuation.Invoke();
@@ -216,7 +225,10 @@ namespace Microsoft.AspNetCore.Server.IIS.Core.IO
                     (IntPtr)_thisHandle,
                     out bytes,
                     out var completionExpected);
-
+                if (hr != 0)
+                {
+                    Console.WriteLine("invoke operation failed");
+                }
                 return !completionExpected;
             }
 

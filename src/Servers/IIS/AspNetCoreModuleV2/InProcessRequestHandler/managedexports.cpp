@@ -460,6 +460,16 @@ http_enable_websockets(
 
 EXTERN_C __MIDL_DECLSPEC_DLLEXPORT
 HRESULT
+http_enable_duplex(
+    _In_ IN_PROCESS_HANDLER* pInProcessHandler
+)
+{
+    ((IHttpContext3*)pInProcessHandler->QueryHttpContext())->EnableFullDuplex();
+    return S_OK;
+}
+
+EXTERN_C __MIDL_DECLSPEC_DLLEXPORT
+HRESULT
 http_cancel_io(
     _In_ IN_PROCESS_HANDLER* pInProcessHandler
 )

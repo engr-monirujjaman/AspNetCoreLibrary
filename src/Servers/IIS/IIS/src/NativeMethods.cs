@@ -142,6 +142,9 @@ namespace Microsoft.AspNetCore.Server.IIS
         private static extern int http_enable_websockets(IntPtr pInProcessHandler);
 
         [DllImport(AspNetCoreModuleDll)]
+        private static extern int http_enable_duplex(IntPtr pInProcessHandler);
+
+        [DllImport(AspNetCoreModuleDll)]
         private static extern int http_cancel_io(IntPtr pInProcessHandler);
 
         [DllImport(AspNetCoreModuleDll)]
@@ -292,6 +295,11 @@ namespace Microsoft.AspNetCore.Server.IIS
         public static void HttpEnableWebsockets(IntPtr pInProcessHandler)
         {
             Validate(http_enable_websockets(pInProcessHandler));
+        }
+
+        public static void HttpEnableDuplex(IntPtr pInProcessHandler)
+        {
+            Validate(http_enable_duplex(pInProcessHandler));
         }
 
         public static bool HttpTryCancelIO(IntPtr pInProcessHandler)

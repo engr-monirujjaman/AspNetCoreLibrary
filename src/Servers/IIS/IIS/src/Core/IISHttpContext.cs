@@ -324,6 +324,7 @@ namespace Microsoft.AspNetCore.Server.IIS.Core
             // If at this point request was not upgraded just start a normal IO engine
             if (AsyncIO == null)
             {
+                NativeMethods.HttpEnableDuplex(_pInProcessHandler);
                 AsyncIO = new Http2AsyncIOEngine(_contextLock, _pInProcessHandler);
             }
         }
