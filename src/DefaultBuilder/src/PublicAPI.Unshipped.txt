@@ -1,1 +1,29 @@
 #nullable enable
+Microsoft.AspNetCore.WebApplication
+Microsoft.AspNetCore.WebApplication.Addresses.get -> System.Collections.Generic.IEnumerable<string!>!
+Microsoft.AspNetCore.WebApplication.Configuration.get -> Microsoft.Extensions.Configuration.IConfiguration!
+Microsoft.AspNetCore.WebApplication.Dispose() -> void
+Microsoft.AspNetCore.WebApplication.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Microsoft.AspNetCore.WebApplication.Environment.get -> Microsoft.AspNetCore.Hosting.IWebHostEnvironment!
+Microsoft.AspNetCore.WebApplication.Lifetime.get -> Microsoft.Extensions.Hosting.IHostApplicationLifetime!
+Microsoft.AspNetCore.WebApplication.Logger.get -> Microsoft.Extensions.Logging.ILogger!
+Microsoft.AspNetCore.WebApplication.Run() -> void
+Microsoft.AspNetCore.WebApplication.Run(params string![]! urls) -> void
+Microsoft.AspNetCore.WebApplication.RunAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken), params string![]! urls) -> System.Threading.Tasks.Task!
+Microsoft.AspNetCore.WebApplication.Services.get -> System.IServiceProvider!
+Microsoft.AspNetCore.WebApplication.StartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Microsoft.AspNetCore.WebApplication.StopAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Microsoft.AspNetCore.WebApplication.WebApplication() -> void
+Microsoft.AspNetCore.WebApplicationBuilder
+Microsoft.AspNetCore.WebApplicationBuilder.Build() -> Microsoft.AspNetCore.WebApplication!
+Microsoft.AspNetCore.WebApplicationBuilder.Configuration.get -> Microsoft.Extensions.Configuration.IConfiguration!
+Microsoft.AspNetCore.WebApplicationBuilder.Environment.get -> Microsoft.AspNetCore.Hosting.IWebHostEnvironment!
+Microsoft.AspNetCore.WebApplicationBuilder.Host.get -> Microsoft.Extensions.Hosting.IHostBuilder!
+Microsoft.AspNetCore.WebApplicationBuilder.Logging.get -> Microsoft.Extensions.Logging.ILoggingBuilder!
+Microsoft.AspNetCore.WebApplicationBuilder.Services.get -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+Microsoft.AspNetCore.WebApplicationBuilder.WebApplicationBuilder() -> void
+Microsoft.AspNetCore.WebApplicationBuilder.WebHost.get -> Microsoft.AspNetCore.Hosting.IWebHostBuilder!
+static Microsoft.AspNetCore.WebApplication.Create() -> Microsoft.AspNetCore.WebApplication!
+static Microsoft.AspNetCore.WebApplication.Create(string![]! args) -> Microsoft.AspNetCore.WebApplication!
+static Microsoft.AspNetCore.WebApplication.CreateBuilder() -> Microsoft.AspNetCore.WebApplicationBuilder!
+static Microsoft.AspNetCore.WebApplication.CreateBuilder(string![]! args) -> Microsoft.AspNetCore.WebApplicationBuilder!

@@ -16,6 +16,12 @@ namespace SampleApp
     {
         public static void Main(string[] args)
         {
+            var app = WebApplication.Create(args);
+
+            app.MapGet("/", context => context.Response.WriteAsync("Hello World"));
+
+            app.Run("http://localhost:3000");
+
             CreateHostBuilder(args).Build().Run();
         }
 
