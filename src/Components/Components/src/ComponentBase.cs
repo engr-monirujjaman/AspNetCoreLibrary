@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.HotReload;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -22,7 +23,7 @@ namespace Microsoft.AspNetCore.Components
     /// Optional base class for components. Alternatively, components may
     /// implement <see cref="IComponent"/> directly.
     /// </summary>
-    public abstract class ComponentBase : IComponent, IHandleEvent, IHandleAfterRender, IReceiveHotReloadContext
+    public abstract class ComponentBase : IComponent, IHandleEvent, IHandleAfterRender, IReceiveHotReloadContext, IMagicFooBar
     {
         private readonly RenderFragment _renderFragment;
         private RenderHandle _renderHandle;
@@ -336,5 +337,44 @@ namespace Microsoft.AspNetCore.Components
         {
             _hotReloadContext = context;
         }
+
+        bool IMagicFooBar.TryGetWriter(string parameterName, [NotNullWhen(true)] out ParameterWriter? writer)
+        {
+            writer = null;
+            return false;
+        }
+
+        bool IMagicFooBar.TryGetUnmatchedValuesWriter([NotNullWhen(true)] out ParameterWriter? writer)
+        {
+            writer = null;
+            return false;
+        }
     }
+
+#pragma warning disable RS0016 // Add public types and members to the declared API
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public interface IMagicFooBar
+    {
+        bool TryGetWriter(string parameterName, [NotNullWhen(true)] out ParameterWriter? writer);
+
+        bool TryGetUnmatchedValuesWriter([NotNullWhen(true)] out ParameterWriter? writer);
+    }
+
+    public sealed class ParameterWriter
+    {
+        private readonly Action<object> _propertySetter;
+
+        public ParameterWriter(Action<object> propertySetter)
+        {
+            _propertySetter = propertySetter;
+        }
+
+        public bool Cascading { get; init; }
+
+        public bool CapturesUnmatchedValues { get; init; }
+
+        public void SetValue(object value) => _propertySetter(value);
+    }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning restore RS0016 // Add public types and members to the declared API
 }
