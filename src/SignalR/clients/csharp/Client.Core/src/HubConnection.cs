@@ -1230,6 +1230,8 @@ namespace Microsoft.AspNetCore.SignalR.Client
                             }
                             break;
                         }
+
+                        connectionState.StartPing();
                     }
                     finally
                     {
@@ -1679,6 +1681,10 @@ namespace Microsoft.AspNetCore.SignalR.Client
             private long _nextActivationServerTimeout;
             private long _nextActivationSendPing;
 
+            private Timer? _serverTimeoutTimer;
+            private Timer? _pingTimer;
+            private readonly bool _isBrowser = OperatingSystem.IsBrowser();
+
             public ConnectionContext Connection { get; }
             public Task? ReceiveTask { get; set; }
             public Exception? CloseException { get; set; }
@@ -1789,6 +1795,9 @@ namespace Microsoft.AspNetCore.SignalR.Client
             {
                 Log.Stopping(_logger);
 
+                _serverTimeoutTimer?.Dispose();
+                _pingTimer?.Dispose();
+
                 // Complete our write pipe, which should cause everything to shut down
                 Log.TerminatingReceiveLoop(_logger);
                 Connection.Transport.Input.CancelPendingRead();
@@ -1814,17 +1823,24 @@ namespace Microsoft.AspNetCore.SignalR.Client
                     await _hubConnection.SendHubMessage(this, PingMessage.Instance);
                 }
 
-                // initialize the timers
-                timer.Start();
+                if (!_isBrowser)
+                {
+                    // initialize the timers
+                    timer.Start();
+                }
+
                 ResetTimeout();
                 ResetSendPing();
 
-                using (timer)
+                if (!_isBrowser)
                 {
-                    // await returns True until `timer.Stop()` is called in the `finally` block of `ReceiveLoop`
-                    while (await timer)
+                    using (timer)
                     {
-                        await RunTimerActions();
+                        // await returns True until `timer.Stop()` is called in the `finally` block of `ReceiveLoop`
+                        while (await timer)
+                        {
+                            await RunTimerActions();
+                        }
                     }
                 }
             }
@@ -1836,15 +1852,22 @@ namespace Microsoft.AspNetCore.SignalR.Client
 
             public void ResetTimeout()
             {
-                Volatile.Write(ref _nextActivationServerTimeout, (DateTime.UtcNow + _hubConnection.ServerTimeout).Ticks);
+                if (!_isBrowser)
+                {
+                    Volatile.Write(ref _nextActivationServerTimeout, (DateTime.UtcNow + _hubConnection.ServerTimeout).Ticks);
+                }
+                else
+                {
+                    _serverTimeoutTimer = new Timer((state) => ((ConnectionState)state!).OnServerTimeout(), this, _hubConnection.ServerTimeout, Timeout.InfiniteTimeSpan);
+                }
             }
 
             // Internal for testing
-            internal async Task RunTimerActions()
+            internal Task RunTimerActions()
             {
                 if (_hasInherentKeepAlive)
                 {
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 if (DateTime.UtcNow.Ticks > Volatile.Read(ref _nextActivationServerTimeout))
@@ -1852,6 +1875,30 @@ namespace Microsoft.AspNetCore.SignalR.Client
                     OnServerTimeout();
                 }
 
+                return SendPing();
+            }
+
+            public void StartPing()
+            {
+                if (!_isBrowser)
+                {
+                    return;
+                }
+
+                if (_pingTimer is null)
+                {
+                    var nextPing = _nextActivationSendPing - DateTime.UtcNow.Ticks;
+                    if (nextPing < 0)
+                    {
+                        nextPing = 0;
+                    }
+
+                    _pingTimer = new Timer(static async (state) => await ((ConnectionState)state!).SendPing(), this, nextPing, Timeout.Infinite);
+                }
+            }
+
+            private async Task SendPing()
+            {
                 if (DateTime.UtcNow.Ticks > Volatile.Read(ref _nextActivationSendPing) && !Stopping)
                 {
                     if (!_hubConnection._state.TryAcquireConnectionLock())
@@ -1874,6 +1921,7 @@ namespace Microsoft.AspNetCore.SignalR.Client
                     }
                     finally
                     {
+                        _pingTimer = null;
                         _hubConnection._state.ReleaseConnectionLock();
                     }
                 }
