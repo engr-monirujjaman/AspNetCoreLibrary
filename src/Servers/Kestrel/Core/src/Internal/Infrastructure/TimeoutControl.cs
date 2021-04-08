@@ -18,10 +18,9 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
 
         private readonly object _readTimingLock = new object();
         private MinDataRate? _minReadRate;
+        private MinDataRateLimiter? _minReadRateLimiter;
         private bool _readTimingEnabled;
         private bool _readTimingPauseRequested;
-        private long _readTimingElapsedTicks;
-        private long _readTimingBytesRead;
         private InputFlowControl? _connectionInputFlowControl;
         // The following are always 0 or 1 for HTTP/1.x
         private int _concurrentIncompleteRequestBodies;
@@ -98,19 +97,11 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
                     return;
                 }
 
-                // Assume overly long tick intervals are the result of server resource starvation.
-                // Don't count extra time between ticks against the rate limit.
-                _readTimingElapsedTicks += Math.Min(timestamp - _lastTimestamp, Heartbeat.Interval.Ticks);
-
                 Debug.Assert(_minReadRate != null);
+                Debug.Assert(_minReadRateLimiter != null);
 
-                if (_minReadRate.BytesPerSecond > 0 && _readTimingElapsedTicks > _minReadRate.GracePeriod.Ticks)
-                {
-                    var elapsedSeconds = (double)_readTimingElapsedTicks / TimeSpan.TicksPerSecond;
-                    var rate = _readTimingBytesRead / elapsedSeconds;
-
-                    timeout = rate < _minReadRate.BytesPerSecond && !Debugger.IsAttached;
-                }
+                timeout = _minReadRateLimiter.EstimatedCount < _minReadRate.BytesPerSecond && !Debugger.IsAttached;
+                _minReadRateLimiter.Tick(timestamp);
 
                 // PauseTimingReads() cannot just set _timingReads to false. It needs to go through at least one tick
                 // before pausing, otherwise _readTimingElapsed might never be updated if PauseTimingReads() is always
@@ -194,13 +185,8 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
                 Debug.Assert(_concurrentIncompleteRequestBodies == 0 || minRate == _minReadRate, "Multiple simultaneous read data rates are not supported.");
 
                 _minReadRate = minRate;
+                _minReadRateLimiter = new MinDataRateLimiter(minRate, _lastTimestamp);
                 _concurrentIncompleteRequestBodies++;
-
-                if (_concurrentIncompleteRequestBodies == 1)
-                {
-                    _readTimingElapsedTicks = 0;
-                    _readTimingBytesRead = 0;
-                }
             }
         }
 
@@ -247,9 +233,10 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
         {
             Debug.Assert(count >= 0, "BytesRead count must not be negative.");
 
+            // lock might not be needed?
             lock (_readTimingLock)
             {
-                _readTimingBytesRead += count;
+                _minReadRateLimiter?.TryAcquire(count);
             }
         }
 
