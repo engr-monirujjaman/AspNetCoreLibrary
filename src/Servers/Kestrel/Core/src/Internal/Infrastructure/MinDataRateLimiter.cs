@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Internal;
 
 namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
 {
-    internal class MinDataRateLimiter : IRateLimiter
+    internal class MinDataRateLimiter : IResourceLimiter
     {
         private long _bytesTokens;
         private MinDataRate _minDataRate;
@@ -35,15 +35,17 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
             }
         }
 
-        public ValueTask<bool> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
+        public ValueTask<IResource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
         {
             Interlocked.Add(ref _bytesTokens, requestedCount);
 
-            return ValueTask.FromResult(true);
+            return ValueTask.FromResult<IResource>(RateLimitResource.Instance);
         }
 
-        public bool TryAcquire(long requestedCount)
+        public bool TryAcquire(long requestedCount, out IResource resource)
         {
+            resource = RateLimitResource.Instance;
+
             Interlocked.Add(ref _bytesTokens, requestedCount);
 
             return true;

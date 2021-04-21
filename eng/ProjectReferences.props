@@ -88,6 +88,7 @@
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.Localization.Routing" ProjectPath="$(RepoRoot)src\Middleware\Localization.Routing\src\Microsoft.AspNetCore.Localization.Routing.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.Localization" ProjectPath="$(RepoRoot)src\Middleware\Localization\src\Microsoft.AspNetCore.Localization.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.MiddlewareAnalysis" ProjectPath="$(RepoRoot)src\Middleware\MiddlewareAnalysis\src\Microsoft.AspNetCore.MiddlewareAnalysis.csproj" />
+    <ProjectReferenceProvider Include="Microsoft.AspNetCore.RateLimiter" ProjectPath="$(RepoRoot)src\Middleware\RateLimiter\src\Microsoft.AspNetCore.RateLimiter.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.ResponseCaching.Abstractions" ProjectPath="$(RepoRoot)src\Middleware\ResponseCaching.Abstractions\src\Microsoft.AspNetCore.ResponseCaching.Abstractions.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.ResponseCaching" ProjectPath="$(RepoRoot)src\Middleware\ResponseCaching\src\Microsoft.AspNetCore.ResponseCaching.csproj" />
     <ProjectReferenceProvider Include="Microsoft.AspNetCore.ResponseCompression" ProjectPath="$(RepoRoot)src\Middleware\ResponseCompression\src\Microsoft.AspNetCore.ResponseCompression.csproj" />

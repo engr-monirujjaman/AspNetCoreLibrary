@@ -238,7 +238,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
             // lock might not be needed?
             lock (_readTimingLock)
             {
-                _minReadRateLimiter?.TryAcquire(count);
+                _minReadRateLimiter?.TryAcquire(count, out _);
             }
         }
 

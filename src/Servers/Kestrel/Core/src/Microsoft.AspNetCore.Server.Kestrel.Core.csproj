@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageTags>aspnetcore;kestrel</PackageTags>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoWarn>CS1591;$(NoWarn)</NoWarn>
+    <NoWarn>RS0016;RS0026;CS1591;$(NoWarn)</NoWarn>
     <IsPackable>false</IsPackable>
     <DefineConstants>$(DefineConstants);KESTREL</DefineConstants>
     <Nullable>enable</Nullable>
@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="$(SharedSourceRoot)RateLimit\*.cs" />
+    <Compile Include="$(SharedSourceRoot)RateLimit\*.cs" LinkBase="ResourceLimit" />
     <Compile Include="$(SharedSourceRoot)CertificateGeneration\**\*.cs" />
     <Compile Include="$(SharedSourceRoot)ValueTaskExtensions\**\*.cs" />
     <Compile Include="$(SharedSourceRoot)UrlDecoder\**\*.cs" />
