@@ -51,7 +51,7 @@ namespace Microsoft.AspNetCore.RateLimiter
 
             if (resourceId.Connection.RemoteIpAddress == null)
             {
-                resource = RateLimitResource.Instance;
+                resource = RateLimitNoopResource.Instance;
                 return true;
             }
 
@@ -61,7 +61,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             {
                 if (_cache.TryAdd(key, requestedCount))
                 {
-                    resource = RateLimitResource.Instance;
+                    resource = RateLimitNoopResource.Instance;
                     return true;
                 }
             }
@@ -77,14 +77,14 @@ namespace Microsoft.AspNetCore.RateLimiter
                         return false;
                     }
 
-                    resource = RateLimitResource.Instance;
+                    resource = RateLimitNoopResource.Instance;
                     return true;
                 }
                 if (!_cache.TryGetValue(key, out count))
                 {
                     if (_cache.TryAdd(key, requestedCount))
                     {
-                        resource = RateLimitResource.Instance;
+                        resource = RateLimitNoopResource.Instance;
                         return true;
                     }
                 }

@@ -5,9 +5,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.Internal
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public interface IResourceLimiter
     {
         // an inaccurate view of resources

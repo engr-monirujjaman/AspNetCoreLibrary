@@ -4,6 +4,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Internal;
+using Microsoft.AspNetCore.RateLimiter;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
 
@@ -12,25 +14,26 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
     internal class ConnectionLimitMiddleware<T> where T : BaseConnectionContext
     {
         private readonly Func<T, Task> _next;
-        private readonly ResourceCounter _concurrentConnectionCounter;
         private readonly IKestrelTrace _trace;
+        private readonly IResourceLimiter _limiter;
 
         public ConnectionLimitMiddleware(Func<T, Task> next, long connectionLimit, IKestrelTrace trace)
-            : this(next, ResourceCounter.Quota(connectionLimit), trace)
+            : this(next, new ConcurrencyLimiter(connectionLimit), trace)
         {
         }
 
         // For Testing
-        internal ConnectionLimitMiddleware(Func<T, Task> next, ResourceCounter concurrentConnectionCounter, IKestrelTrace trace)
+        internal ConnectionLimitMiddleware(Func<T, Task> next, IResourceLimiter limiter, IKestrelTrace trace)
         {
             _next = next;
-            _concurrentConnectionCounter = concurrentConnectionCounter;
+            _limiter = limiter;
             _trace = trace;
         }
 
         public async Task OnConnectionAsync(T connection)
         {
-            if (!_concurrentConnectionCounter.TryLockOne())
+            var resourceObtained = _limiter.TryAcquire(out var resource);
+            if (!resourceObtained)
             {
                 KestrelEventSource.Log.ConnectionRejected(connection.ConnectionId);
                 _trace.ConnectionRejected(connection.ConnectionId);
@@ -38,7 +41,8 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
                 return;
             }
 
-            var releasor = new ConnectionReleasor(_concurrentConnectionCounter);
+            // Do we need IDecrementConcurrentConnectionCountFeature?
+            var releasor = new ConnectionReleasor(resource!);
 
             try
             {
@@ -53,21 +57,16 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
 
         private class ConnectionReleasor : IDecrementConcurrentConnectionCountFeature
         {
-            private readonly ResourceCounter _concurrentConnectionCounter;
-            private bool _connectionReleased;
+            private readonly IResource _resource;
 
-            public ConnectionReleasor(ResourceCounter normalConnectionCounter)
+            public ConnectionReleasor(IResource resource)
             {
-                _concurrentConnectionCounter = normalConnectionCounter;
+                _resource = resource;
             }
 
             public void ReleaseConnection()
             {
-                if (!_connectionReleased)
-                {
-                    _connectionReleased = true;
-                    _concurrentConnectionCounter.ReleaseOne();
-                }
+                _resource.Release(_resource.Count);
             }
         }
     }

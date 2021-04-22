@@ -31,7 +31,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         {
             if (Interlocked.Add(ref _resourceCount, requestedCount) <= _maxResourceCount)
             {
-                resource = RateLimitResource.Instance;
+                resource = RateLimitNoopResource.Instance;
                 return true;
             }
 
@@ -44,7 +44,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         {
             if (Interlocked.Add(ref _resourceCount, requestedCount) <= _maxResourceCount)
             {
-                return ValueTask.FromResult<IResource>(RateLimitResource.Instance);
+                return ValueTask.FromResult<IResource>(RateLimitNoopResource.Instance);
             }
 
             Interlocked.Add(ref _resourceCount, -requestedCount);
@@ -53,7 +53,7 @@ namespace Microsoft.AspNetCore.RateLimiter
 
             if (WaitHandle.WaitAny(new[] { registration.MRE.WaitHandle, cancellationToken.WaitHandle }) == 0)
             {
-                return ValueTask.FromResult<IResource>(RateLimitResource.Instance);
+                return ValueTask.FromResult<IResource>(RateLimitNoopResource.Instance);
             }
 
             throw new InvalidOperationException("Limit exceeded");

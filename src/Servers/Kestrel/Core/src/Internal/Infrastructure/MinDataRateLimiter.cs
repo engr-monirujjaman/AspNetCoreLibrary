@@ -39,12 +39,12 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
         {
             Interlocked.Add(ref _bytesTokens, requestedCount);
 
-            return ValueTask.FromResult<IResource>(RateLimitResource.Instance);
+            return ValueTask.FromResult<IResource>(RateLimitNoopResource.Instance);
         }
 
         public bool TryAcquire(long requestedCount, out IResource resource)
         {
-            resource = RateLimitResource.Instance;
+            resource = RateLimitNoopResource.Instance;
 
             Interlocked.Add(ref _bytesTokens, requestedCount);
 

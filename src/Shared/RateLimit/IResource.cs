@@ -6,14 +6,16 @@ namespace Microsoft.AspNetCore.Internal
 {
     public abstract class IResource : IDisposable
     {
+        public long Count { get; init; }
+
         public abstract void Release(long requestedCount);
 
         public abstract void Dispose();
     }
 
-    public class RateLimitResource : IResource
+    public class RateLimitNoopResource : IResource
     {
-        public static RateLimitResource Instance = new RateLimitResource();
+        public static RateLimitNoopResource Instance = new RateLimitNoopResource { Count = 0 };
 
         public override void Dispose() { }
         public override void Release(long requestedCount) { }
