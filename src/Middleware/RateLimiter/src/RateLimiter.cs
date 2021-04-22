@@ -27,11 +27,11 @@ namespace Microsoft.AspNetCore.RateLimiter
             _renewTimer = new Timer(Replenish, this, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
         }
 
-        public bool TryAcquire(long requestedCount, [NotNullWhen(true)] out IResource? resource)
+        public bool TryAcquire(long requestedCount, [NotNullWhen(true)] out Resource? resource)
         {
             if (Interlocked.Add(ref _resourceCount, requestedCount) <= _maxResourceCount)
             {
-                resource = RateLimitNoopResource.Instance;
+                resource = Resource.NoopResource;
                 return true;
             }
 
@@ -40,11 +40,11 @@ namespace Microsoft.AspNetCore.RateLimiter
             return false;
         }
 
-        public ValueTask<IResource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
+        public ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
         {
             if (Interlocked.Add(ref _resourceCount, requestedCount) <= _maxResourceCount)
             {
-                return ValueTask.FromResult<IResource>(RateLimitNoopResource.Instance);
+                return ValueTask.FromResult(Resource.NoopResource);
             }
 
             Interlocked.Add(ref _resourceCount, -requestedCount);
@@ -53,7 +53,7 @@ namespace Microsoft.AspNetCore.RateLimiter
 
             if (WaitHandle.WaitAny(new[] { registration.MRE.WaitHandle, cancellationToken.WaitHandle }) == 0)
             {
-                return ValueTask.FromResult<IResource>(RateLimitNoopResource.Instance);
+                return ValueTask.FromResult(Resource.NoopResource);
             }
 
             throw new InvalidOperationException("Limit exceeded");

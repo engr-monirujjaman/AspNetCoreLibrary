@@ -24,7 +24,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         }
 
         // Fast synchronous attempt to acquire resources
-        public bool TryAcquire(long requestedCount, [NotNullWhen(true)] out IResource? resource)
+        public bool TryAcquire(long requestedCount, [NotNullWhen(true)] out Resource? resource)
         {
             resource = null;
 
@@ -55,7 +55,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         }
 
         // Wait until the requested resources are available
-        public ValueTask<IResource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
+        public ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
         {
             if (requestedCount < 0 || requestedCount > _maxResourceCount)
             {
@@ -69,7 +69,7 @@ namespace Microsoft.AspNetCore.RateLimiter
                     if (EstimatedCount >= requestedCount)
                     {
                         Interlocked.Add(ref _resourceCount, -requestedCount);
-                        return ValueTask.FromResult<IResource>(
+                        return ValueTask.FromResult<Resource>(
                             new ConcurrentResource(this, requestedCount));
                     }
                 }
@@ -90,7 +90,7 @@ namespace Microsoft.AspNetCore.RateLimiter
                     if (EstimatedCount > requestedCount)
                     {
                         Interlocked.Add(ref _resourceCount, -requestedCount);
-                        return ValueTask.FromResult<IResource>(
+                        return ValueTask.FromResult<Resource>(
                             new ConcurrentResource(this, requestedCount));
                     }
                 }
@@ -104,7 +104,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             _mre.Set();
         }
 
-        private class ConcurrentResource : IResource
+        private class ConcurrentResource : Resource
         {
             private long _count;
             private ConcurrencyLimiter _limiter;

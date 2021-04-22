@@ -12,10 +12,10 @@ namespace Microsoft.AspNetCore.Internal
         long EstimatedCount(TKey resourceID);
 
         // Fast synchronous attempt to acquire resources
-        bool TryAcquire(TKey resourceID, long requestedCount, out IResource? resource);
+        bool TryAcquire(TKey resourceID, long requestedCount, out Resource? resource);
 
         // Wait until the requested resources are available
         // If unsuccessful, throw
-        ValueTask<IResource> AcquireAsync(TKey resourceID, long requestedCount, CancellationToken cancellationToken = default);
+        ValueTask<Resource> AcquireAsync(TKey resourceID, long requestedCount, CancellationToken cancellationToken = default);
     }
 }

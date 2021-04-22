@@ -35,16 +35,16 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
             }
         }
 
-        public ValueTask<IResource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
+        public ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
         {
             Interlocked.Add(ref _bytesTokens, requestedCount);
 
-            return ValueTask.FromResult<IResource>(RateLimitNoopResource.Instance);
+            return ValueTask.FromResult(Resource.NoopResource);
         }
 
-        public bool TryAcquire(long requestedCount, out IResource resource)
+        public bool TryAcquire(long requestedCount, out Resource resource)
         {
-            resource = RateLimitNoopResource.Instance;
+            resource = Resource.NoopResource;
 
             Interlocked.Add(ref _bytesTokens, requestedCount);
 

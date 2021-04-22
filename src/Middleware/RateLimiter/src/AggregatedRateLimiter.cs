@@ -41,7 +41,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             return _cache.TryGetValue(resourceId.Connection.RemoteIpAddress, out var count) ? count : 0;
         }
 
-        public bool TryAcquire(HttpContext resourceId, long requestedCount, [NotNullWhen(true)] out IResource? resource)
+        public bool TryAcquire(HttpContext resourceId, long requestedCount, [NotNullWhen(true)] out Resource? resource)
         {
             if (requestedCount > _maxResourceCount)
             {
@@ -51,7 +51,7 @@ namespace Microsoft.AspNetCore.RateLimiter
 
             if (resourceId.Connection.RemoteIpAddress == null)
             {
-                resource = RateLimitNoopResource.Instance;
+                resource = Resource.NoopResource;
                 return true;
             }
 
@@ -61,7 +61,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             {
                 if (_cache.TryAdd(key, requestedCount))
                 {
-                    resource = RateLimitNoopResource.Instance;
+                    resource = Resource.NoopResource;
                     return true;
                 }
             }
@@ -77,21 +77,21 @@ namespace Microsoft.AspNetCore.RateLimiter
                         return false;
                     }
 
-                    resource = RateLimitNoopResource.Instance;
+                    resource = Resource.NoopResource;
                     return true;
                 }
                 if (!_cache.TryGetValue(key, out count))
                 {
                     if (_cache.TryAdd(key, requestedCount))
                     {
-                        resource = RateLimitNoopResource.Instance;
+                        resource = Resource.NoopResource;
                         return true;
                     }
                 }
             }
         }
 
-        public ValueTask<IResource> AcquireAsync(HttpContext resourceId, long requestedCount, CancellationToken cancellationToken = default)
+        public ValueTask<Resource> AcquireAsync(HttpContext resourceId, long requestedCount, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

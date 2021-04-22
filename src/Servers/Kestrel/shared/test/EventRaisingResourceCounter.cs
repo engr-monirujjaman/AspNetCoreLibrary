@@ -5,7 +5,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Internal;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
 
 namespace Microsoft.AspNetCore.Server.Kestrel.Tests
 {
@@ -23,12 +22,12 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Tests
         public event EventHandler OnRelease;
         public event EventHandler<bool> OnLock;
 
-        public ValueTask<IResource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
+        public ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryAcquire(long requestedCount, out IResource resource)
+        public bool TryAcquire(long requestedCount, out Resource resource)
         {
             var retVal = _wrapped.TryAcquire(out var innerResource);
             resource = new WrappedResource(innerResource, () => OnRelease.Invoke(this, null));
@@ -36,12 +35,12 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Tests
             return retVal;
         }
 
-        private class WrappedResource : IResource
+        private class WrappedResource : Resource
         {
-            private readonly IResource _resource;
+            private readonly Resource _resource;
             private readonly Action _releaseAction;
 
-            public WrappedResource(IResource resource, Action releaseAction)
+            public WrappedResource(Resource resource, Action releaseAction)
             {
                 _resource = resource;
                 _releaseAction = releaseAction;

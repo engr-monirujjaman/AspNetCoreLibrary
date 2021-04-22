@@ -37,7 +37,7 @@ namespace RateLimiterSample
                     await context.Response.WriteAsync("Hello World!");
                 }).EnforceLimit<RateLimiter>();
 
-                endpoints.MapGet("/conccurent", async context =>
+                endpoints.MapGet("/concurrent", async context =>
                 {
                     await Task.Delay(5000);
                     await context.Response.WriteAsync("Wrote!");

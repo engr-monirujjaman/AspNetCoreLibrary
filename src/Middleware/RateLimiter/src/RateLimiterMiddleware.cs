@@ -46,7 +46,7 @@ namespace Microsoft.AspNetCore.RateLimiter
                 return;
             }
 
-            var resources = new Stack<IResource>();
+            var resources = new Stack<Resource>();
             try
             {
                 foreach (var registration in registrations)

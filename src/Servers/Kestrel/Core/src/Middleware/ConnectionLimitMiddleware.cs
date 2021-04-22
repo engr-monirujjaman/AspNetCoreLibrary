@@ -57,9 +57,9 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
 
         private class ConnectionReleasor : IDecrementConcurrentConnectionCountFeature
         {
-            private readonly IResource _resource;
+            private readonly Resource _resource;
 
-            public ConnectionReleasor(IResource resource)
+            public ConnectionReleasor(Resource resource)
             {
                 _resource = resource;
             }

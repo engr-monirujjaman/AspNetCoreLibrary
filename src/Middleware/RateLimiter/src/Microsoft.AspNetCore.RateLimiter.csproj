@@ -12,8 +12,6 @@
   <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Http.Abstractions" />
     <Reference Include="Microsoft.Extensions.Logging.Abstractions" />
-
-    <Compile Include="$(SharedSourceRoot)RateLimit\*.cs" LinkBase="RateLimit" />
   </ItemGroup>
 
 </Project>
