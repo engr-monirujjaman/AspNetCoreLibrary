@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Internal;
@@ -46,9 +45,8 @@ namespace Microsoft.AspNetCore.RateLimiter
                     {
                         Interlocked.Add(ref _resourceCount, -requestedCount);
                         resource = new Resource(
-                            count: requestedCount,
                             state: null,
-                            onDispose: resource => Release(resource.Count));
+                            onDispose: resource => Release(requestedCount));
                         return true;
                     }
                 }
@@ -73,9 +71,8 @@ namespace Microsoft.AspNetCore.RateLimiter
                     {
                         Interlocked.Add(ref _resourceCount, -requestedCount);
                         return ValueTask.FromResult(new Resource(
-                            count: requestedCount,
                             state: null,
-                            onDispose: resource => Release(resource.Count)));
+                            onDispose: resource => Release(requestedCount)));
                     }
                 }
             }
@@ -96,9 +93,8 @@ namespace Microsoft.AspNetCore.RateLimiter
                     {
                         Interlocked.Add(ref _resourceCount, -requestedCount);
                         return ValueTask.FromResult(new Resource(
-                            count: requestedCount,
                             state: null,
-                            onDispose: resource => Release(resource.Count)));
+                            onDispose: resource => Release(requestedCount)));
                     }
                 }
             }

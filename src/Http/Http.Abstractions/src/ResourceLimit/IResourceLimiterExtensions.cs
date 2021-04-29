@@ -8,7 +8,6 @@ namespace Microsoft.AspNetCore.Internal
 {
     public static class ResourceLimiterExtensions
     {
-        
         public static bool TryAcquire(this IResourceLimiter limiter, out Resource resource)
         {
             return limiter.TryAcquire(1, out resource);

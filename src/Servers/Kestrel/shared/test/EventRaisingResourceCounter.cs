@@ -33,7 +33,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Tests
             var retVal = _wrapped.TryAcquire(out var innerResource);
             if (retVal)
             {
-                resource = new Resource(innerResource.Count, innerResource.State, r => OnRelease.Invoke(this, null));
+                resource = new Resource(innerResource.State, r => OnRelease.Invoke(this, null));
             }
             OnLock?.Invoke(this, retVal);
             return retVal;
