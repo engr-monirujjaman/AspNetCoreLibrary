@@ -12,7 +12,7 @@ namespace Microsoft.AspNetCore.Internal
         long EstimatedCount(TKey resourceID);
 
         // Fast synchronous attempt to acquire resources
-        bool TryAcquire(TKey resourceID, long requestedCount, out Resource? resource);
+        bool TryAcquire(TKey resourceID, long requestedCount, out Resource resource);
 
         // Wait until the requested resources are available
         // If unsuccessful, throw

@@ -29,34 +29,14 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Tests
 
         public bool TryAcquire(long requestedCount, out Resource resource)
         {
+            resource = Resource.NoopResource;
             var retVal = _wrapped.TryAcquire(out var innerResource);
-            resource = new WrappedResource(innerResource, () => OnRelease.Invoke(this, null));
+            if (retVal)
+            {
+                resource = new Resource(innerResource.Count, innerResource.State, r => OnRelease.Invoke(this, null));
+            }
             OnLock?.Invoke(this, retVal);
             return retVal;
-        }
-
-        private class WrappedResource : Resource
-        {
-            private readonly Resource _resource;
-            private readonly Action _releaseAction;
-
-            public WrappedResource(Resource resource, Action releaseAction)
-            {
-                _resource = resource;
-                _releaseAction = releaseAction;
-            }
-
-            public override void Release(long requestedCount)
-            {
-                _resource.Release(requestedCount);
-                _releaseAction();
-            }
-
-            // Careful with locking in dispose
-            public override void Dispose()
-            {
-                _resource.Release(_resource.Count);
-            }
         }
     }
 }

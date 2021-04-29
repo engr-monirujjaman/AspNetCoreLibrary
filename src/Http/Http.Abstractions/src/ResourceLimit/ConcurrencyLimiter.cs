@@ -24,9 +24,9 @@ namespace Microsoft.AspNetCore.RateLimiter
         }
 
         // Fast synchronous attempt to acquire resources
-        public bool TryAcquire(long requestedCount, [NotNullWhen(true)] out Resource? resource)
+        public bool TryAcquire(long requestedCount, out Resource resource)
         {
-            resource = null;
+            resource = Resource.NoopResource;
 
             if (requestedCount < 0 || requestedCount > _maxResourceCount)
             {
@@ -45,7 +45,10 @@ namespace Microsoft.AspNetCore.RateLimiter
                     if (EstimatedCount >= requestedCount)
                     {
                         Interlocked.Add(ref _resourceCount, -requestedCount);
-                        resource = new ConcurrentResource(this, requestedCount);
+                        resource = new Resource(
+                            count: requestedCount,
+                            state: null,
+                            onDispose: resource => Release(resource.Count));
                         return true;
                     }
                 }
@@ -69,8 +72,10 @@ namespace Microsoft.AspNetCore.RateLimiter
                     if (EstimatedCount >= requestedCount)
                     {
                         Interlocked.Add(ref _resourceCount, -requestedCount);
-                        return ValueTask.FromResult<Resource>(
-                            new ConcurrentResource(this, requestedCount));
+                        return ValueTask.FromResult(new Resource(
+                            count: requestedCount,
+                            state: null,
+                            onDispose: resource => Release(resource.Count)));
                     }
                 }
             }
@@ -90,8 +95,10 @@ namespace Microsoft.AspNetCore.RateLimiter
                     if (EstimatedCount > requestedCount)
                     {
                         Interlocked.Add(ref _resourceCount, -requestedCount);
-                        return ValueTask.FromResult<Resource>(
-                            new ConcurrentResource(this, requestedCount));
+                        return ValueTask.FromResult(new Resource(
+                            count: requestedCount,
+                            state: null,
+                            onDispose: resource => Release(resource.Count)));
                     }
                 }
             }
@@ -102,37 +109,6 @@ namespace Microsoft.AspNetCore.RateLimiter
             // Check for negative requestCount
             Interlocked.Add(ref _resourceCount, releaseCount);
             _mre.Set();
-        }
-
-        private class ConcurrentResource : Resource
-        {
-            private long _count;
-            private ConcurrencyLimiter _limiter;
-            private object _lock = new object();
-
-            public ConcurrentResource(ConcurrencyLimiter limiter, long count)
-            {
-                _count = count;
-                _limiter = limiter;
-            }
-
-            public override void Release(long requestedCount)
-            {
-                lock (_lock)
-                {
-                    var releaseCount = Math.Min(requestedCount, _count);
-                    _limiter.Release(releaseCount);
-                }
-            }
-
-            // Careful with locking in dispose
-            public override void Dispose()
-            {
-                lock (_lock)
-                {
-                    _limiter.Release(_count);
-                }
-            }
         }
     }
 }

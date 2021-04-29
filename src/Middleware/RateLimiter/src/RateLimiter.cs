@@ -27,16 +27,15 @@ namespace Microsoft.AspNetCore.RateLimiter
             _renewTimer = new Timer(Replenish, this, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
         }
 
-        public bool TryAcquire(long requestedCount, [NotNullWhen(true)] out Resource? resource)
+        public bool TryAcquire(long requestedCount, out Resource resource)
         {
+            resource = Resource.NoopResource;
             if (Interlocked.Add(ref _resourceCount, requestedCount) <= _maxResourceCount)
             {
-                resource = Resource.NoopResource;
                 return true;
             }
 
             Interlocked.Add(ref _resourceCount, -requestedCount);
-            resource = null;
             return false;
         }
 

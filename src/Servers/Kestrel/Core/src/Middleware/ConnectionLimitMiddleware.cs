@@ -42,7 +42,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
             }
 
             // Do we need IDecrementConcurrentConnectionCountFeature?
-            var releasor = new ConnectionReleasor(resource!);
+            var releasor = new ConnectionReleasor(resource);
 
             try
             {
@@ -66,7 +66,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
 
             public void ReleaseConnection()
             {
-                _resource.Release(_resource.Count);
+                _resource.Dispose();
             }
         }
     }

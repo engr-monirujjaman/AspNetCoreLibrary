@@ -63,7 +63,7 @@ namespace Microsoft.AspNetCore.RateLimiter
                         }
 
                         _logger.LogInformation("Resource obtained");
-                        resources.Push(resource!);// Shouldn't NotNullWhen mean it's never null here?
+                        resources.Push(resource);// Shouldn't NotNullWhen mean it's never null here?
                     }
                     if (registration.ResolveAggregatedLimiter != null)
                     {
@@ -77,7 +77,7 @@ namespace Microsoft.AspNetCore.RateLimiter
                         }
 
                         _logger.LogInformation("Resource obtained");
-                        resources.Push(resource!);// Shouldn't NotNullWhen mean it's never null here?
+                        resources.Push(resource);// Shouldn't NotNullWhen mean it's never null here?
                     }
 
                 }

@@ -41,17 +41,16 @@ namespace Microsoft.AspNetCore.RateLimiter
             return _cache.TryGetValue(resourceId.Connection.RemoteIpAddress, out var count) ? count : 0;
         }
 
-        public bool TryAcquire(HttpContext resourceId, long requestedCount, [NotNullWhen(true)] out Resource? resource)
+        public bool TryAcquire(HttpContext resourceId, long requestedCount, out Resource resource)
         {
+            resource = Resource.NoopResource;
             if (requestedCount > _maxResourceCount)
             {
-                resource = null;
                 return false;
             }
 
             if (resourceId.Connection.RemoteIpAddress == null)
             {
-                resource = Resource.NoopResource;
                 return true;
             }
 
@@ -61,7 +60,6 @@ namespace Microsoft.AspNetCore.RateLimiter
             {
                 if (_cache.TryAdd(key, requestedCount))
                 {
-                    resource = Resource.NoopResource;
                     return true;
                 }
             }
@@ -73,18 +71,15 @@ namespace Microsoft.AspNetCore.RateLimiter
                 {
                     if (newCount > _maxResourceCount)
                     {
-                        resource = null;
                         return false;
                     }
 
-                    resource = Resource.NoopResource;
                     return true;
                 }
                 if (!_cache.TryGetValue(key, out count))
                 {
                     if (_cache.TryAdd(key, requestedCount))
                     {
-                        resource = Resource.NoopResource;
                         return true;
                     }
                 }
