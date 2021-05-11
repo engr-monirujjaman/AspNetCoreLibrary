@@ -27,7 +27,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         }
 
         public static IEndpointConventionBuilder EnforceLimit<TResourceLimiter>(this IEndpointConventionBuilder builder)
-            where TResourceLimiter : IResourceLimiter
+            where TResourceLimiter : ResourceLimiter
         {
             builder.Add(endpointBuilder =>
             {
@@ -37,7 +37,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         }
 
         public static IEndpointConventionBuilder EnforceAggregatedLimit<TAggregatedResourceLimiter>(this IEndpointConventionBuilder builder)
-            where TAggregatedResourceLimiter : IAggregatedResourceLimiter<HttpContext>
+            where TAggregatedResourceLimiter : AggregatedResourceLimiter<HttpContext>
         {
             builder.Add(endpointBuilder =>
             {

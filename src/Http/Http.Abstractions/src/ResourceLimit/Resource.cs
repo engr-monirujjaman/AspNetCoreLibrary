@@ -8,9 +8,9 @@ namespace Microsoft.AspNetCore.Internal
     {
         public object? State { get; init; }
 
-        private Action<Resource>? _onDispose;
+        private Action<object?>? _onDispose;
 
-        public Resource(object? state, Action<Resource>? onDispose)
+        public Resource(object? state, Action<object?>? onDispose)
         {
             State = state;
             _onDispose = onDispose;
@@ -18,7 +18,7 @@ namespace Microsoft.AspNetCore.Internal
 
         public void Dispose()
         {
-            _onDispose?.Invoke(this);
+            _onDispose?.Invoke(State);
         }
 
         public static Resource NoopResource = new Resource(null, null);

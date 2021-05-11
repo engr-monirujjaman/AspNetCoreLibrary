@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Internal;
 
 namespace Microsoft.AspNetCore.RateLimiter
 {
-    public class RateLimiter : IResourceLimiter
+    public class RateLimiter : ResourceLimiter
     {
         private long _resourceCount;
         private readonly long _maxResourceCount;
@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         private Timer _renewTimer;
         private readonly ConcurrentQueue<RateLimitRequest> _queue = new ConcurrentQueue<RateLimitRequest>();
 
-        public long EstimatedCount => Interlocked.Read(ref _resourceCount);
+        public override long EstimatedCount => Interlocked.Read(ref _resourceCount);
 
         public RateLimiter(long resourceCount, long newResourcePerSecond)
         {
@@ -27,7 +27,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             _renewTimer = new Timer(Replenish, this, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
         }
 
-        public bool TryAcquire(long requestedCount, out Resource resource)
+        public override bool TryAcquire(long requestedCount, [NotNullWhen(true)] out Resource? resource)
         {
             resource = Resource.NoopResource;
             if (Interlocked.Add(ref _resourceCount, requestedCount) <= _maxResourceCount)
@@ -39,7 +39,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             return false;
         }
 
-        public ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
+        public override ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
         {
             if (Interlocked.Add(ref _resourceCount, requestedCount) <= _maxResourceCount)
             {

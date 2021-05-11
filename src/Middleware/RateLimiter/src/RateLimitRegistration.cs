@@ -6,15 +6,15 @@ namespace Microsoft.AspNetCore.RateLimiter
 {
     class RateLimitRegistration
     {
-        internal Func<IServiceProvider, IResourceLimiter>? ResolveLimiter { get; }
-        internal Func<IServiceProvider, IAggregatedResourceLimiter<HttpContext>>? ResolveAggregatedLimiter { get; }
+        internal Func<IServiceProvider, ResourceLimiter>? ResolveLimiter { get; }
+        internal Func<IServiceProvider, AggregatedResourceLimiter<HttpContext>>? ResolveAggregatedLimiter { get; }
 
-        public RateLimitRegistration(Func<IServiceProvider, IResourceLimiter> resolveLimiter)
+        public RateLimitRegistration(Func<IServiceProvider, ResourceLimiter> resolveLimiter)
         {
             ResolveLimiter = resolveLimiter;
         }
 
-        public RateLimitRegistration(Func<IServiceProvider, IAggregatedResourceLimiter<HttpContext>> resolveAggregatedLimiter)
+        public RateLimitRegistration(Func<IServiceProvider, AggregatedResourceLimiter<HttpContext>> resolveAggregatedLimiter)
         {
             ResolveAggregatedLimiter = resolveAggregatedLimiter;
         }

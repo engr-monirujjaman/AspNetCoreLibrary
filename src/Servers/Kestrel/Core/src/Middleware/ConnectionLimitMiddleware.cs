@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
     {
         private readonly Func<T, Task> _next;
         private readonly IKestrelTrace _trace;
-        private readonly IResourceLimiter _limiter;
+        private readonly ResourceLimiter _limiter;
 
         public ConnectionLimitMiddleware(Func<T, Task> next, long connectionLimit, IKestrelTrace trace)
             : this(next, new ConcurrencyLimiter(connectionLimit), trace)
@@ -23,7 +23,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
         }
 
         // For Testing
-        internal ConnectionLimitMiddleware(Func<T, Task> next, IResourceLimiter limiter, IKestrelTrace trace)
+        internal ConnectionLimitMiddleware(Func<T, Task> next, ResourceLimiter limiter, IKestrelTrace trace)
         {
             _next = next;
             _limiter = limiter;
@@ -32,8 +32,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
 
         public async Task OnConnectionAsync(T connection)
         {
-            var resourceObtained = _limiter.TryAcquire(out var resource);
-            if (!resourceObtained)
+            if (!_limiter.TryAcquire(out var resource))
             {
                 KestrelEventSource.Log.ConnectionRejected(connection.ConnectionId);
                 _trace.ConnectionRejected(connection.ConnectionId);
@@ -42,7 +41,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
             }
 
             // Do we need IDecrementConcurrentConnectionCountFeature?
-            var releasor = new ConnectionReleasor(resource);
+            var releasor = new ConnectionReleasor(resource.Value);
 
             try
             {

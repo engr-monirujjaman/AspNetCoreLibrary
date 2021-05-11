@@ -1,20 +1,21 @@
 
 // Single resource
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.Internal
 {
-    public interface IResourceLimiter
+    public abstract class ResourceLimiter
     {
         // an inaccurate view of resources
-        long EstimatedCount { get; }
+        public abstract long EstimatedCount { get; }
 
         // Fast synchronous attempt to acquire resources
-        bool TryAcquire(long requestedCount, out Resource resource);
+        public abstract bool TryAcquire(long requestedCount, [NotNullWhen(true)] out Resource? resource);
 
         // Wait until the requested resources are available
         // If unsuccessful, throw
-        ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default);
+        public abstract ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default);
     }
 }

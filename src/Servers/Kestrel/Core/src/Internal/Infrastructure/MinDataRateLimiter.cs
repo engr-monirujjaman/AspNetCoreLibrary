@@ -1,11 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Internal;
 
 namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
 {
-    internal class MinDataRateLimiter : IResourceLimiter
+    internal class MinDataRateLimiter : ResourceLimiter
     {
         private long _bytesTokens;
         private MinDataRate _minDataRate;
@@ -24,7 +25,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
             };
         }
 
-        public long EstimatedCount {
+        public override long EstimatedCount {
             get {
                 if (Interlocked.Read(ref _lastTimestamp) - _initialTimestamp <= _minDataRate.GracePeriod.Ticks)
                 {
@@ -35,14 +36,14 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
             }
         }
 
-        public ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
+        public override ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
         {
             Interlocked.Add(ref _bytesTokens, requestedCount);
 
             return ValueTask.FromResult(Resource.NoopResource);
         }
 
-        public bool TryAcquire(long requestedCount, out Resource resource)
+        public override bool TryAcquire(long requestedCount, [NotNullWhen(true)] out Resource? resource)
         {
             resource = Resource.NoopResource;
 

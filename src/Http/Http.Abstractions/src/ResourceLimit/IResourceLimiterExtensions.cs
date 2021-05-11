@@ -8,21 +8,21 @@ namespace Microsoft.AspNetCore.Internal
 {
     public static class ResourceLimiterExtensions
     {
-        public static bool TryAcquire(this IResourceLimiter limiter, out Resource resource)
+        public static bool TryAcquire(this ResourceLimiter limiter, [NotNullWhen(true)] out Resource? resource)
         {
             return limiter.TryAcquire(1, out resource);
         }
 
-        public static ValueTask<Resource> AcquireAsync(this IResourceLimiter limiter, CancellationToken cancellationToken = default)
+        public static ValueTask<Resource> AcquireAsync(this ResourceLimiter limiter, CancellationToken cancellationToken = default)
         {
             return limiter.AcquireAsync(1, cancellationToken);
         }
-        public static bool TryAcquire<TKey>(this IAggregatedResourceLimiter<TKey> limiter, TKey resourceId, out Resource resource)
+        public static bool TryAcquire<TKey>(this AggregatedResourceLimiter<TKey> limiter, TKey resourceId, [NotNullWhen(true)] out Resource resource)
         {
             return limiter.TryAcquire(resourceId, 1, out resource);
         }
 
-        public static ValueTask<Resource> AcquireAsync<TKey>(this IAggregatedResourceLimiter<TKey> limiter, TKey resourceId, CancellationToken cancellationToken = default)
+        public static ValueTask<Resource> AcquireAsync<TKey>(this AggregatedResourceLimiter<TKey> limiter, TKey resourceId, CancellationToken cancellationToken = default)
         {
             return limiter.AcquireAsync(resourceId, 1, cancellationToken);
         }

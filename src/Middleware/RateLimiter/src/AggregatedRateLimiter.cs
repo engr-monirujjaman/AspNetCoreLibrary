@@ -10,7 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Microsoft.AspNetCore.RateLimiter
 {
-    public class IPAggregatedRateLimiter : IAggregatedResourceLimiter<HttpContext>
+    public class IPAggregatedRateLimiter : AggregatedResourceLimiter<HttpContext>
     {
         private long _resourceCount;
         private readonly long _maxResourceCount;
@@ -30,7 +30,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             _renewTimer = new Timer(Replenish, this, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
         }
 
-        public long EstimatedCount(HttpContext resourceId)
+        public override long EstimatedCount(HttpContext resourceId)
         {
             if (resourceId.Connection.RemoteIpAddress == null)
             {
@@ -41,7 +41,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             return _cache.TryGetValue(resourceId.Connection.RemoteIpAddress, out var count) ? count : 0;
         }
 
-        public bool TryAcquire(HttpContext resourceId, long requestedCount, out Resource resource)
+        public override bool TryAcquire(HttpContext resourceId, long requestedCount, [NotNullWhen(true)] out Resource? resource)
         {
             resource = Resource.NoopResource;
             if (requestedCount > _maxResourceCount)
@@ -86,7 +86,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             }
         }
 
-        public ValueTask<Resource> AcquireAsync(HttpContext resourceId, long requestedCount, CancellationToken cancellationToken = default)
+        public override ValueTask<Resource> AcquireAsync(HttpContext resourceId, long requestedCount, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

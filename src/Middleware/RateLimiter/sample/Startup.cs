@@ -17,6 +17,7 @@ namespace RateLimiterSample
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResourceLimiters(OptionsBuilderConfigurationExtensions => OptionsBuilderConfigurationExtensions.AddPolicy("policyName" [requirements]))
             services.AddSingleton(new IPAggregatedRateLimiter(2, 2));
             services.AddSingleton(new ConcurrencyLimiter(1));
             services.AddSingleton(new RateLimiter(2, 2));

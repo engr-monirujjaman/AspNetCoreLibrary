@@ -1,11 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Internal;
 
 namespace Microsoft.AspNetCore.RateLimiter
 {
-    public class ConcurrencyLimiter : IResourceLimiter
+    public class ConcurrencyLimiter : ResourceLimiter
     {
         private long _resourceCount;
         private readonly long _maxResourceCount;
@@ -13,7 +14,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         private ManualResetEventSlim _mre; // How about a FIFO queue instead of randomness?
 
         // an inaccurate view of resources
-        public long EstimatedCount => Interlocked.Read(ref _resourceCount);
+        public override long EstimatedCount => Interlocked.Read(ref _resourceCount);
 
         public ConcurrencyLimiter(long resourceCount)
         {
@@ -23,7 +24,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         }
 
         // Fast synchronous attempt to acquire resources
-        public bool TryAcquire(long requestedCount, out Resource resource)
+        public override bool TryAcquire(long requestedCount, [NotNullWhen(true)] out Resource? resource)
         {
             resource = Resource.NoopResource;
 
@@ -56,7 +57,7 @@ namespace Microsoft.AspNetCore.RateLimiter
         }
 
         // Wait until the requested resources are available
-        public ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
+        public override ValueTask<Resource> AcquireAsync(long requestedCount, CancellationToken cancellationToken = default)
         {
             if (requestedCount < 0 || requestedCount > _maxResourceCount)
             {
