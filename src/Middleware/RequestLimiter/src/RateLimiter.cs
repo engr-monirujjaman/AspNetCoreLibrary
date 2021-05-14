@@ -2,10 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Threading.ResourceLimits;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Internal;
 
-namespace Microsoft.AspNetCore.RateLimiter
+namespace Microsoft.AspNetCore.RequestLimiter
 {
     public class RateLimiter : ResourceLimiter
     {

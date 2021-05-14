@@ -187,7 +187,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
                 Debug.Assert(_concurrentIncompleteRequestBodies == 0 || minRate == _minReadRate, "Multiple simultaneous read data rates are not supported.");
 
                 _minReadRate = minRate;
-                _minReadRateLimiter = new MinDataRateLimiter(minRate, _lastTimestamp, this);
+                _minReadRateLimiter = new MinDataRateLimiter(minRate, _lastTimestamp, MinRateTickEvent);
                 _concurrentIncompleteRequestBodies++;
             }
         }

@@ -1,10 +1,9 @@
+// Pending API review
 
-// Single resource
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNetCore.Internal
+namespace System.Threading.ResourceLimits
 {
     public static class ResourceLimiterExtensions
     {
@@ -17,7 +16,7 @@ namespace Microsoft.AspNetCore.Internal
         {
             return limiter.AcquireAsync(1, cancellationToken);
         }
-        public static bool TryAcquire<TKey>(this AggregatedResourceLimiter<TKey> limiter, TKey resourceId, [NotNullWhen(true)] out Resource resource)
+        public static bool TryAcquire<TKey>(this AggregatedResourceLimiter<TKey> limiter, TKey resourceId, [NotNullWhen(true)] out Resource? resource)
         {
             return limiter.TryAcquire(resourceId, 1, out resource);
         }

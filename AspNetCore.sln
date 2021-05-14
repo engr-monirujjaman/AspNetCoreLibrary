@@ -1630,11 +1630,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebviewAppShared", "src\Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestStartupAssembly1", "src\Hosting\test\testassets\TestStartupAssembly1\TestStartupAssembly1.csproj", "{262FF30C-34B4-462D-B5E2-0DABB9196E40}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RateLimiter", "RateLimiter", "{74BD81EC-1CE2-42F1-9588-F3812ECF73FD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RequestLimiter", "RequestLimiter", "{74BD81EC-1CE2-42F1-9588-F3812ECF73FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.RateLimiter", "src\Middleware\RateLimiter\src\Microsoft.AspNetCore.RateLimiter.csproj", "{B5616C0A-5D0A-4099-B08E-971FE0B4BA03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.RequestLimiter", "src\Middleware\RequestLimiter\src\Microsoft.AspNetCore.RequestLimiter.csproj", "{B5616C0A-5D0A-4099-B08E-971FE0B4BA03}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimiterSample", "src\Middleware\RateLimiter\sample\RateLimiterSample.csproj", "{1F7135AE-40D4-4A92-9473-8EB38F56526A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestLimiterSample", "src\Middleware\RequestLimiter\sample\RequestLimiterSample.csproj", "{1F7135AE-40D4-4A92-9473-8EB38F56526A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -12,7 +12,7 @@ namespace RateLimiterSample
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+                .ConfigureWebHost(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });

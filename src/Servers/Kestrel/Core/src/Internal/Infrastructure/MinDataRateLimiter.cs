@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Threading.ResourceLimits;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Internal;
 
 namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
 {
@@ -14,12 +14,12 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
         private long _lastTimestamp;
         private double _rateRemainder;
 
-        public MinDataRateLimiter(MinDataRate minDataRate, long initialTimestamp, TimeoutControl control)
+        public MinDataRateLimiter(MinDataRate minDataRate, long initialTimestamp, EventHandler<long>? tickEvent)
         {
             _minDataRate = minDataRate;
             _initialTimestamp = initialTimestamp;
             _lastTimestamp = initialTimestamp;
-            control.MinRateTickEvent += (sender, tick) =>
+            tickEvent += (sender, tick) =>
             {
                 Tick(tick); // need to unsubscribe
             };

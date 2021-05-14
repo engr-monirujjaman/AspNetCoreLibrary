@@ -1,10 +1,9 @@
+// Pending API review
 
-// Single resource
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNetCore.Internal
+namespace System.Threading.ResourceLimits
 {
     // Represent an aggregated resource (e.g. a resource limiter aggregated by IP)
     public abstract class AggregatedResourceLimiter<TKey>

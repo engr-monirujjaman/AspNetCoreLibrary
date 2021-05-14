@@ -2,17 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Threading.ResourceLimits;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Internal;
 using Microsoft.Extensions.Logging;
 
-namespace Microsoft.AspNetCore.RateLimiter
+namespace Microsoft.AspNetCore.RequestLimiter
 {
     /// <summary>
     /// 
     /// </summary>
-    public class RateLimiterMiddleware
+    public class RequestLimiterMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
@@ -22,10 +22,10 @@ namespace Microsoft.AspNetCore.RateLimiter
         /// </summary>
         /// <param name="next"></param>
         /// <param name="loggerFactory"></param>
-        public RateLimiterMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
+        public RequestLimiterMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
         {
             _next = next;
-            _logger = loggerFactory.CreateLogger<RateLimiterMiddleware>();
+            _logger = loggerFactory.CreateLogger<RequestLimiterMiddleware>();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Microsoft.AspNetCore.RateLimiter
             _logger.LogInformation("Resource limiting: " + context.Request.Path);
 
             var endpoint = context.GetEndpoint();
-            var registrations = endpoint?.Metadata.GetOrderedMetadata<RateLimitRegistration>();
+            var registrations = endpoint?.Metadata.GetOrderedMetadata<RequestLimitRegistration>();
 
             if (registrations == null)
             {
@@ -63,7 +63,7 @@ namespace Microsoft.AspNetCore.RateLimiter
                         }
 
                         _logger.LogInformation("Resource obtained");
-                        resources.Push(resource);// Shouldn't NotNullWhen mean it's never null here?
+                        resources.Push(resource.Value);// Shouldn't NotNullWhen mean it's never null here?
                     }
                     if (registration.ResolveAggregatedLimiter != null)
                     {
@@ -77,7 +77,7 @@ namespace Microsoft.AspNetCore.RateLimiter
                         }
 
                         _logger.LogInformation("Resource obtained");
-                        resources.Push(resource);// Shouldn't NotNullWhen mean it's never null here?
+                        resources.Push(resource.Value);// Shouldn't NotNullWhen mean it's never null here?
                     }
 
                 }

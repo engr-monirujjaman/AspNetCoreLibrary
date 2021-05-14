@@ -1,11 +1,9 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Internal;
+// Pending API review
 
-namespace Microsoft.AspNetCore.RateLimiter
-{
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+
+namespace System.Threading.ResourceLimits
     public class ConcurrencyLimiter : ResourceLimiter
     {
         private long _resourceCount;

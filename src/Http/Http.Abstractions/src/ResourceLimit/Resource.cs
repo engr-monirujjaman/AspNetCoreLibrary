@@ -1,8 +1,6 @@
+// Pending API review
 
-// Single resource
-using System;
-
-namespace Microsoft.AspNetCore.Internal
+namespace System.Threading.ResourceLimits
 {
     public struct Resource : IDisposable
     {

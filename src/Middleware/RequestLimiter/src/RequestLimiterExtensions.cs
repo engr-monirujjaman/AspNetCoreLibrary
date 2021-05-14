@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using Microsoft.AspNetCore.RateLimiter;
+using Microsoft.AspNetCore.RequestLimiter;
 
 namespace Microsoft.AspNetCore.Builder
 {
     /// <summary>
     /// 
     /// </summary>
-    public static class RateLimiterExtensions
+    public static class RequestLimiterExtensions
     {
         /// <summary>
         /// 
@@ -23,7 +23,7 @@ namespace Microsoft.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(app));
             }
 
-            return app.UseMiddleware<RateLimiterMiddleware>();
+            return app.UseMiddleware<RequestLimiterMiddleware>();
         }
     }
 }

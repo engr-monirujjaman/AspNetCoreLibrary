@@ -15,8 +15,8 @@
       "src\\Servers\\Kestrel\\Transport.Sockets\\src\\Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.csproj",
       "src\\http\\Headers\\src\\Microsoft.Net.Http.Headers.csproj",
       "src\\http\\http\\src\\Microsoft.AspNetCore.Http.csproj",
-      "src\\Middleware\\RateLimiter\\sample\\RateLimiterSample.csproj",
-      "src\\Middleware\\RateLimiter\\src\\Microsoft.AspNetCore.RateLimiter.csproj",
+      "src\\Middleware\\RequestLimiter\\sample\\RequestLimiterSample.csproj",
+      "src\\Middleware\\RequestLimiter\\src\\Microsoft.AspNetCore.RequestLimiter.csproj",
       "src\\Middleware\\HttpsPolicy\\src\\Microsoft.AspNetCore.HttpsPolicy.csproj"
     ]
   }

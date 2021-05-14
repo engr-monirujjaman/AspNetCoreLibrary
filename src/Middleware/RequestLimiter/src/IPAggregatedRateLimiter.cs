@@ -3,12 +3,11 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading;
+using System.Threading.ResourceLimits;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Internal;
-using Microsoft.Extensions.Caching.Memory;
 
-namespace Microsoft.AspNetCore.RateLimiter
+namespace Microsoft.AspNetCore.RequestLimiter
 {
     public class IPAggregatedRateLimiter : AggregatedResourceLimiter<HttpContext>
     {
