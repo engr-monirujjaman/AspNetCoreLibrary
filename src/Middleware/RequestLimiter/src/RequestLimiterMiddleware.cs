@@ -6,6 +6,7 @@ using System.Threading.ResourceLimits;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.AspNetCore.RequestLimiter
 {
@@ -16,16 +17,18 @@ namespace Microsoft.AspNetCore.RequestLimiter
     {
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
+        private readonly RequestLimiterOptions _options;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="next"></param>
         /// <param name="loggerFactory"></param>
-        public RequestLimiterMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
+        public RequestLimiterMiddleware(RequestDelegate next, ILoggerFactory loggerFactory, IOptions<RequestLimiterOptions> options)
         {
             _next = next;
             _logger = loggerFactory.CreateLogger<RequestLimiterMiddleware>();
+            _options = options.Value;
         }
 
         /// <summary>
@@ -38,10 +41,11 @@ namespace Microsoft.AspNetCore.RequestLimiter
             _logger.LogInformation("Resource limiting: " + context.Request.Path);
 
             var endpoint = context.GetEndpoint();
-            var registrations = endpoint?.Metadata.GetOrderedMetadata<RequestLimitRegistration>();
+            var attributes = endpoint?.Metadata.GetOrderedMetadata<RequestLimitAttribute>();
 
-            if (registrations == null)
+            if (attributes == null)
             {
+                // TODO: Apply default policy
                 await _next.Invoke(context);
                 return;
             }
@@ -49,8 +53,13 @@ namespace Microsoft.AspNetCore.RequestLimiter
             var resources = new Stack<Resource>();
             try
             {
-                foreach (var registration in registrations)
+                foreach (var attribute in attributes)
                 {
+                    if (!string.IsNullOrEmpty(attribute.Policy) && attribute.LimiterRegistration != null)
+                    {
+                        // TODO: error
+                    }
+
                     if (registration.ResolveLimiter != null)
                     {
                         var limiter = registration.ResolveLimiter(context.RequestServices);
