@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Internal;
+using Microsoft.AspNetCore.RateLimiter;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
@@ -26,7 +28,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.InMemory.FunctionalTests
             var requestTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             var releasedTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             var lockedTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            var counter = new EventRaisingResourceCounter(ResourceCounter.Quota(1));
+            var counter = new EventRaisingResourceLimiter(new ConcurrencyLimiter(uint.MaxValue));
             counter.OnLock += (s, e) => lockedTcs.TrySetResult(e);
             counter.OnRelease += (s, e) => releasedTcs.TrySetResult();
 
@@ -150,7 +152,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.InMemory.FunctionalTests
             var openedTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             var closedTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            var counter = new EventRaisingResourceCounter(ResourceCounter.Quota(uint.MaxValue));
+            var counter = new EventRaisingResourceLimiter(new ConcurrencyLimiter(uint.MaxValue));
 
             counter.OnLock += (o, e) =>
             {
@@ -203,14 +205,14 @@ namespace Microsoft.AspNetCore.Server.Kestrel.InMemory.FunctionalTests
             return new TestServer(app, serviceContext);
         }
 
-        private TestServer CreateServerWithMaxConnections(RequestDelegate app, ResourceCounter concurrentConnectionCounter)
+        private TestServer CreateServerWithMaxConnections(RequestDelegate app, IResourceLimiter limiter)
         {
             var serviceContext = new TestServiceContext(LoggerFactory);
 
             var listenOptions = new ListenOptions(new IPEndPoint(IPAddress.Loopback, 0));
             listenOptions.Use(next =>
             {
-                var middleware = new ConnectionLimitMiddleware<ConnectionContext>(c => next(c), concurrentConnectionCounter, serviceContext.Log);
+                var middleware = new ConnectionLimitMiddleware<ConnectionContext>(c => next(c), limiter, serviceContext.Log);
                 return middleware.OnConnectionAsync;
             });
 
