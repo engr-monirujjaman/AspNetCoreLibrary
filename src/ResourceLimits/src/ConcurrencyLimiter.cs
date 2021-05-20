@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace System.Threading.ResourceLimits
+{
     public class ConcurrencyLimiter : ResourceLimiter
     {
         private long _resourceCount;

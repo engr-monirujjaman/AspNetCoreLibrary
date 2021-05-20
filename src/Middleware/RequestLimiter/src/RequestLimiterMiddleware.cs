@@ -60,6 +60,8 @@ namespace Microsoft.AspNetCore.RequestLimiter
                         // TODO: error
                     }
 
+
+
                     if (registration.ResolveLimiter != null)
                     {
                         var limiter = registration.ResolveLimiter(context.RequestServices);
