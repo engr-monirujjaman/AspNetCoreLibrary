@@ -33,6 +33,7 @@ namespace Microsoft.AspNetCore.Mvc.DataAnnotations
 
             MergeAttribute(context.Attributes, "data-val", "true");
             MergeAttribute(context.Attributes, "data-val-required", GetErrorMessage(context));
+            MergeAttribute(context.Attributes, "required", "required");
         }
 
         /// <inheritdoc />

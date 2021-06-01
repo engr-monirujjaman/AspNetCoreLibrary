@@ -14,5 +14,11 @@ namespace MvcSandbox.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Index(TestModel model)
+        {
+            return View(model);
+        }
     }
 }

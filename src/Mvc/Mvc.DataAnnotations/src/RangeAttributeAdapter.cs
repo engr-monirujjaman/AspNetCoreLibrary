@@ -38,7 +38,9 @@ namespace Microsoft.AspNetCore.Mvc.DataAnnotations
             MergeAttribute(context.Attributes, "data-val", "true");
             MergeAttribute(context.Attributes, "data-val-range", GetErrorMessage(context));
             MergeAttribute(context.Attributes, "data-val-range-max", _max);
+            MergeAttribute(context.Attributes, "max", _max);
             MergeAttribute(context.Attributes, "data-val-range-min", _min);
+            MergeAttribute(context.Attributes, "min", _min);
         }
 
         /// <inheritdoc />

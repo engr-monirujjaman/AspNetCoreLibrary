@@ -25,6 +25,7 @@ namespace Microsoft.AspNetCore.Mvc.DataAnnotations
             MergeAttribute(context.Attributes, "data-val", "true");
             MergeAttribute(context.Attributes, "data-val-regex", GetErrorMessage(context));
             MergeAttribute(context.Attributes, "data-val-regex-pattern", Attribute.Pattern);
+            MergeAttribute(context.Attributes, "pattern", Attribute.Pattern);
         }
 
         /// <inheritdoc />
