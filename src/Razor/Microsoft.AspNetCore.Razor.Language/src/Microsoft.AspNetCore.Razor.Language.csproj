@@ -6,6 +6,8 @@
     <PublishWindowsPdb>true</PublishWindowsPdb>
     <!-- Need to build this project in source build -->
     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+
+    <ApplyNgenOptimization>full</ApplyNgenOptimization>
   </PropertyGroup>
 
   <ItemGroup>
