@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.Extensions.Primitives;
@@ -94,7 +93,7 @@ namespace Microsoft.AspNetCore.Http
                 throw new ArgumentNullException(nameof(uri));
             }
 
-            string queryValue = uri.GetComponents(UriComponents.Query, UriFormat.UriEscaped);
+            var queryValue = uri.GetComponents(UriComponents.Query, UriFormat.UriEscaped);
             if (!string.IsNullOrEmpty(queryValue))
             {
                 queryValue = "?" + queryValue;

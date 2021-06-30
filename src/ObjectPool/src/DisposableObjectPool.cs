@@ -46,7 +46,7 @@ namespace Microsoft.Extensions.ObjectPool
 
         private bool ReturnCore(T obj)
         {
-            bool returnedTooPool = false;
+            var returnedTooPool = false;
 
             if (_isDefaultPolicy || (_fastPolicy?.Return(obj) ?? _policy.Return(obj)))
             {
@@ -73,7 +73,7 @@ namespace Microsoft.Extensions.ObjectPool
             DisposeItem(_firstItem);
             _firstItem = null;
 
-            ObjectWrapper[] items = _items;
+            var items = _items;
             for (var i = 0; i < items.Length; i++)
             {
                 DisposeItem(items[i].Element);

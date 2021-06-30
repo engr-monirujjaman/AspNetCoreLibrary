@@ -63,7 +63,7 @@ namespace Microsoft.AspNetCore.WebUtilities
             var stream = new AsyncOnlyStreamWrapper(GetLargeStream());
             var reader = new HttpRequestStreamReader(stream, Encoding.UTF8);
             var streamReader = new StreamReader(GetLargeStream());
-            string expected = await streamReader.ReadToEndAsync();
+            var expected = await streamReader.ReadToEndAsync();
 
             // Act
             var actual = await reader.ReadToEndAsync();
@@ -82,7 +82,7 @@ namespace Microsoft.AspNetCore.WebUtilities
             for (var i = 0; i < CharData.Length; i++)
             {
                 var tmp = reader.Read();
-                Assert.Equal((int)CharData[i], tmp);
+                Assert.Equal(CharData[i], tmp);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Microsoft.AspNetCore.WebUtilities
             for (var i = 0; i < CharData.Length; i++)
             {
                 var peek = reader.Peek();
-                Assert.Equal((int)CharData[i], peek);
+                Assert.Equal(CharData[i], peek);
 
                 reader.Read();
             }
@@ -309,7 +309,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         }
 
         [Fact]
-        public async static Task ReadAsync_Memory_ReadAllCharactersAtOnce()
+        public static async Task ReadAsync_Memory_ReadAllCharactersAtOnce()
         {
             // Arrange
             var reader = CreateReader();
@@ -328,7 +328,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         }
 
         [Fact]
-        public async static Task ReadAsync_Memory_WithMoreDataThanInternalBufferSize()
+        public static async Task ReadAsync_Memory_WithMoreDataThanInternalBufferSize()
         {
             // Arrange
             var reader = CreateReader(10);
@@ -403,13 +403,13 @@ namespace Microsoft.AspNetCore.WebUtilities
 
         private static HttpRequestStreamReader CreateReader()
         {
-            MemoryStream stream = CreateStream();
+            var stream = CreateStream();
             return new HttpRequestStreamReader(stream, Encoding.UTF8);
         }
 
         private static HttpRequestStreamReader CreateReader(int bufferSize)
         {
-            MemoryStream stream = CreateStream();
+            var stream = CreateStream();
             return new HttpRequestStreamReader(stream, Encoding.UTF8, bufferSize);
         }
 

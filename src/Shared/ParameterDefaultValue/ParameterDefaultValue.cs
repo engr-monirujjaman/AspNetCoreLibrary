@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.Internal
 {
     internal class ParameterDefaultValue
     {
-        private static readonly Type _nullable = typeof(Nullable<>);
+        private static readonly Type Nullable = typeof(Nullable<>);
 
         public static bool TryGetDefaultValue(ParameterInfo parameter, out object? defaultValue)
         {
@@ -47,10 +47,10 @@ namespace Microsoft.Extensions.Internal
                 // Handle nullable enums
                 if (defaultValue != null &&
                     parameter.ParameterType.IsGenericType &&
-                    parameter.ParameterType.GetGenericTypeDefinition() == _nullable
+                    parameter.ParameterType.GetGenericTypeDefinition() == Nullable
                     )
                 {
-                    var underlyingType = Nullable.GetUnderlyingType(parameter.ParameterType);
+                    var underlyingType = System.Nullable.GetUnderlyingType(parameter.ParameterType);
                     if (underlyingType != null && underlyingType.IsEnum)
                     {
                         defaultValue = Enum.ToObject(underlyingType, defaultValue);

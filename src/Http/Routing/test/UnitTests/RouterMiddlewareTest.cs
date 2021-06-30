@@ -128,7 +128,7 @@ namespace Microsoft.AspNetCore.Routing
 
         private class TestRouter : IRouter
         {
-            private bool _isHandled;
+            private readonly bool _isHandled;
 
             public TestRouter(bool isHandled)
             {
@@ -142,7 +142,7 @@ namespace Microsoft.AspNetCore.Routing
 
             public Task RouteAsync(RouteContext context)
             {
-                context.Handler = _isHandled ? (RequestDelegate)((c) => Task.CompletedTask) : null;
+                context.Handler = _isHandled ? ((c) => Task.CompletedTask) : null;
                 return Task.FromResult<object>(null);
             }
         }

@@ -31,28 +31,28 @@ namespace Microsoft.AspNetCore.Http
         [BenchmarkCategory("QueryString")]
         public void ParseNew()
         {
-            _ = QueryFeature.ParseNullableQueryInternal(_queryString);
+            _ = ParseNullableQueryInternal(_queryString);
         }
 
         [Benchmark(Description = "ParseNew")]
         [BenchmarkCategory("Single")]
         public void ParseNewSingle()
         {
-            _ = QueryFeature.ParseNullableQueryInternal(_singleValue);
+            _ = ParseNullableQueryInternal(_singleValue);
         }
 
         [Benchmark(Description = "ParseNew")]
         [BenchmarkCategory("SingleWithPlus")]
         public void ParseNewSingleWithPlus()
         {
-            _ = QueryFeature.ParseNullableQueryInternal(_singleValueWithPlus);
+            _ = ParseNullableQueryInternal(_singleValueWithPlus);
         }
 
         [Benchmark(Description = "ParseNew")]
         [BenchmarkCategory("Encoded")]
         public void ParseNewEncoded()
         {
-            _ = QueryFeature.ParseNullableQueryInternal(_encoded);
+            _ = ParseNullableQueryInternal(_encoded);
         }
 
         [Benchmark(Description = "QueryHelpersParse")]

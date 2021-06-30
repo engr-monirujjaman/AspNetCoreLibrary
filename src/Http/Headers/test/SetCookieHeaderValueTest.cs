@@ -4,10 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text;
-using Microsoft.Extensions.Primitives;
-using Moq;
 using Xunit;
 
 namespace Microsoft.Net.Http.Headers
@@ -405,7 +402,7 @@ namespace Microsoft.Net.Http.Headers
         [MemberData(nameof(ListOfSetCookieHeaderDataSet))]
         public void SetCookieHeaderValue_TryParseList_AcceptsValidValues(IList<SetCookieHeaderValue> cookies, string[] input)
         {
-            bool result = SetCookieHeaderValue.TryParseList(input, out var results);
+            var result = SetCookieHeaderValue.TryParseList(input, out var results);
             Assert.True(result);
 
             Assert.Equal(cookies, results);
@@ -414,8 +411,8 @@ namespace Microsoft.Net.Http.Headers
         [Fact]
         public void SetCookieHeaderValue_TryParse_ExtensionOrderDoesntMatter()
         {
-            string cookieHeaderValue1 = "cookiename=value; extensionname1=value; extensionname2=value;";
-            string cookieHeaderValue2 = "cookiename=value; extensionname2=value; extensionname1=value;";
+            var cookieHeaderValue1 = "cookiename=value; extensionname1=value; extensionname2=value;";
+            var cookieHeaderValue2 = "cookiename=value; extensionname2=value; extensionname1=value;";
 
             SetCookieHeaderValue.TryParse(cookieHeaderValue1, out var setCookieHeaderValue1);
             SetCookieHeaderValue.TryParse(cookieHeaderValue2, out var setCookieHeaderValue2);
@@ -436,7 +433,7 @@ namespace Microsoft.Net.Http.Headers
         [MemberData(nameof(ListOfSetCookieHeaderDataSet))]
         public void SetCookieHeaderValue_TryParseStrictList_AcceptsValidValues(IList<SetCookieHeaderValue> cookies, string[] input)
         {
-            bool result = SetCookieHeaderValue.TryParseStrictList(input, out var results);
+            var result = SetCookieHeaderValue.TryParseStrictList(input, out var results);
             Assert.True(result);
 
             Assert.Equal(cookies, results);
@@ -455,7 +452,7 @@ namespace Microsoft.Net.Http.Headers
         [MemberData(nameof(ListWithInvalidSetCookieHeaderDataSet))]
         public void SetCookieHeaderValue_TryParseList_ExcludesInvalidValues(IList<SetCookieHeaderValue> cookies, string[] input)
         {
-            bool result = SetCookieHeaderValue.TryParseList(input, out var results);
+            var result = SetCookieHeaderValue.TryParseList(input, out var results);
             Assert.Equal(cookies, results);
             Assert.Equal(cookies?.Count > 0, result);
         }
@@ -479,7 +476,7 @@ namespace Microsoft.Net.Http.Headers
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
             string[] input)
         {
-            bool result = SetCookieHeaderValue.TryParseStrictList(input, out var results);
+            var result = SetCookieHeaderValue.TryParseStrictList(input, out var results);
             Assert.Null(results);
             Assert.False(result);
         }

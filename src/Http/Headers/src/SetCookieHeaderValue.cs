@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Primitives;
 
@@ -533,8 +532,7 @@ namespace Microsoft.Net.Http.Headers
                     }
                     // We don't want to include comma, becouse date may contain it (eg. Sun, 06 Nov...)
                     var dateString = ReadToSemicolonOrEnd(input, ref offset, includeComma: false);
-                    DateTimeOffset expirationDate;
-                    if (!HttpRuleParser.TryStringToDate(dateString, out expirationDate))
+                    if (!HttpRuleParser.TryStringToDate(dateString, out var expirationDate))
                     {
                         // Invalid expiration date, abort
                         return 0;
@@ -556,8 +554,7 @@ namespace Microsoft.Net.Http.Headers
                         return 0;
                     }
                     var numberString = input.Subsegment(offset, itemLength);
-                    long maxAge;
-                    if (!HeaderUtilities.TryParseNonNegativeInt64(numberString, out maxAge))
+                    if (!HeaderUtilities.TryParseNonNegativeInt64(numberString, out var maxAge))
                     {
                         // Invalid expiration date, abort
                         return 0;
@@ -688,9 +685,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as SetCookieHeaderValue;
-
-            if (other == null)
+            if (obj is not SetCookieHeaderValue other)
             {
                 return false;
             }

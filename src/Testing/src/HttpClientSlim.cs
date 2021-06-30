@@ -155,7 +155,7 @@ namespace Microsoft.AspNetCore.Testing
             if (requestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
             {
                 var sslStream = new SslStream(stream, leaveInnerStreamOpen: false, userCertificateValidationCallback:
-                    validateCertificate ? null : (RemoteCertificateValidationCallback)((a, b, c, d) => true));
+                    validateCertificate ? null : ((a, b, c, d) => true));
 
                 await sslStream.AuthenticateAsClientAsync(requestUri.Host, clientCertificates: null,
                     enabledSslProtocols: SslProtocols.None,

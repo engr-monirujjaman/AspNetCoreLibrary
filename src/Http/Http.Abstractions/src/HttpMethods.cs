@@ -192,7 +192,7 @@ namespace Microsoft.AspNetCore.Http
         /// </returns>
         public static bool Equals(string methodA, string methodB)
         {
-            return object.ReferenceEquals(methodA, methodB) || StringComparer.OrdinalIgnoreCase.Equals(methodA, methodB);
+            return ReferenceEquals(methodA, methodB) || StringComparer.OrdinalIgnoreCase.Equals(methodA, methodB);
         }
     }
 }

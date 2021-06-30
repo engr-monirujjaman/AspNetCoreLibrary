@@ -116,7 +116,7 @@ namespace Microsoft.AspNetCore.Builder
 
             Assert.Equal("BUILDER", endpoint.Metadata.GetMetadata<IHttpMethodMetadata>().HttpMethods.Single());
 
-            string GetMethod(object metadata)
+            static string GetMethod(object metadata)
             {
                 var httpMethodMetadata = Assert.IsAssignableFrom<IHttpMethodMetadata>(metadata);
                 return Assert.Single(httpMethodMetadata.HttpMethods);

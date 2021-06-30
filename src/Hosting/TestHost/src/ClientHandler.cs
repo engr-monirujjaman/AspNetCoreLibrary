@@ -191,7 +191,7 @@ namespace Microsoft.AspNetCore.TestHost
                 {
                     foreach (var trailer in responseTrailersFeature.Trailers)
                     {
-                        bool success = response.TrailingHeaders.TryAddWithoutValidation(trailer.Key, (IEnumerable<string>)trailer.Value);
+                        var success = response.TrailingHeaders.TryAddWithoutValidation(trailer.Key, (IEnumerable<string>)trailer.Value);
                         Contract.Assert(success, "Bad trailer");
                     }
                 }
@@ -210,7 +210,7 @@ namespace Microsoft.AspNetCore.TestHost
             {
                 if (!response.Headers.TryAddWithoutValidation(header.Key, (IEnumerable<string>)header.Value))
                 {
-                    bool success = response.Content.Headers.TryAddWithoutValidation(header.Key, (IEnumerable<string>)header.Value);
+                    var success = response.Content.Headers.TryAddWithoutValidation(header.Key, (IEnumerable<string>)header.Value);
                     Contract.Assert(success, "Bad header");
                 }
             }

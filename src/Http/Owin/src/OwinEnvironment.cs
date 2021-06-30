@@ -33,8 +33,8 @@ namespace Microsoft.AspNetCore.Owin
     /// </summary>
     public class OwinEnvironment : IDictionary<string, object>
     {
-        private HttpContext _context;
-        private IDictionary<string, FeatureMap> _entries;
+        private readonly HttpContext _context;
+        private readonly IDictionary<string, FeatureMap> _entries;
 
         /// <summary>
         /// Initializes a new instance of <see cref="OwinEnvironment"/>.
@@ -157,16 +157,14 @@ namespace Microsoft.AspNetCore.Owin
 
         bool IDictionary<string, object>.ContainsKey(string key)
         {
-            object value;
-            return ((IDictionary<string, object>)this).TryGetValue(key, out value);
+            return ((IDictionary<string, object>)this).TryGetValue(key, out _);
         }
 
         ICollection<string> IDictionary<string, object>.Keys
         {
             get
             {
-                object value;
-                return _entries.Where(pair => pair.Value.TryGet(_context, out value))
+                return _entries.Where(pair => pair.Value.TryGet(_context, out var value))
                     .Select(pair => pair.Key).Concat(_context.Items.Keys.Select(key => Convert.ToString(key, CultureInfo.InvariantCulture))).ToList();
             }
         }
@@ -182,8 +180,7 @@ namespace Microsoft.AspNetCore.Owin
 
         bool IDictionary<string, object>.TryGetValue(string key, out object value)
         {
-            FeatureMap entry;
-            if (_entries.TryGetValue(key, out entry) && entry.TryGet(_context, out value))
+            if (_entries.TryGetValue(key, out var entry) && entry.TryGet(_context, out value))
             {
                 return true;
             }
@@ -199,9 +196,7 @@ namespace Microsoft.AspNetCore.Owin
         {
             get
             {
-                FeatureMap entry;
-                object value;
-                if (_entries.TryGetValue(key, out entry) && entry.TryGet(_context, out value))
+                if (_entries.TryGetValue(key, out var entry) && entry.TryGet(_context, out var value))
                 {
                     return value;
                 }
@@ -213,8 +208,7 @@ namespace Microsoft.AspNetCore.Owin
             }
             set
             {
-                FeatureMap entry;
-                if (_entries.TryGetValue(key, out entry))
+                if (_entries.TryGetValue(key, out var entry))
                 {
                     if (entry.CanSet)
                     {
@@ -284,8 +278,7 @@ namespace Microsoft.AspNetCore.Owin
         {
             foreach (var entryPair in _entries)
             {
-                object value;
-                if (entryPair.Value.TryGet(_context, out value))
+                if (entryPair.Value.TryGet(_context, out var value))
                 {
                     yield return new KeyValuePair<string, object>(entryPair.Key, value);
                 }
@@ -383,7 +376,7 @@ namespace Microsoft.AspNetCore.Owin
 
             internal bool TryGet(HttpContext context, out object value)
             {
-                object featureInstance = context.Features[FeatureInterface];
+                var featureInstance = context.Features[FeatureInterface];
                 if (featureInstance == null)
                 {
                     value = null;

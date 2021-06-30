@@ -11,8 +11,7 @@ namespace Microsoft.AspNetCore.Http
     {
         public static StringValues GetHeader(IHeaderDictionary headers, string key)
         {
-            StringValues value;
-            return headers.TryGetValue(key, out value) ? value : StringValues.Empty;
+            return headers.TryGetValue(key, out var value) ? value : StringValues.Empty;
         }
 
         public static StringValues GetHeaderSplit(IHeaderDictionary headers, string key)
@@ -43,8 +42,7 @@ namespace Microsoft.AspNetCore.Http
                 throw new ArgumentNullException(nameof(headers));
             }
 
-            StringValues values;
-            return headers.TryGetValue(key, out values) ? values : StringValues.Empty;
+            return headers.TryGetValue(key, out var values) ? values : StringValues.Empty;
         }
 
         public static void SetHeaderJoined(IHeaderDictionary headers, string key, StringValues value)

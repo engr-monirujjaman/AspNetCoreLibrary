@@ -105,11 +105,9 @@ namespace Microsoft.AspNetCore.Routing
                 throw new ArgumentNullException(nameof(value));
             }
 
-            var constraint = value as IRouteConstraint;
-            if (constraint == null)
+            if (value is not IRouteConstraint constraint)
             {
-                var regexPattern = value as string;
-                if (regexPattern == null)
+                if (value is not string regexPattern)
                 {
                     throw new RouteCreationException(
                         Resources.FormatRouteConstraintBuilder_ValidationMustBeStringOrCustomConstraint(

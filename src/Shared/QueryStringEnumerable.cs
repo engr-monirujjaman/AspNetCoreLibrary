@@ -163,14 +163,14 @@ namespace Microsoft.AspNetCore.Internal
 
         private static class SpanHelper
         {
-            private static readonly SpanAction<char, IntPtr> s_replacePlusWithSpace = ReplacePlusWithSpaceCore;
+            private static readonly SpanAction<char, IntPtr> ReplacePlusWithSpaceAction = ReplacePlusWithSpaceCore;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static unsafe string ReplacePlusWithSpace(ReadOnlySpan<char> span)
             {
                 fixed (char* ptr = &MemoryMarshal.GetReference(span))
                 {
-                    return string.Create(span.Length, (IntPtr)ptr, s_replacePlusWithSpace);
+                    return string.Create(span.Length, (IntPtr)ptr, ReplacePlusWithSpaceAction);
                 }
             }
 

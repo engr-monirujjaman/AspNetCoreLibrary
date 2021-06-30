@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using BenchmarkDotNet.Attributes;
 
 namespace Microsoft.AspNetCore.Routing.Matching
@@ -50,7 +48,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
             var strings = _strings;
             var segments = _segments;
 
-            int destination = 0;
+            var destination = 0;
             for (var i = 0; i < strings.Length; i++)
             {
                 var @string = strings[i];

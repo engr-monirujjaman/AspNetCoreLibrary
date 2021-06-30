@@ -74,8 +74,7 @@ namespace Microsoft.Net.Http.Headers
         [InlineData("directive1=value;q=0.6,directive2 = 42 ", "directive2", 42)]
         public void TryParseSeconds_Succeeds(string headerValues, string targetValue, int expectedValue)
         {
-            TimeSpan? value;
-            Assert.True(HeaderUtilities.TryParseSeconds(new StringValues(headerValues), targetValue, out value));
+            Assert.True(HeaderUtilities.TryParseSeconds(new StringValues(headerValues), targetValue, out var value));
             Assert.Equal(TimeSpan.FromSeconds(expectedValue), value);
         }
 
@@ -94,8 +93,7 @@ namespace Microsoft.Net.Http.Headers
         [InlineData("directive1;directive2=10", "directive2")]
         public void TryParseSeconds_Fails(string headerValues, string targetValue)
         {
-            TimeSpan? value;
-            Assert.False(HeaderUtilities.TryParseSeconds(new StringValues(headerValues), targetValue, out value));
+            Assert.False(HeaderUtilities.TryParseSeconds(new StringValues(headerValues), targetValue, out _));
         }
 
         [Theory]
@@ -171,8 +169,7 @@ namespace Microsoft.Net.Http.Headers
         [InlineData("9223372036854775808")] // long.MaxValue + 1
         public void TryParseNonNegativeInt64_Fails(string valueString)
         {
-            long value = 1;
-            Assert.False(HeaderUtilities.TryParseNonNegativeInt64(valueString, out value));
+            Assert.False(HeaderUtilities.TryParseNonNegativeInt64(valueString, out var value));
             Assert.Equal(0, value);
         }
 
@@ -181,8 +178,7 @@ namespace Microsoft.Net.Http.Headers
         [InlineData("9223372036854775807", 9223372036854775807)] // long.MaxValue
         public void TryParseNonNegativeInt64_Succeeds(string valueString, long expected)
         {
-            long value = 1;
-            Assert.True(HeaderUtilities.TryParseNonNegativeInt64(valueString, out value));
+            Assert.True(HeaderUtilities.TryParseNonNegativeInt64(valueString, out var value));
             Assert.Equal(expected, value);
         }
 
@@ -196,8 +192,7 @@ namespace Microsoft.Net.Http.Headers
         [InlineData("2147483648")] // int.MaxValue + 1
         public void TryParseNonNegativeInt32_Fails(string valueString)
         {
-            int value = 1;
-            Assert.False(HeaderUtilities.TryParseNonNegativeInt32(valueString, out value));
+            Assert.False(HeaderUtilities.TryParseNonNegativeInt32(valueString, out var value));
             Assert.Equal(0, value);
         }
 
@@ -206,8 +201,7 @@ namespace Microsoft.Net.Http.Headers
         [InlineData("2147483647", 2147483647)] // int.MaxValue
         public void TryParseNonNegativeInt32_Succeeds(string valueString, long expected)
         {
-            int value = 1;
-            Assert.True(HeaderUtilities.TryParseNonNegativeInt32(valueString, out value));
+            Assert.True(HeaderUtilities.TryParseNonNegativeInt32(valueString, out var value));
             Assert.Equal(expected, value);
         }
 

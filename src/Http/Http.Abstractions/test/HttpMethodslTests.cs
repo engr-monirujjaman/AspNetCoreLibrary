@@ -1,7 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
@@ -26,10 +25,10 @@ namespace Microsoft.AspNetCore.Http.Abstractions
                 (new string[] { "TRACE", "Trace", "trace" }, HttpMethods.Trace)
             };
 
-            for (int i = 0; i < testCases.Count; i++)
+            for (var i = 0; i < testCases.Count; i++)
             {
                 var testCase = testCases[i];
-                for (int j = 0; j < testCase.methods.Length; j++)
+                for (var j = 0; j < testCase.methods.Length; j++)
                 {
                     CanonicalizedValueTest(testCase.methods[j], testCase.expectedMethod);
                 }
@@ -39,7 +38,7 @@ namespace Microsoft.AspNetCore.Http.Abstractions
 
         private void CanonicalizedValueTest(string method, string expectedMethod)
         {
-            string inputMethod = CreateStringAtRuntime(method);
+            var inputMethod = CreateStringAtRuntime(method);
             var canonicalizedValue = HttpMethods.GetCanonicalizedValue(inputMethod);
 
             Assert.Same(expectedMethod, canonicalizedValue);

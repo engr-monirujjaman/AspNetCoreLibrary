@@ -97,7 +97,7 @@ namespace Microsoft.AspNetCore.Http
                 throw new ArgumentNullException(nameof(uri));
             }
 
-            string fragmentValue = uri.GetComponents(UriComponents.Fragment, UriFormat.UriEscaped);
+            var fragmentValue = uri.GetComponents(UriComponents.Fragment, UriFormat.UriEscaped);
             if (!string.IsNullOrEmpty(fragmentValue))
             {
                 fragmentValue = "#" + fragmentValue;

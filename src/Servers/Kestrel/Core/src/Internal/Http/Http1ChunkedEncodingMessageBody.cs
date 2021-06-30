@@ -355,7 +355,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
 
             do
             {
-                SequencePosition? extensionCursorPosition = buffer.PositionOf(ByteCR);
+                var extensionCursorPosition = buffer.PositionOf(ByteCR);
                 if (extensionCursorPosition == null)
                 {
                     // End marker not found yet

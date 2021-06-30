@@ -400,9 +400,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as CacheControlHeaderValue;
-
-            if (other == null)
+            if (obj is not CacheControlHeaderValue other)
             {
                 return false;
             }
@@ -443,7 +441,7 @@ namespace Microsoft.Net.Http.Headers
             // Use a different bit for bool fields: bool.GetHashCode() will return 0 (false) or 1 (true). So we would
             // end up having the same hash code for e.g. two instances where one has only noCache set and the other
             // only noStore.
-            int result = _noCache.GetHashCode() ^ (_noStore.GetHashCode() << 1) ^ (_maxStale.GetHashCode() << 2) ^
+            var result = _noCache.GetHashCode() ^ (_noStore.GetHashCode() << 1) ^ (_maxStale.GetHashCode() << 2) ^
                 (_noTransform.GetHashCode() << 3) ^ (_onlyIfCached.GetHashCode() << 4) ^
                 (_public.GetHashCode() << 5) ^ (_private.GetHashCode() << 6) ^
                 (_mustRevalidate.GetHashCode() << 7) ^ (_proxyRevalidate.GetHashCode() << 8);
@@ -730,12 +728,11 @@ namespace Microsoft.Net.Http.Headers
             // We have a quoted string. Now verify that the string contains a list of valid tokens separated by ','.
             var current = 1; // skip the initial '"' character.
             var maxLength = valueString.Length - 1; // -1 because we don't want to parse the final '"'.
-            var separatorFound = false;
             var originalValueCount = destination == null ? 0 : destination.Count;
             while (current < maxLength)
             {
                 current = HeaderUtilities.GetNextNonEmptyOrWhitespaceIndex(valueString, current, true,
-                    out separatorFound);
+                    out var separatorFound);
 
                 if (current == maxLength)
                 {
@@ -778,8 +775,7 @@ namespace Microsoft.Net.Http.Headers
                 return false;
             }
 
-            int seconds;
-            if (!HeaderUtilities.TryParseNonNegativeInt32(nameValue.Value, out seconds))
+            if (!HeaderUtilities.TryParseNonNegativeInt32(nameValue.Value, out var seconds))
             {
                 return false;
             }

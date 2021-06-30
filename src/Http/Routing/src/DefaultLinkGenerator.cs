@@ -20,7 +20,6 @@ namespace Microsoft.AspNetCore.Routing
 {
     internal sealed class DefaultLinkGenerator : LinkGenerator, IDisposable
     {
-        private readonly ParameterPolicyFactory _parameterPolicyFactory;
         private readonly TemplateBinderFactory _binderFactory;
         private readonly ILogger<DefaultLinkGenerator> _logger;
         private readonly IServiceProvider _serviceProvider;
@@ -36,14 +35,12 @@ namespace Microsoft.AspNetCore.Routing
         private readonly Func<RouteEndpoint, TemplateBinder> _createTemplateBinder;
 
         public DefaultLinkGenerator(
-            ParameterPolicyFactory parameterPolicyFactory,
             TemplateBinderFactory binderFactory,
             EndpointDataSource dataSource,
             IOptions<RouteOptions> routeOptions,
             ILogger<DefaultLinkGenerator> logger,
             IServiceProvider serviceProvider)
         {
-            _parameterPolicyFactory = parameterPolicyFactory;
             _binderFactory = binderFactory;
             _logger = logger;
             _serviceProvider = serviceProvider;
@@ -352,6 +349,7 @@ namespace Microsoft.AspNetCore.Routing
                 public static readonly EventId LinkGenerationFailed = new EventId(106, "LinkGenerationFailed");
             }
 
+#pragma warning disable IDE1006 // Naming Styles
             private static readonly Action<ILogger, IEnumerable<string>, object, Exception> _endpointsFound = LoggerMessage.Define<IEnumerable<string>, object>(
                 LogLevel.Debug,
                 EventIds.EndpointsFound,
@@ -402,6 +400,7 @@ namespace Microsoft.AspNetCore.Routing
                 EventIds.LinkGenerationFailed,
                 "Link generation failed for endpoints {Endpoints}",
                 skipEnabledCheck: true);
+#pragma warning restore IDE1006 // Naming Styles
 
             public static void EndpointsFound(ILogger logger, object address, IEnumerable<Endpoint> endpoints)
             {

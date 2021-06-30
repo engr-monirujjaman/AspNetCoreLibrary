@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Routing.Matching
@@ -83,7 +82,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task NotMatch_DefaultValues(string template, string path)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher(template);
+            var (matcher, _) = CreateMatcher(template);
             var httpContext = CreateContext(path);
 
             // Act
@@ -138,7 +137,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task NotMatch_OptionalParameter(string template, string path)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher(template);
+            var (matcher, _) = CreateMatcher(template);
             var httpContext = CreateContext(path);
 
             // Act
@@ -182,7 +181,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task Quirks_CatchAllParameter(string template, string path, string[] keys, string[] values)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher(template);
+            var (matcher, _) = CreateMatcher(template);
             var httpContext = CreateContext(path);
 
             // Act
@@ -237,7 +236,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task NotMatch_ComplexSegment(string template, string path)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher(template);
+            var (matcher, _) = CreateMatcher(template);
             var httpContext = CreateContext(path);
 
             // Act
@@ -292,7 +291,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task NotMatch_OptionalSeparator(string template, string path)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher(template);
+            var (matcher, _) = CreateMatcher(template);
             var httpContext = CreateContext(path);
 
             // Act

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Text;
 using Microsoft.Extensions.Primitives;
 
@@ -196,9 +195,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as CookieHeaderValue;
-
-            if (other == null)
+            if (obj is not CookieHeaderValue other)
             {
                 return false;
             }

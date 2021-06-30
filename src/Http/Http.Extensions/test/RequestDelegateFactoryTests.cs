@@ -205,7 +205,7 @@ namespace Microsoft.AspNetCore.Routing.Internal
             const string paramName = "value";
             const int originalRouteParam = 42;
 
-            void TestAction(HttpContext httpContext, [FromRoute] int value)
+            static void TestAction(HttpContext httpContext, [FromRoute] int value)
             {
                 httpContext.Items.Add("input", value);
             }
@@ -1228,7 +1228,7 @@ namespace Microsoft.AspNetCore.Routing.Internal
                         break;
                     }
 
-                    string property = reader.GetString()!;
+                    var property = reader.GetString()!;
                     reader.Read();
 
                     switch (property.ToLowerInvariant())

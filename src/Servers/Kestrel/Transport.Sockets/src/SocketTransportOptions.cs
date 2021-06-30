@@ -140,6 +140,6 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
             return listenSocket;
         }
 
-        internal Func<MemoryPool<byte>> MemoryPoolFactory { get; set; } = System.Buffers.PinnedBlockMemoryPoolFactory.Create;
+        internal Func<MemoryPool<byte>> MemoryPoolFactory { get; set; } = PinnedBlockMemoryPoolFactory.Create;
     }
 }

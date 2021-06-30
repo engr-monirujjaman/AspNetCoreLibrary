@@ -18,8 +18,8 @@ namespace Microsoft.Net.Http.Headers
     /// </summary>
     public class RangeItemHeaderValue
     {
-        private long? _from;
-        private long? _to;
+        private readonly long? _from;
+        private readonly long? _to;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeItemHeaderValue"/> class.
@@ -117,7 +117,7 @@ namespace Microsoft.Net.Http.Headers
             }
 
             // Empty segments are allowed, so skip all delimiter-only segments (e.g. ", ,").
-            var current = HeaderUtilities.GetNextNonEmptyOrWhitespaceIndex(input, startIndex, true, out var separatorFound);
+            var current = HeaderUtilities.GetNextNonEmptyOrWhitespaceIndex(input, startIndex, true, out _);
             // It's OK if we didn't find leading separator characters. Ignore 'separatorFound'.
 
             if (current == input.Length)
@@ -137,7 +137,7 @@ namespace Microsoft.Net.Http.Headers
                 rangeCollection!.Add(range!);
 
                 current = current + rangeLength;
-                current = HeaderUtilities.GetNextNonEmptyOrWhitespaceIndex(input, current, true, out separatorFound);
+                current = HeaderUtilities.GetNextNonEmptyOrWhitespaceIndex(input, current, true, out var separatorFound);
 
                 // If the string is not consumed, we must have a delimiter, otherwise the string is not a valid
                 // range list.
@@ -233,8 +233,8 @@ namespace Microsoft.Net.Http.Headers
                 return 0;
             }
 
-            parsedValue = new RangeItemHeaderValue((fromLength == 0 ? (long?)null : (long?)from),
-                (toLength == 0 ? (long?)null : (long?)to));
+            parsedValue = new RangeItemHeaderValue((fromLength == 0 ? null : (long?)from),
+                (toLength == 0 ? null : (long?)to));
             return current - startIndex;
         }
     }

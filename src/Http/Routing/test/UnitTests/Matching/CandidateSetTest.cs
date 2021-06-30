@@ -99,7 +99,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
                 ref var state = ref candidateSet[i];
 
                 // Act
-                candidateSet.ReplaceEndpoint(i, (Endpoint)null, null);
+                candidateSet.ReplaceEndpoint(i, null, null);
 
                 // Assert
                 Assert.Null(state.Endpoint);
@@ -385,7 +385,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
 
         private static DfaMatcherBuilder CreateDfaMatcherBuilder(params MatcherPolicy[] policies)
         {
-            var dataSource = new CompositeEndpointDataSource(Array.Empty<EndpointDataSource>());
+            _ = new CompositeEndpointDataSource(Array.Empty<EndpointDataSource>());
             return new DfaMatcherBuilder(
                 NullLoggerFactory.Instance,
                 Mock.Of<ParameterPolicyFactory>(),

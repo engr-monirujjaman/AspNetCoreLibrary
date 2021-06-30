@@ -488,7 +488,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
 
         private void OnAbsoluteFormTarget(TargetOffsetPathLength targetPath, Span<byte> target)
         {
-            Span<byte> query = target[targetPath.Length..];
+            var query = target[targetPath.Length..];
             _requestTargetForm = HttpRequestTarget.AbsoluteForm;
 
             // absolute-form

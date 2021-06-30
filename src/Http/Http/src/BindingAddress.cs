@@ -108,8 +108,7 @@ namespace Microsoft.AspNetCore.Http
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as BindingAddress;
-            if (other == null)
+            if (obj is not BindingAddress other)
             {
                 return false;
             }
@@ -129,12 +128,12 @@ namespace Microsoft.AspNetCore.Http
             // A null/empty address will throw FormatException
             address = address ?? string.Empty;
 
-            int schemeDelimiterStart = address.IndexOf(Uri.SchemeDelimiter, StringComparison.Ordinal);
+            var schemeDelimiterStart = address.IndexOf(Uri.SchemeDelimiter, StringComparison.Ordinal);
             if (schemeDelimiterStart < 0)
             {
                 throw new FormatException($"Invalid url: '{address}'");
             }
-            int schemeDelimiterEnd = schemeDelimiterStart + Uri.SchemeDelimiter.Length;
+            var schemeDelimiterEnd = schemeDelimiterStart + Uri.SchemeDelimiter.Length;
 
             var isUnixPipe = address.IndexOf(UnixPipeHostPrefix, schemeDelimiterEnd, StringComparison.Ordinal) == schemeDelimiterEnd;
 
@@ -169,19 +168,18 @@ namespace Microsoft.AspNetCore.Http
 
             var scheme = address.Substring(0, schemeDelimiterStart);
             string? host = null;
-            int port = 0;
+            var port = 0;
 
             var hasSpecifiedPort = false;
             if (!isUnixPipe)
             {
-                int portDelimiterStart = address.LastIndexOf(":", pathDelimiterStart - 1, pathDelimiterStart - schemeDelimiterEnd, StringComparison.Ordinal);
+                var portDelimiterStart = address.LastIndexOf(":", pathDelimiterStart - 1, pathDelimiterStart - schemeDelimiterEnd, StringComparison.Ordinal);
                 if (portDelimiterStart >= 0)
                 {
-                    int portDelimiterEnd = portDelimiterStart + ":".Length;
+                    var portDelimiterEnd = portDelimiterStart + ":".Length;
 
-                    string portString = address.Substring(portDelimiterEnd, pathDelimiterStart - portDelimiterEnd);
-                    int portNumber;
-                    if (int.TryParse(portString, NumberStyles.Integer, CultureInfo.InvariantCulture, out portNumber))
+                    var portString = address.Substring(portDelimiterEnd, pathDelimiterStart - portDelimiterEnd);
+                    if (int.TryParse(portString, NumberStyles.Integer, CultureInfo.InvariantCulture, out var portNumber))
                     {
                         hasSpecifiedPort = true;
                         host = address.Substring(schemeDelimiterEnd, portDelimiterStart - schemeDelimiterEnd);

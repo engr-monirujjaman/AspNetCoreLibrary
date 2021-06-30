@@ -29,7 +29,7 @@ namespace Microsoft.AspNetCore.Routing.Patterns
 
         internal static bool IsRequiredValueAny(object? value)
         {
-            return object.ReferenceEquals(RequiredValueAny, value);
+            return ReferenceEquals(RequiredValueAny, value);
         }
 
         private const string SeparatorString = "/";

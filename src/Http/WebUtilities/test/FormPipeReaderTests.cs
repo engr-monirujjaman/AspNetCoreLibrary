@@ -193,7 +193,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         [Fact]
         public async Task ReadFormAsync_ValueLengthLimitExceededAcrossBufferBoundary_Throw()
         {
-            Pipe bodyPipe = new Pipe();
+            var bodyPipe = new Pipe();
 
             var content1 = "foo=1&baz=1234567890";
             var content2 = "1";
@@ -598,7 +598,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         private static async Task<PipeReader> MakePipeReader(string text)
         {
             var formContent = Encoding.UTF8.GetBytes(text);
-            Pipe bodyPipe = new Pipe();
+            var bodyPipe = new Pipe();
 
             await bodyPipe.Writer.WriteAsync(formContent);
 

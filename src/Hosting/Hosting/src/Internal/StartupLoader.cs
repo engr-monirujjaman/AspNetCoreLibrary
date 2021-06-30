@@ -170,7 +170,7 @@ namespace Microsoft.AspNetCore.Hosting
                     }
 
                     Action<IServiceCollection> pipeline = InvokeStartup;
-                    for (int i = filters.Length - 1; i >= 0; i--)
+                    for (var i = filters.Length - 1; i >= 0; i--)
                     {
                         pipeline = filters[i].ConfigureServices(pipeline);
                     }

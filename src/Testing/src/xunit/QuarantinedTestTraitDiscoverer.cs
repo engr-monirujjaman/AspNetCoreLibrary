@@ -13,7 +13,7 @@ namespace Microsoft.AspNetCore.Testing
     {
         public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
         {
-            if (traitAttribute is ReflectionAttributeInfo attribute && attribute.Attribute is QuarantinedTestAttribute quarantinedTestAttribute)
+            if (traitAttribute is ReflectionAttributeInfo attribute && attribute.Attribute is QuarantinedTestAttribute)
             {
                 yield return new KeyValuePair<string, string>("Quarantined", "true");
             }

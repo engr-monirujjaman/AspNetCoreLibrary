@@ -32,13 +32,13 @@ namespace Microsoft.AspNetCore.Routing.LinkGeneration
         [Benchmark(Baseline = true)]
         public void Baseline()
         {
-            var actual = _baseline.FindEndpoints(address: 0);
+            _ = _baseline.FindEndpoints(address: 0);
         }
 
         [Benchmark]
         public void RouteValues()
         {
-            var actual = _implementation.FindEndpoints(new RouteValuesAddress
+            _ = _implementation.FindEndpoints(new RouteValuesAddress
             {
                 AmbientValues = _requestContext.AmbientValues,
                 ExplicitValues = new RouteValueDictionary(new { controller = "Products", action = "Details" }),
@@ -49,7 +49,7 @@ namespace Microsoft.AspNetCore.Routing.LinkGeneration
         [Benchmark]
         public void RouteName()
         {
-            var actual = _implementation.FindEndpoints(new RouteValuesAddress
+            _ = _implementation.FindEndpoints(new RouteValuesAddress
             {
                 AmbientValues = _requestContext.AmbientValues,
                 RouteName = "ProductDetails"

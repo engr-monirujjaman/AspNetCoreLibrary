@@ -312,10 +312,10 @@ namespace Microsoft.AspNetCore.Routing
                 else
                 {
                     var separator = (RoutePatternSeparatorPart)routeSegment.Parts[indexOfLastSegment - 1];
-                    if (requestSegment.EndsWith(
-                    separator.Content,
-                    StringComparison.OrdinalIgnoreCase))
+                    if (requestSegment.EndsWith(separator.Content, StringComparison.OrdinalIgnoreCase))
+                    {
                         return false;
+                    }
 
                     return MatchComplexSegmentCore(
                         routeSegment,

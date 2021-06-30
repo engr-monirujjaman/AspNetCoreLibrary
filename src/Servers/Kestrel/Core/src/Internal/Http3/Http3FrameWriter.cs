@@ -129,7 +129,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http3
                 var parameterLength = VariableLengthIntegerHelper.WriteInteger(destination, (long)setting.Parameter);
                 destination = destination.Slice(parameterLength);
 
-                var valueLength = VariableLengthIntegerHelper.WriteInteger(destination, (long)setting.Value);
+                var valueLength = VariableLengthIntegerHelper.WriteInteger(destination, setting.Value);
                 destination = destination.Slice(valueLength);
             }
         }
@@ -185,7 +185,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http3
             {
                 Debug.Assert(dataLength == data.Length);
 
-                var dataPayloadLength = (int)MaxDataFrameSize;
+                var dataPayloadLength = MaxDataFrameSize;
 
                 Debug.Assert(dataLength > dataPayloadLength);
 

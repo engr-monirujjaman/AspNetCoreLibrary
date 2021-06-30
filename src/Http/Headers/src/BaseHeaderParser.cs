@@ -28,9 +28,8 @@ namespace Microsoft.Net.Http.Headers
                 return SupportsMultipleValues;
             }
 
-            var separatorFound = false;
             var current = HeaderUtilities.GetNextNonEmptyOrWhitespaceIndex(value, index, SupportsMultipleValues,
-                out separatorFound);
+                out var separatorFound);
 
             if (separatorFound && !SupportsMultipleValues)
             {

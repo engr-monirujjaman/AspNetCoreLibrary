@@ -54,10 +54,9 @@ namespace Microsoft.AspNetCore.Routing.Matching
         private static int ComparePattern(Endpoint x, Endpoint y)
         {
             // A RouteEndpoint always comes before a non-RouteEndpoint, regardless of its RawText value
-            var routeEndpointX = x as RouteEndpoint;
             var routeEndpointY = y as RouteEndpoint;
 
-            if (routeEndpointX != null)
+            if (x is RouteEndpoint routeEndpointX)
             {
                 if (routeEndpointY != null)
                 {
@@ -111,10 +110,9 @@ namespace Microsoft.AspNetCore.Routing.Matching
 
             public int Compare(Endpoint? x, Endpoint? y)
             {
-                var routeEndpointX = x as RouteEndpoint;
                 var routeEndpointY = y as RouteEndpoint;
 
-                if (routeEndpointX != null)
+                if (x is RouteEndpoint routeEndpointX)
                 {
                     if (routeEndpointY != null)
                     {
@@ -138,10 +136,9 @@ namespace Microsoft.AspNetCore.Routing.Matching
 
             public int Compare(Endpoint? x, Endpoint? y)
             {
-                var routeEndpointX = x as RouteEndpoint;
                 var routeEndpointY = y as RouteEndpoint;
 
-                if (routeEndpointX != null)
+                if (x is RouteEndpoint routeEndpointX)
                 {
                     if (routeEndpointY != null)
                     {

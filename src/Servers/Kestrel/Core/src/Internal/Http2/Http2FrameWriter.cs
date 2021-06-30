@@ -7,7 +7,6 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipelines;
-using System.Net.Http;
 using System.Net.Http.HPack;
 using System.Threading;
 using System.Threading.Tasks;

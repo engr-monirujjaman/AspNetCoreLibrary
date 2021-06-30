@@ -182,7 +182,7 @@ namespace Microsoft.AspNetCore.Builder
 
             var methodArguments = new Expression[parameters.Length];
             methodArguments[0] = httpContextArg;
-            for (int i = 1; i < parameters.Length; i++)
+            for (var i = 1; i < parameters.Length; i++)
             {
                 var parameterType = parameters[i].ParameterType;
                 if (parameterType.IsByRef)

@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 
 namespace Microsoft.AspNetCore.StaticFiles
 {
@@ -71,9 +69,9 @@ namespace Microsoft.AspNetCore.StaticFiles
                 if (dirContents.Exists)
                 {
                     // Check if any of our default files exist.
-                    for (int matchIndex = 0; matchIndex < _options.DefaultFileNames.Count; matchIndex++)
+                    for (var matchIndex = 0; matchIndex < _options.DefaultFileNames.Count; matchIndex++)
                     {
-                        string defaultFile = _options.DefaultFileNames[matchIndex];
+                        var defaultFile = _options.DefaultFileNames[matchIndex];
                         var file = _fileProvider.GetFileInfo(subpath.Value + defaultFile);
                         // TryMatchPath will make sure subpath always ends with a "/" by adding it if needed.
                         if (file.Exists)

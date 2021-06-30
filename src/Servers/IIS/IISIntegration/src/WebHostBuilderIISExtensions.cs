@@ -48,8 +48,7 @@ namespace Microsoft.AspNetCore.Hosting
             var iisAuth = hostBuilder.GetSetting(IISAuth) ?? Environment.GetEnvironmentVariable($"ASPNETCORE_{IISAuth}");
             var websocketsSupported = hostBuilder.GetSetting(IISWebSockets) ?? Environment.GetEnvironmentVariable($"ASPNETCORE_{IISWebSockets}");
 
-            bool isWebSocketsSupported;
-            if (!bool.TryParse(websocketsSupported, out isWebSocketsSupported))
+            if (!bool.TryParse(websocketsSupported, out var isWebSocketsSupported))
             {
                 // If the websocket support variable is not set, we will always fallback to assuming websockets are enabled.
                 isWebSocketsSupported = (Environment.OSVersion.Version >= new Version(6, 2));

@@ -2,15 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Hosting.Views;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.StackTrace.Sources;
-using Microsoft.Net.Http.Headers;
 
 namespace Microsoft.AspNetCore.Hosting
 {

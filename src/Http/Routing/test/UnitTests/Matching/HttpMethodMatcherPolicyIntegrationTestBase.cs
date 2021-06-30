@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
@@ -82,7 +81,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
 
             // Assert
             Assert.NotSame(endpoint, httpContext.GetEndpoint());
-            Assert.Same(HttpMethodMatcherPolicy.Http405EndpointDisplayName, httpContext.GetEndpoint().DisplayName);
+            Assert.Same(Http405EndpointDisplayName, httpContext.GetEndpoint().DisplayName);
         }
 
         [Theory]
@@ -202,7 +201,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
             Assert.NotSame(endpoint1, httpContext.GetEndpoint());
             Assert.NotSame(endpoint2, httpContext.GetEndpoint());
 
-            Assert.Same(HttpMethodMatcherPolicy.Http405EndpointDisplayName, httpContext.GetEndpoint().DisplayName);
+            Assert.Same(Http405EndpointDisplayName, httpContext.GetEndpoint().DisplayName);
 
             // Invoke the endpoint
             await httpContext.GetEndpoint().RequestDelegate(httpContext);
@@ -312,7 +311,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
             Assert.NotSame(endpoint1, httpContext.GetEndpoint());
             Assert.NotSame(endpoint2, httpContext.GetEndpoint());
 
-            Assert.Same(HttpMethodMatcherPolicy.Http405EndpointDisplayName, httpContext.GetEndpoint().DisplayName);
+            Assert.Same(Http405EndpointDisplayName, httpContext.GetEndpoint().DisplayName);
 
             // Invoke the endpoint
             await httpContext.GetEndpoint().RequestDelegate(httpContext);

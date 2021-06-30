@@ -1,0 +1,10 @@
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)..\, Directory.Build.props))\Directory.Build.targets" />
+
+  <PropertyGroup>
+    <!-- Enable .NET code style analysis during build for src projects. -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+
+</Project>

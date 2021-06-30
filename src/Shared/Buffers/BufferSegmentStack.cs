@@ -22,8 +22,8 @@ namespace System.IO.Pipelines
 
         public bool TryPop([NotNullWhen(true)] out BufferSegment? result)
         {
-            int size = _size - 1;
-            SegmentAsValueType[] array = _array;
+            var size = _size - 1;
+            var array = _array;
 
             if ((uint)size >= (uint)array.Length)
             {
@@ -40,8 +40,8 @@ namespace System.IO.Pipelines
         // Pushes an item to the top of the stack.
         public void Push(BufferSegment item)
         {
-            int size = _size;
-            SegmentAsValueType[] array = _array;
+            var size = _size;
+            var array = _array;
 
             if ((uint)size < (uint)array.Length)
             {

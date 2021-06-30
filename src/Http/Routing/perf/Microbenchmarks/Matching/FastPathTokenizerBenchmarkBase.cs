@@ -7,8 +7,8 @@ namespace Microsoft.AspNetCore.Routing.Matching
     {
         internal unsafe void NaiveBaseline(string path, PathSegment* segments, int maxCount)
         {
-            int count = 0;
-            int start = 1; // Paths always start with a leading /
+            var count = 0;
+            var start = 1; // Paths always start with a leading /
             int end;
             while ((end = path.IndexOf('/', start)) >= 0 && count < maxCount)
             {

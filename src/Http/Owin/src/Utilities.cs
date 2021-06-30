@@ -1,12 +1,10 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 
 namespace Microsoft.AspNetCore.Owin
 {
@@ -48,8 +46,7 @@ namespace Microsoft.AspNetCore.Owin
 
         internal static IHeaderDictionary MakeHeaderDictionary(IDictionary<string, string[]> dictionary)
         {
-            var wrapper = dictionary as DictionaryStringArrayWrapper;
-            if (wrapper != null)
+            if (dictionary is DictionaryStringArrayWrapper wrapper)
             {
                 return wrapper.Inner;
             }
@@ -58,8 +55,7 @@ namespace Microsoft.AspNetCore.Owin
 
         internal static IDictionary<string, string[]> MakeDictionaryStringArray(IHeaderDictionary dictionary)
         {
-            var wrapper = dictionary as DictionaryStringValuesWrapper;
-            if (wrapper != null)
+            if (dictionary is DictionaryStringValuesWrapper wrapper)
             {
                 return wrapper.Inner;
             }

@@ -27,7 +27,10 @@ namespace System.Buffers
             get
             {
                 if (_disposed)
+                {
                     throw new ObjectDisposedException(nameof(CustomMemoryForTest<T>));
+                }
+
                 return new Memory<T>(_array, _offset, _length);
             }
         }
@@ -35,7 +38,9 @@ namespace System.Buffers
         public void Dispose()
         {
             if (_disposed)
+            {
                 return;
+            }
 
             _array = null!;
             _disposed = true;

@@ -199,8 +199,7 @@ namespace Microsoft.AspNetCore.Authentication
                 throw await CreateMissingSignInHandlerException(scheme);
             }
 
-            var signInHandler = handler as IAuthenticationSignInHandler;
-            if (signInHandler == null)
+            if (handler is not IAuthenticationSignInHandler signInHandler)
             {
                 throw await CreateMismatchedSignInHandlerException(scheme, handler);
             }
@@ -233,8 +232,7 @@ namespace Microsoft.AspNetCore.Authentication
                 throw await CreateMissingSignOutHandlerException(scheme);
             }
 
-            var signOutHandler = handler as IAuthenticationSignOutHandler;
-            if (signOutHandler == null)
+            if (handler is not IAuthenticationSignOutHandler signOutHandler)
             {
                 throw await CreateMismatchedSignOutHandlerException(scheme, handler);
             }

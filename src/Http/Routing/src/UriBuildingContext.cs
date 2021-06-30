@@ -16,7 +16,7 @@ namespace Microsoft.AspNetCore.Routing
     {
         // Holds the 'accepted' parts of the path.
         private readonly StringBuilder _path;
-        private StringBuilder _query;
+        private readonly StringBuilder _query;
 
         // Holds the 'optional' parts of the path. We need a secondary buffer to handle cases where an optional
         // segment is in the middle of the uri. We don't know if we need to write it out - if it's
@@ -301,7 +301,7 @@ namespace Microsoft.AspNetCore.Routing
             else
             {
                 int end;
-                int length = start + characterCount;
+                var length = start + characterCount;
                 while ((end = value.IndexOf('/', start, characterCount)) >= 0)
                 {
                     _urlEncoder.Encode(PathWriter, value, start, end - start);

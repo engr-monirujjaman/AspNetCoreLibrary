@@ -16,7 +16,7 @@ namespace Microsoft.AspNetCore.Http.Extensions
     /// </summary>
     public class QueryBuilder : IEnumerable<KeyValuePair<string, string>>
     {
-        private IList<KeyValuePair<string, string>> _params;
+        private readonly IList<KeyValuePair<string, string>> _params;
 
         /// <summary>
         /// Initializes a new instance of <see cref="QueryBuilder"/>.
@@ -72,7 +72,7 @@ namespace Microsoft.AspNetCore.Http.Extensions
         public override string ToString()
         {
             var builder = new StringBuilder();
-            bool first = true;
+            var first = true;
             for (var i = 0; i < _params.Count; i++)
             {
                 var pair = _params[i];

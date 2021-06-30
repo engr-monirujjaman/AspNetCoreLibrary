@@ -498,7 +498,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         {
             // Arrange
             var encoding = Encoding.GetEncoding(encodingName);
-            string data = new string(character, charCount);
+            var data = new string(character, charCount);
             var expectedBytes = encoding.GetBytes(data);
             var stream = new MemoryStream();
             var writer = new HttpResponseStreamWriter(stream, encoding);

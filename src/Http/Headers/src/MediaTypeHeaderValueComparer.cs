@@ -36,7 +36,7 @@ namespace Microsoft.Net.Http.Headers
         /// </example>
         public int Compare(MediaTypeHeaderValue? mediaType1, MediaTypeHeaderValue? mediaType2)
         {
-            if (object.ReferenceEquals(mediaType1, mediaType2))
+            if (ReferenceEquals(mediaType1, mediaType2))
             {
                 return 0;
             }

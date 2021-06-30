@@ -156,7 +156,7 @@ namespace Microsoft.AspNetCore.Routing.DecisionTree
 
                 foreach (var branch in criterion.Value)
                 {
-                    bool hasReducedItems = false;
+                    var hasReducedItems = false;
 
                     foreach (var item in branch.Value)
                     {

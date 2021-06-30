@@ -25,7 +25,6 @@ namespace Microsoft.AspNetCore.Routing.Template
             var literalPartA = RoutePatternFactory.LiteralPart("A");
             var paramPartB = RoutePatternFactory.ParameterPart("B");
             var paramPartC = RoutePatternFactory.ParameterPart("C");
-            var paramPartD = RoutePatternFactory.ParameterPart("D");
             var separatorPartE = RoutePatternFactory.SeparatorPart("E");
             var templateSegment = new TemplateSegment(RoutePatternFactory.Segment(paramPartC, literalPartA, separatorPartE, paramPartB));
 

@@ -1,11 +1,8 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.IO.Pipelines;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
@@ -271,16 +268,6 @@ namespace Microsoft.AspNetCore.Http
         private static HttpRequest GetRequestWithContentType(string contentType = null)
         {
             return GetRequestWithHeader("Content-Type", contentType);
-        }
-
-        private static HttpRequest GetRequestWithAcceptHeader(string acceptHeader = null)
-        {
-            return GetRequestWithHeader("Accept", acceptHeader);
-        }
-
-        private static HttpRequest GetRequestWithAcceptCharsetHeader(string acceptCharset = null)
-        {
-            return GetRequestWithHeader("Accept-Charset", acceptCharset);
         }
 
         private static HttpRequest GetRequestWithHeader(string headerName, string headerValue)

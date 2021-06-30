@@ -48,7 +48,7 @@ namespace Microsoft.AspNetCore.Routing.Constraints
                 throw new ArgumentNullException(nameof(values));
             }
 
-            if (values.TryGetValue(routeKey, out var value))
+            if (values.TryGetValue(routeKey, out _))
             {
                 return InnerConstraint.Match(httpContext,
                                              route,

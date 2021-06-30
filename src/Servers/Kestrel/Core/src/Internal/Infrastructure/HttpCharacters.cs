@@ -18,7 +18,6 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
         internal static void Initialize()
         {
             // Access _alphaNumeric to initialize static fields
-            var initialize = _alphaNumeric;
         }
 
         private static bool[] InitializeAlphaNumeric()

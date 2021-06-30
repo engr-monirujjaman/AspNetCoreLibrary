@@ -22,7 +22,7 @@ namespace Microsoft.AspNetCore.Routing.FunctionalTests
         [Fact]
         public async Task MapPost_FromBodyWorksWithJsonPayload()
         {
-            Todo EchoTodo([FromRoute] int id, [FromBody] Todo todo) => todo with { Id = id };
+            static Todo EchoTodo([FromRoute] int id, [FromBody] Todo todo) => todo with { Id = id };
 
             using var host = new HostBuilder()
                 .ConfigureWebHost(webHostBuilder =>

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -568,7 +567,7 @@ namespace Microsoft.Net.Http.Headers
                 "name8=value8,name9=value9",
                 "name10=\"value 10\", name11= \"value 11\"",
             };
-            Assert.False(NameValueHeaderValue.TryParseStrictList(inputs, out var results));
+            Assert.False(NameValueHeaderValue.TryParseStrictList(inputs, out _));
         }
 
         [Theory]
@@ -644,7 +643,7 @@ namespace Microsoft.Net.Http.Headers
         {
             var header = new NameValueHeaderValue("test");
             header.SetAndEscapeValue(input);
-            var valueHeader = header.GetUnescapedValue();
+            _ = header.GetUnescapedValue();
 
             var actual = header.Value;
 

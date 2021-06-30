@@ -36,7 +36,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         /// </summary>
         public const int DefaultValueLengthLimit = 1024 * 1024 * 4;
 
-        private const int _rentedCharPoolLength = 8192;
+        private const int RentedCharPoolLength = 8192;
         private readonly TextReader _reader;
         private readonly char[] _buffer;
         private readonly ArrayPool<char> _charPool;
@@ -69,7 +69,7 @@ namespace Microsoft.AspNetCore.WebUtilities
                 throw new ArgumentNullException(nameof(data));
             }
 
-            _buffer = charPool.Rent(_rentedCharPoolLength);
+            _buffer = charPool.Rent(RentedCharPoolLength);
             _charPool = charPool;
             _reader = new StringReader(data);
         }
@@ -111,7 +111,7 @@ namespace Microsoft.AspNetCore.WebUtilities
                 throw new ArgumentNullException(nameof(encoding));
             }
 
-            _buffer = charPool.Rent(_rentedCharPoolLength);
+            _buffer = charPool.Rent(RentedCharPoolLength);
             _charPool = charPool;
             _reader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks: true, bufferSize: 1024 * 2, leaveOpen: true);
         }

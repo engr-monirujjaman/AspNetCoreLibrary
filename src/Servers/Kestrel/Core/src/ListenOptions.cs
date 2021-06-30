@@ -167,7 +167,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core
                 return Task.CompletedTask;
             };
 
-            for (int i = _multiplexedMiddleware.Count - 1; i >= 0; i--)
+            for (var i = _multiplexedMiddleware.Count - 1; i >= 0; i--)
             {
                 var component = _multiplexedMiddleware[i];
                 app = component(app);

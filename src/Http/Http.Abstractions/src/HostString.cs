@@ -82,7 +82,7 @@ namespace Microsoft.AspNetCore.Http
         {
             get
             {
-                GetParts(_value, out var host, out var port);
+                GetParts(_value, out var host, out _);
 
                 return host.ToString();
             }
@@ -96,7 +96,7 @@ namespace Microsoft.AspNetCore.Http
         {
             get
             {
-                GetParts(_value, out var host, out var port);
+                GetParts(_value, out _, out var port);
 
                 if (!StringSegment.IsNullOrEmpty(port)
                     && int.TryParse(port.AsSpan(), NumberStyles.None, CultureInfo.InvariantCulture, out var p))
@@ -180,7 +180,7 @@ namespace Microsoft.AspNetCore.Http
                     if (index >= 0)
                     {
                         // Has a port
-                        string port = uriComponent.Substring(index);
+                        var port = uriComponent.Substring(index);
                         var mapping = new IdnMapping();
                         uriComponent = mapping.GetUnicode(uriComponent, 0, index) + port;
                     }
@@ -241,7 +241,7 @@ namespace Microsoft.AspNetCore.Http
             // Drop the port
             GetParts(value, out var host, out var port);
 
-            for (int i = 0; i < port.Length; i++)
+            for (var i = 0; i < port.Length; i++)
             {
                 if (port[i] < '0' || '9' < port[i])
                 {
@@ -250,7 +250,7 @@ namespace Microsoft.AspNetCore.Http
             }
 
             var count = patterns.Count;
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var pattern = patterns[i];
 
@@ -306,7 +306,7 @@ namespace Microsoft.AspNetCore.Http
             {
                 return !HasValue;
             }
-            return obj is HostString && Equals((HostString)obj);
+            return obj is HostString hostString && Equals(hostString);
         }
 
         /// <summary>

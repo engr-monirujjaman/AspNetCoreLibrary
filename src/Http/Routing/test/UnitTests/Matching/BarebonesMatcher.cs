@@ -4,7 +4,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace Microsoft.AspNetCore.Routing.Matching
 {
@@ -60,7 +59,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
                 var segment = 0;
 
                 var start = 1; // PathString always has a leading slash
-                var end = 0;
+                int end;
                 while ((end = path.IndexOf('/', start)) >= 0)
                 {
                     var comparand = _segments.Length > segment ? _segments[segment] : null;

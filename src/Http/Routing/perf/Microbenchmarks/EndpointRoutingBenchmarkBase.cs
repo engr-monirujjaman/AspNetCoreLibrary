@@ -70,7 +70,7 @@ namespace Microsoft.AspNetCore.Routing
         [MethodImpl(MethodImplOptions.NoInlining)]
         private protected void Validate(HttpContext httpContext, Endpoint expected, Endpoint actual)
         {
-            if (!object.ReferenceEquals(expected, actual))
+            if (!ReferenceEquals(expected, actual))
             {
                 var message = new StringBuilder();
                 message.AppendLine($"Validation failed for request {Array.IndexOf(Requests, httpContext)}");

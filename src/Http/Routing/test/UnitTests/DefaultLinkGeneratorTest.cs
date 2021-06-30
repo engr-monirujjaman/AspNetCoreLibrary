@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing.TestObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -639,7 +638,7 @@ namespace Microsoft.AspNetCore.Routing
             httpContext.Request.RouteValues = new RouteValueDictionary(new { controller = "Home", action = "Index" });
 
             var values = new RouteValueDictionary();
-            for (int i = 0; i < routeNames.Length; i++)
+            for (var i = 0; i < routeNames.Length; i++)
             {
                 values[routeNames[i]] = routeValues[i];
             }
@@ -678,7 +677,7 @@ namespace Microsoft.AspNetCore.Routing
             httpContext.Request.RouteValues = new RouteValueDictionary(new { controller = "Home", action = "Index", });
 
             var values = new RouteValueDictionary();
-            for (int i = 0; i < routeNames.Length; i++)
+            for (var i = 0; i < routeNames.Length; i++)
             {
                 values[routeNames[i]] = routeValues[i];
             }
@@ -716,7 +715,7 @@ namespace Microsoft.AspNetCore.Routing
             var httpContext = CreateHttpContext();
 
             var values = new RouteValueDictionary();
-            for (int i = 0; i < routeNames.Length; i++)
+            for (var i = 0; i < routeNames.Length; i++)
             {
                 values[routeNames[i]] = routeValues[i];
             }

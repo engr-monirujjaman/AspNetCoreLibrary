@@ -1670,7 +1670,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         private static DfaMatcherBuilder CreateDfaMatcherBuilder(params MatcherPolicy[] policies)
         {
             var policyFactory = CreateParameterPolicyFactory();
-            var dataSource = new CompositeEndpointDataSource(Array.Empty<EndpointDataSource>());
+            _ = new CompositeEndpointDataSource(Array.Empty<EndpointDataSource>());
             return new DfaMatcherBuilder(
                 NullLoggerFactory.Instance,
                 policyFactory,

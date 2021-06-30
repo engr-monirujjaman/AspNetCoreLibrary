@@ -70,8 +70,8 @@ namespace Microsoft.AspNetCore.Testing
 
         protected async Task<decimal> RetryAsync(RetryAttribute retryAttribute, object testClassInstance)
         {
-            var attempts = 0;
             var timeTaken = 0.0M;
+            int attempts;
             for (attempts = 0; attempts < retryAttribute.MaxRetries; attempts++)
             {
                 timeTaken = await base.InvokeTestMethodAsync(testClassInstance);

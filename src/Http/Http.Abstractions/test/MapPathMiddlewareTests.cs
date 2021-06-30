@@ -3,7 +3,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 
@@ -54,7 +53,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
         [InlineData("/foo/cho", "/Bar", "/foo/cho/do")]
         public async Task PathMatchFunc_BranchTaken(string matchPath, string basePath, string requestPath)
         {
-            HttpContext context = CreateRequest(basePath, requestPath);
+            var context = CreateRequest(basePath, requestPath);
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.Map(matchPath, UseSuccess);
             var app = builder.Build();
@@ -82,7 +81,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
         [InlineData("/foo/cho", "/Bar", "/Foo/Cho/do")]
         public async Task PathMatchAction_BranchTaken(string matchPath, string basePath, string requestPath)
         {
-            HttpContext context = CreateRequest(basePath, requestPath);
+            var context = CreateRequest(basePath, requestPath);
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.Map(matchPath, subBuilder => subBuilder.Run(Success));
             var app = builder.Build();
@@ -110,7 +109,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
         [InlineData("/foo/cho", "/Bar", "/Foo/Cho/do")]
         public async Task PathMatchAction_BranchTaken_WithPreserveMatchedPathSegment(string matchPath, string basePath, string requestPath)
         {
-            HttpContext context = CreateRequest(basePath, requestPath);
+            var context = CreateRequest(basePath, requestPath);
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.Map(matchPath, true, subBuilder => subBuilder.Run(Success));
             var app = builder.Build();
@@ -140,7 +139,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
         [InlineData("/foo/bar", "/foo", "/bar")]
         public async Task PathMismatchFunc_PassedThrough(string matchPath, string basePath, string requestPath)
         {
-            HttpContext context = CreateRequest(basePath, requestPath);
+            var context = CreateRequest(basePath, requestPath);
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.Map(matchPath, UseNotImplemented);
             builder.Run(Success);
@@ -162,7 +161,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
         [InlineData("/foo/bar", "/foo", "/bar")]
         public async Task PathMismatchAction_PassedThrough(string matchPath, string basePath, string requestPath)
         {
-            HttpContext context = CreateRequest(basePath, requestPath);
+            var context = CreateRequest(basePath, requestPath);
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.Map(matchPath, UseNotImplemented);
             builder.Run(Success);
@@ -186,7 +185,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
             builder.Map("/route2/subroute2", UseSuccess);
             var app = builder.Build();
 
-            HttpContext context = CreateRequest(string.Empty, "/route1");
+            var context = CreateRequest(string.Empty, "/route1");
             await Assert.ThrowsAsync<NotImplementedException>(() => app.Invoke(context));
 
             context = CreateRequest(string.Empty, "/route1/subroute1");

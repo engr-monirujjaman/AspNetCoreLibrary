@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using Microsoft.AspNetCore.Builder;
@@ -219,7 +218,7 @@ namespace Microsoft.AspNetCore.Hosting
             _builder.ConfigureServices((context, services) =>
             {
                 // Run this delegate if the startup type matches
-                if (object.ReferenceEquals(_startupObject, startupType))
+                if (ReferenceEquals(_startupObject, startupType))
                 {
                     UseStartup(startupType, context, services);
                 }
@@ -236,7 +235,7 @@ namespace Microsoft.AspNetCore.Hosting
             _builder.ConfigureServices((context, services) =>
             {
                 // UseStartup can be called multiple times. Only run the last one.
-                if (object.ReferenceEquals(_startupObject, startupFactory))
+                if (ReferenceEquals(_startupObject, startupFactory))
                 {
                     var webHostBuilderContext = GetWebHostBuilderContext(context);
                     var instance = startupFactory(webHostBuilderContext) ?? throw new InvalidOperationException("The specified factory returned null startup instance.");
@@ -338,7 +337,7 @@ namespace Microsoft.AspNetCore.Hosting
 
             _builder.ConfigureServices((context, services) =>
             {
-                if (object.ReferenceEquals(_startupObject, configure))
+                if (ReferenceEquals(_startupObject, configure))
                 {
                     services.Configure<GenericWebHostServiceOptions>(options =>
                     {

@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Net.Http.Headers;
 
 namespace Microsoft.AspNetCore.Http
 {

@@ -442,7 +442,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
 
         private static bool IsTlsHandshake(ReadOnlySpan<byte> requestLine)
         {
-            const byte SslRecordTypeHandshake = (byte)0x16;
+            const byte SslRecordTypeHandshake = 0x16;
 
             // Make sure we can check at least for the existence of a TLS handshake - we check the first byte
             // See https://serializethoughts.com/2014/07/27/dissecting-tls-client-hello-message/

@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -48,7 +46,7 @@ namespace RoutingSandbox.Framework
 
         private List<Endpoint> BuildEndpoints()
         {
-            List<Endpoint> endpoints = new List<Endpoint>();
+            var endpoints = new List<Endpoint>();
 
             foreach (var hubMethod in HubMethods)
             {

@@ -200,7 +200,7 @@ namespace Microsoft.AspNetCore.Internal
             var readStream = new MemoryStream(byteArray);
 
             var httpContext = GetHttpContext();
-            var requestHeaders = httpContext.Request.GetTypedHeaders();
+            _ = httpContext.Request.GetTypedHeaders();
             httpContext.Request.Headers.Range = rangeString;
             httpContext.Request.Method = HttpMethods.Get;
             httpContext.Response.Body = new MemoryStream();

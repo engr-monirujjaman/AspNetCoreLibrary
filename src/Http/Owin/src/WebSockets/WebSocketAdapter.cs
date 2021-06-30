@@ -79,7 +79,7 @@ namespace Microsoft.AspNetCore.Owin
 
         internal async Task<WebSocketReceiveTuple> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancel)
         {
-            WebSocketReceiveResult nativeResult = await _webSocket.ReceiveAsync(buffer, cancel);
+            var nativeResult = await _webSocket.ReceiveAsync(buffer, cancel);
 
             if (nativeResult.MessageType == WebSocketMessageType.Close)
             {
@@ -107,10 +107,10 @@ namespace Microsoft.AspNetCore.Owin
             else if (buffer.Count >= 2)
             {
                 // Unpack the close message.
-                int statusCode =
+                var statusCode =
                     (buffer.Array[buffer.Offset] << 8)
                         | buffer.Array[buffer.Offset + 1];
-                string description = Encoding.UTF8.GetString(buffer.Array, buffer.Offset + 2, buffer.Count - 2);
+                var description = Encoding.UTF8.GetString(buffer.Array, buffer.Offset + 2, buffer.Count - 2);
 
                 return CloseAsync(statusCode, description, cancel);
             }

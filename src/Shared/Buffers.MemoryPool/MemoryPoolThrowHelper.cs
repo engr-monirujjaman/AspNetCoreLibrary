@@ -69,7 +69,7 @@ namespace System.Buffers
 
         private static string GenerateMessage(string message, params DiagnosticPoolBlock[] blocks)
         {
-            StringBuilder builder = new StringBuilder(message);
+            var builder = new StringBuilder(message);
             foreach (var diagnosticPoolBlock in blocks)
             {
                 if (diagnosticPoolBlock.Leaser != null)

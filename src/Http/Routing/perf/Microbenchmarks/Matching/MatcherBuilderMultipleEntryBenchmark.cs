@@ -64,7 +64,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
 
         private Matcher SetupMatcher(MatcherBuilder builder)
         {
-            for (int i = 0; i < Endpoints.Length; i++)
+            for (var i = 0; i < Endpoints.Length; i++)
             {
                 builder.AddEndpoint(Endpoints[i]);
             }
@@ -187,7 +187,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
 
         private abstract class TestMatcherPolicyBase : MatcherPolicy
         {
-            private int _order;
+            private readonly int _order;
 
             protected TestMatcherPolicyBase(int order)
             {

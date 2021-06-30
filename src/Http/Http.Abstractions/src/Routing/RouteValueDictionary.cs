@@ -19,7 +19,7 @@ namespace Microsoft.AspNetCore.Routing
     public class RouteValueDictionary : IDictionary<string, object?>, IReadOnlyDictionary<string, object?>
     {
         // 4 is a good default capacity here because that leaves enough space for area/controller/action/id
-        private readonly int DefaultCapacity = 4;
+        private const int DefaultCapacity = 4;
 
         internal KeyValuePair<string, object?>[] _arrayStorage;
         internal PropertyStorage? _propertyStorage;
@@ -741,7 +741,7 @@ namespace Microsoft.AspNetCore.Routing
 
         internal class PropertyStorage
         {
-            private static readonly ConcurrentDictionary<Type, PropertyHelper[]> _propertyCache = new ConcurrentDictionary<Type, PropertyHelper[]>();
+            private static readonly ConcurrentDictionary<Type, PropertyHelper[]> PropertyCache = new();
 
             public readonly object Value;
             public readonly PropertyHelper[] Properties;
@@ -753,11 +753,11 @@ namespace Microsoft.AspNetCore.Routing
 
                 // Cache the properties so we can know if we've already validated them for duplicates.
                 var type = Value.GetType();
-                if (!_propertyCache.TryGetValue(type, out Properties!))
+                if (!PropertyCache.TryGetValue(type, out Properties!))
                 {
                     Properties = PropertyHelper.GetVisibleProperties(type);
                     ValidatePropertyNames(type, Properties);
-                    _propertyCache.TryAdd(type, Properties);
+                    PropertyCache.TryAdd(type, Properties);
                 }
             }
 

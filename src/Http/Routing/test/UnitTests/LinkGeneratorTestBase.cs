@@ -72,7 +72,6 @@ namespace Microsoft.AspNetCore.Routing
             var routeOptions = serviceProvider.GetRequiredService<IOptions<RouteOptions>>();
 
             return new DefaultLinkGenerator(
-                new DefaultParameterPolicyFactory(routeOptions, serviceProvider),
                 serviceProvider.GetRequiredService<TemplateBinderFactory>(),
                 new CompositeEndpointDataSource(routeOptions.Value.EndpointDataSources),
                 routeOptions,

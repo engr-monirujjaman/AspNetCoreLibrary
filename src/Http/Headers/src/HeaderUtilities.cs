@@ -16,7 +16,7 @@ namespace Microsoft.Net.Http.Headers
     /// </summary>
     public static class HeaderUtilities
     {
-        private const int _qualityValueMaxCharCount = 10; // Little bit more permissive than RFC7231 5.3.1
+        private const int QualityValueMaxCharCount = 10; // Little bit more permissive than RFC7231 5.3.1
         private const string QualityName = "q";
         internal const string BytesUnit = "bytes";
 
@@ -246,12 +246,11 @@ namespace Microsoft.Net.Http.Headers
 
                 while (current < headerValues[i].Length)
                 {
-                    long seconds;
                     var initial = current;
                     var tokenLength = HttpRuleParser.GetTokenLength(headerValues[i], current);
                     if (tokenLength == targetValue.Length
                         && string.Compare(headerValues[i], current, targetValue, 0, tokenLength, StringComparison.OrdinalIgnoreCase) == 0
-                        && TryParseNonNegativeInt64FromHeaderValue(current + tokenLength, headerValues[i], out seconds))
+                        && TryParseNonNegativeInt64FromHeaderValue(current + tokenLength, headerValues[i], out var seconds))
                     {
                         // Token matches target value and seconds were parsed
                         value = TimeSpan.FromSeconds(seconds);
@@ -411,9 +410,7 @@ namespace Microsoft.Net.Http.Headers
 
             var inputLength = input.Length;
             var current = startIndex;
-            var limit = startIndex + _qualityValueMaxCharCount;
-
-            var intPart = 0;
+            var limit = startIndex + QualityValueMaxCharCount;
             var decPart = 0;
             var decPow = 1;
 
@@ -424,6 +421,8 @@ namespace Microsoft.Net.Http.Headers
 
             var ch = input[current];
 
+
+            int intPart;
             if (ch >= '0' && ch <= '1') // Only values between 0 and 1 are accepted, according to RFC
             {
                 intPart = ch - '0';
@@ -607,7 +606,7 @@ namespace Microsoft.Net.Http.Headers
                 var spanLength = span.Length;
                 for (var i = 0; i < segment.Length && (uint)spanIndex < (uint)spanLength; i++)
                 {
-                    int nextIndex = i + 1;
+                    var nextIndex = i + 1;
                     if ((uint)nextIndex < (uint)segment.Length && segment[i] == '\\')
                     {
                         // If there is an backslash character as the last character in the string,

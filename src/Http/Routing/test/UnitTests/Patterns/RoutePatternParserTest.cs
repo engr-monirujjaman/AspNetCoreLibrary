@@ -672,7 +672,7 @@ namespace Microsoft.AspNetCore.Routing.Patterns
                             return false;
                         }
 
-                        for (int j = 0; j < x.PathSegments[i].Parts.Count; j++)
+                        for (var j = 0; j < x.PathSegments[i].Parts.Count; j++)
                         {
                             if (!Equals(x.PathSegments[i].Parts[j], y.PathSegments[i].Parts[j]))
                             {

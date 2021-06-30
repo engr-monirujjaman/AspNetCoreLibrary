@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Globalization;
-using System.Text;
 
 namespace System.Net.Http.HPack
 {
@@ -96,9 +95,9 @@ namespace System.Net.Http.HPack
                     return "416";
                 case (int)HttpStatusCode.ExpectationFailed:
                     return "417";
-                case (int)418:
+                case 418:
                     return "418";
-                case (int)419:
+                case 419:
                     return "419";
                 case (int)HttpStatusCode.MisdirectedRequest:
                     return "421";

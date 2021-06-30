@@ -225,10 +225,10 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.PipeW
 
         private void CleanupSegmentsUnsynchronized()
         {
-            BufferSegment? segment = _head;
+            var segment = _head;
             while (segment != null)
             {
-                BufferSegment returnSegment = segment;
+                var returnSegment = segment;
                 segment = segment.NextSegment;
                 returnSegment.ResetMemory();
             }
@@ -317,7 +317,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.PipeW
             if (_head == null)
             {
                 // We need to allocate memory to write since nobody has written before
-                BufferSegment newSegment = AllocateSegmentUnsynchronized(sizeHint);
+                var newSegment = AllocateSegmentUnsynchronized(sizeHint);
 
                 // Set all the pointers
                 _head = _tail = newSegment;
@@ -325,7 +325,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.PipeW
             }
             else
             {
-                int bytesLeftInBuffer = _tailMemory.Length;
+                var bytesLeftInBuffer = _tailMemory.Length;
 
                 if (bytesLeftInBuffer == 0 || bytesLeftInBuffer < sizeHint)
                 {
@@ -338,7 +338,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.PipeW
                         _tailBytesBuffered = 0;
                     }
 
-                    BufferSegment newSegment = AllocateSegmentUnsynchronized(sizeHint);
+                    var newSegment = AllocateSegmentUnsynchronized(sizeHint);
 
                     _tail.SetNext(newSegment);
                     _tail = newSegment;
@@ -348,7 +348,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.PipeW
 
         private BufferSegment AllocateSegmentUnsynchronized(int sizeHint)
         {
-            BufferSegment newSegment = CreateSegmentUnsynchronized();
+            var newSegment = CreateSegmentUnsynchronized();
 
             if (sizeHint <= _pool.MaxBufferSize)
             {

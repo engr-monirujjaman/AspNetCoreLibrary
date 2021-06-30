@@ -35,7 +35,7 @@ namespace Microsoft.Net.Http.Headers
             Assert.True(cacheControl.ProxyRevalidate, "ProxyRevalidate");
 
             // TimeSpan properties
-            TimeSpan timeSpan = new TimeSpan(1, 2, 3);
+            var timeSpan = new TimeSpan(1, 2, 3);
             cacheControl.MaxAge = timeSpan;
             Assert.Equal(timeSpan, cacheControl.MaxAge);
             cacheControl.SharedMaxAge = timeSpan;
@@ -138,7 +138,7 @@ namespace Microsoft.Net.Http.Headers
             // Verify that different bool fields return different hash values.
             var values = new CacheControlHeaderValue[9];
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 values[i] = new CacheControlHeaderValue();
             }
@@ -154,9 +154,9 @@ namespace Microsoft.Net.Http.Headers
             values[8].MustRevalidate = true;
 
             // Only one bool field set. All hash codes should differ
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
-                for (int j = 0; j < values.Length; j++)
+                for (var j = 0; j < values.Length; j++)
                 {
                     if (i != j)
                     {
@@ -178,7 +178,7 @@ namespace Microsoft.Net.Http.Headers
             // Verify that different timespan fields return different hash values.
             var values = new CacheControlHeaderValue[4];
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 values[i] = new CacheControlHeaderValue();
             }
@@ -189,9 +189,9 @@ namespace Microsoft.Net.Http.Headers
             values[3].SharedMaxAge = new TimeSpan(0, 1, 1);
 
             // Only one timespan field set. All hash codes should differ
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
-                for (int j = 0; j < values.Length; j++)
+                for (var j = 0; j < values.Length; j++)
                 {
                     if (i != j)
                     {
@@ -253,7 +253,7 @@ namespace Microsoft.Net.Http.Headers
             // Verify that different bool fields return different hash values.
             var values = new CacheControlHeaderValue[9];
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 values[i] = new CacheControlHeaderValue();
             }
@@ -269,9 +269,9 @@ namespace Microsoft.Net.Http.Headers
             values[8].MustRevalidate = true;
 
             // Only one bool field set. All hash codes should differ
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
-                for (int j = 0; j < values.Length; j++)
+                for (var j = 0; j < values.Length; j++)
                 {
                     if (i != j)
                     {
@@ -293,7 +293,7 @@ namespace Microsoft.Net.Http.Headers
             // Verify that different timespan fields return different hash values.
             var values = new CacheControlHeaderValue[4];
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 values[i] = new CacheControlHeaderValue();
             }
@@ -304,9 +304,9 @@ namespace Microsoft.Net.Http.Headers
             values[3].SharedMaxAge = new TimeSpan(0, 1, 1);
 
             // Only one timespan field set. All hash codes should differ
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
-                for (int j = 0; j < values.Length; j++)
+                for (var j = 0; j < values.Length; j++)
                 {
                     if (i != j)
                     {

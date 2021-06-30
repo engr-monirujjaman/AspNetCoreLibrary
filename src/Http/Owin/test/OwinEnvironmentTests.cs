@@ -16,14 +16,13 @@ namespace Microsoft.AspNetCore.Owin
     {
         private T Get<T>(IDictionary<string, object> environment, string key)
         {
-            object value;
-            return environment.TryGetValue(key, out value) ? (T)value : default(T);
+            return environment.TryGetValue(key, out var value) ? (T)value : default(T);
         }
 
         [Fact]
         public void OwinEnvironmentCanBeCreated()
         {
-            HttpContext context = CreateContext();
+            var context = CreateContext();
             context.Request.Method = "SomeMethod";
             context.User = new ClaimsPrincipal(new ClaimsIdentity("Foo"));
             context.Request.Body = Stream.Null;
@@ -62,7 +61,7 @@ namespace Microsoft.AspNetCore.Owin
         [Fact]
         public void OwinEnvironmentCanBeModified()
         {
-            HttpContext context = CreateContext();
+            var context = CreateContext();
             IDictionary<string, object> env = new OwinEnvironment(context);
 
             env["owin.RequestMethod"] = "SomeMethod";
@@ -104,11 +103,10 @@ namespace Microsoft.AspNetCore.Owin
         [InlineData("server.LocalPort")]
         public void OwinEnvironmentDoesNotContainEntriesForMissingFeatures(string key)
         {
-            HttpContext context = CreateContext();
+            var context = CreateContext();
             IDictionary<string, object> env = new OwinEnvironment(context);
 
-            object value;
-            Assert.False(env.TryGetValue(key, out value));
+            Assert.False(env.TryGetValue(key, out var value));
 
             Assert.Throws<KeyNotFoundException>(() => env[key]);
 
@@ -119,12 +117,10 @@ namespace Microsoft.AspNetCore.Owin
         [Fact]
         public void OwinEnvironmentSuppliesDefaultsForMissingRequiredEntries()
         {
-            HttpContext context = CreateContext();
+            var context = CreateContext();
             IDictionary<string, object> env = new OwinEnvironment(context);
-
-            object value;
-            Assert.True(env.TryGetValue("owin.CallCancelled", out value), "owin.CallCancelled");
-            Assert.True(env.TryGetValue("owin.Version", out value), "owin.Version");
+            Assert.True(env.TryGetValue("owin.CallCancelled", out _), "owin.CallCancelled");
+            Assert.True(env.TryGetValue("owin.Version", out _), "owin.Version");
 
             Assert.Equal(CancellationToken.None, env["owin.CallCancelled"]);
             Assert.Equal("1.0", env["owin.Version"]);

@@ -33,7 +33,7 @@ namespace Microsoft.AspNetCore.Http.Extensions
             QueryString query = new QueryString(),
             FragmentString fragment = new FragmentString())
         {
-            string combinePath = (pathBase.HasValue || path.HasValue) ? (pathBase + path).ToString() : "/";
+            var combinePath = (pathBase.HasValue || path.HasValue) ? (pathBase + path).ToString() : "/";
             return combinePath + query.ToString() + fragment.ToString();
         }
 

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing.Template;
@@ -948,14 +947,14 @@ namespace Microsoft.AspNetCore.Routing.Tests
 
         private TemplatePart ParseParameter(string routeParameter)
         {
-            var _constraintResolver = GetConstraintResolver();
+            _ = GetConstraintResolver();
             var templatePart = InlineRouteParameterParser.ParseRouteParameter(routeParameter);
             return templatePart;
         }
 
         private static RouteTemplate ParseRouteTemplate(string template)
         {
-            var _constraintResolver = GetConstraintResolver();
+            _ = GetConstraintResolver();
             return TemplateParser.Parse(template);
         }
 

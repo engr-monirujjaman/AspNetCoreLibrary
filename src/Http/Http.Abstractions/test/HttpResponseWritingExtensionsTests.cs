@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Http
         [Fact]
         public async Task WritingText_WriteText()
         {
-            HttpContext context = CreateRequest();
+            var context = CreateRequest();
             await context.Response.WriteAsync("Hello World");
 
             Assert.Equal(11, context.Response.Body.Length);
@@ -24,7 +24,7 @@ namespace Microsoft.AspNetCore.Http
         [Fact]
         public async Task WritingText_MultipleWrites()
         {
-            HttpContext context = CreateRequest();
+            var context = CreateRequest();
             await context.Response.WriteAsync("Hello World");
             await context.Response.WriteAsync("Hello World");
 
@@ -56,7 +56,7 @@ namespace Microsoft.AspNetCore.Http
         [MemberData(nameof(Encodings))]
         public async Task WritingTextWithPassedInEncodingWorks(Encoding encoding)
         {
-            HttpContext context = CreateRequest();
+            var context = CreateRequest();
 
             var inputString = "昨日すき焼きを食べました";
             var expected = encoding.GetBytes(inputString);

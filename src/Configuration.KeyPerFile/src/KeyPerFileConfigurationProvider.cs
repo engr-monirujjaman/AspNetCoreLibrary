@@ -33,7 +33,6 @@ namespace Microsoft.Extensions.Configuration.KeyPerFile
                         Load(reload: true);
                     });
             }
-
         }
 
         private static string NormalizeKey(string key)

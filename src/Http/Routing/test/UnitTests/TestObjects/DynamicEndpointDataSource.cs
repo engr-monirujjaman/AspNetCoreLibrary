@@ -13,13 +13,11 @@ namespace Microsoft.AspNetCore.Routing.TestObjects
         private readonly List<Endpoint> _endpoints;
         private CancellationTokenSource _cts;
         private CancellationChangeToken _changeToken;
-        private readonly object _lock;
 
         public DynamicEndpointDataSource(params Endpoint[] endpoints)
         {
             _endpoints = new List<Endpoint>();
             _endpoints.AddRange(endpoints);
-            _lock = new object();
 
             CreateChangeToken();
         }
@@ -36,8 +34,6 @@ namespace Microsoft.AspNetCore.Routing.TestObjects
             // Capture the old tokens so that we can raise the callbacks on them. This is important so that
             // consumers do not register callbacks on an inflight event causing a stackoverflow.
             var oldTokenSource = _cts;
-            var oldToken = _changeToken;
-
             CreateChangeToken();
 
             // Raise consumer callbacks. Any new callback registration would happen on the new token

@@ -19,7 +19,7 @@ namespace Microsoft.AspNetCore.WebUtilities
     /// </summary>
     public class FileBufferingReadStream : Stream
     {
-        private const int _maxRentedBufferSize = 1024 * 1024; // 1MB
+        private const int MaxRentedBufferSize = 1024 * 1024; // 1MB
         private readonly Stream _inner;
         private readonly ArrayPool<byte> _bytePool;
         private readonly int _memoryThreshold;
@@ -87,7 +87,7 @@ namespace Microsoft.AspNetCore.WebUtilities
             }
 
             _bytePool = bytePool;
-            if (memoryThreshold <= _maxRentedBufferSize)
+            if (memoryThreshold <= MaxRentedBufferSize)
             {
                 _rentedBuffer = bytePool.Rent(memoryThreshold);
                 _buffer = new MemoryStream(_rentedBuffer);
@@ -146,7 +146,7 @@ namespace Microsoft.AspNetCore.WebUtilities
             }
 
             _bytePool = bytePool;
-            if (memoryThreshold <= _maxRentedBufferSize)
+            if (memoryThreshold <= MaxRentedBufferSize)
             {
                 _rentedBuffer = bytePool.Rent(memoryThreshold);
                 _buffer = new MemoryStream(_rentedBuffer);
@@ -290,7 +290,7 @@ namespace Microsoft.AspNetCore.WebUtilities
                 {
                     // Copy data from the in memory buffer to the file stream using a pooled buffer
                     oldBuffer.Position = 0;
-                    var rentedBuffer = _bytePool.Rent(Math.Min((int)oldBuffer.Length, _maxRentedBufferSize));
+                    var rentedBuffer = _bytePool.Rent(Math.Min((int)oldBuffer.Length, MaxRentedBufferSize));
                     try
                     {
                         var copyRead = oldBuffer.Read(rentedBuffer);
@@ -364,7 +364,7 @@ namespace Microsoft.AspNetCore.WebUtilities
                 if (_rentedBuffer == null)
                 {
                     oldBuffer.Position = 0;
-                    var rentedBuffer = _bytePool.Rent(Math.Min((int)oldBuffer.Length, _maxRentedBufferSize));
+                    var rentedBuffer = _bytePool.Rent(Math.Min((int)oldBuffer.Length, MaxRentedBufferSize));
                     try
                     {
                         // oldBuffer is a MemoryStream, no need to do async reads.
@@ -441,12 +441,12 @@ namespace Microsoft.AspNetCore.WebUtilities
             async Task CopyToAsyncImpl()
             {
                 // At least a 4K buffer
-                byte[] buffer = _bytePool.Rent(bufferSize);
+                var buffer = _bytePool.Rent(bufferSize);
                 try
                 {
                     while (true)
                     {
-                        int bytesRead = await ReadAsync(buffer, cancellationToken);
+                        var bytesRead = await ReadAsync(buffer, cancellationToken);
                         if (bytesRead == 0)
                         {
                             break;
@@ -482,7 +482,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         }
 
         /// <inheritdoc/>
-        public async override ValueTask DisposeAsync()
+        public override async ValueTask DisposeAsync()
         {
             if (!_disposed)
             {

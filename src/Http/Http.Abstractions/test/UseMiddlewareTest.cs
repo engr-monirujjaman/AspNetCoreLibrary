@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Http.Abstractions;
 using Xunit;
 
@@ -268,7 +267,7 @@ namespace Microsoft.AspNetCore.Http
 
         private class DummyServiceProvider : IServiceProvider
         {
-            private Dictionary<Type, object> _services = new Dictionary<Type, object>();
+            private readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 
             public void AddService(Type type, object value) => _services[type] = value;
 

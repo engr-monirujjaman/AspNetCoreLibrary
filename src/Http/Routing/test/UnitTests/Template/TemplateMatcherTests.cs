@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Routing.Template.Tests
@@ -1122,7 +1120,7 @@ namespace Microsoft.AspNetCore.Routing.Template.Tests
             {
                 Assert.True(match);
                 Assert.Equal(expected.Count, values.Count);
-                foreach (string key in values.Keys)
+                foreach (var key in values.Keys)
                 {
                     Assert.Equal(expected[key], values[key]);
                 }

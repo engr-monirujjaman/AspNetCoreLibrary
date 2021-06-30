@@ -3,7 +3,6 @@
 
 using System;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.StaticFiles;
 
 namespace Microsoft.AspNetCore.Builder
 {

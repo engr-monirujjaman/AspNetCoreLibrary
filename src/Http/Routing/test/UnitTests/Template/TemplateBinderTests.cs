@@ -8,9 +8,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.AspNetCore.Routing.TestObjects;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ObjectPool;
-using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Routing.Template.Tests
@@ -727,8 +725,7 @@ namespace Microsoft.AspNetCore.Routing.Template.Tests
             // Assert
             Assert.Null(boundTemplate);
             Assert.Equal(2, templateValuesResult.CombinedValues.Count);
-            object routeValue;
-            Assert.True(templateValuesResult.CombinedValues.TryGetValue("controller", out routeValue));
+            Assert.True(templateValuesResult.CombinedValues.TryGetValue("controller", out var routeValue));
             Assert.Equal("Test", routeValue?.ToString());
             Assert.True(templateValuesResult.CombinedValues.TryGetValue("action", out routeValue));
             Assert.Equal("Index", routeValue?.ToString());
@@ -1186,8 +1183,7 @@ namespace Microsoft.AspNetCore.Routing.Template.Tests
 
                     foreach (var kvp in expectedParts.Parameters)
                     {
-                        string value;
-                        Assert.True(actualParts.Parameters.TryGetValue(kvp.Key, out value));
+                        Assert.True(actualParts.Parameters.TryGetValue(kvp.Key, out var value));
                         Assert.Equal(kvp.Value, value);
                     }
                 }

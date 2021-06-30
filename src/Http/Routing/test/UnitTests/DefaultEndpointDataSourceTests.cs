@@ -78,7 +78,7 @@ namespace Microsoft.AspNetCore.Routing
             var endpoints = new List<Endpoint> { endpoint1, endpoint2 };
 
             // Act
-            var dataSource = new DefaultEndpointDataSource((IEnumerable<Endpoint>)endpoints);
+            var dataSource = new DefaultEndpointDataSource(endpoints);
             endpoints.RemoveAt(0);
             endpoints[0] = null;
 

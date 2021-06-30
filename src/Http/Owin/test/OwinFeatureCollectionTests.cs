@@ -17,8 +17,7 @@ namespace Microsoft.AspNetCore.Owin
 
         private T Get<T>(IDictionary<string, object> env, string key)
         {
-            object value;
-            return env.TryGetValue(key, out value) ? (T)value : default(T);
+            return env.TryGetValue(key, out var value) ? (T)value : default(T);
         }
 
         [Fact]

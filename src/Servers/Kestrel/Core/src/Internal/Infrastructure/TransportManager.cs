@@ -97,7 +97,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
         {
             var tasks = new Task[transportsToStop.Count];
 
-            for (int i = 0; i < transportsToStop.Count; i++)
+            for (var i = 0; i < transportsToStop.Count; i++)
             {
                 tasks[i] = transportsToStop[i].UnbindAsync(cancellationToken);
             }
@@ -117,14 +117,14 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
                 }
             }
 
-            for (int i = 0; i < transportsToStop.Count; i++)
+            for (var i = 0; i < transportsToStop.Count; i++)
             {
                 tasks[i] = StopTransportConnection(transportsToStop[i]);
             }
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 
-            for (int i = 0; i < transportsToStop.Count; i++)
+            for (var i = 0; i < transportsToStop.Count; i++)
             {
                 tasks[i] = transportsToStop[i].DisposeAsync().AsTask();
             }

@@ -1,6 +1,5 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -8,10 +7,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -281,7 +278,7 @@ namespace Microsoft.AspNetCore.Testing
 
         private class AssemblyLogTimestampOffsetEnricher : ILogEventEnricher
         {
-            private DateTimeOffset? _logStart;
+            private readonly DateTimeOffset? _logStart;
 
             public AssemblyLogTimestampOffsetEnricher(DateTimeOffset? logStart)
             {
@@ -299,7 +296,7 @@ namespace Microsoft.AspNetCore.Testing
 
         private class Disposable : IDisposable
         {
-            private Action _action;
+            private readonly Action _action;
 
             public Disposable(Action action)
             {

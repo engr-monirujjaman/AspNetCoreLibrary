@@ -162,7 +162,7 @@ namespace Microsoft.Extensions.Internal
             // Build parameter list
             var paramInfos = methodInfo.GetParameters();
             var parameters = new List<Expression>(paramInfos.Length);
-            for (int i = 0; i < paramInfos.Length; i++)
+            for (var i = 0; i < paramInfos.Length; i++)
             {
                 var paramInfo = paramInfos[i];
                 var valueObj = Expression.ArrayIndex(parametersParameter, Expression.Constant(i));
@@ -214,7 +214,7 @@ namespace Microsoft.Extensions.Internal
             // Build parameter list
             var paramInfos = methodInfo.GetParameters();
             var parameters = new List<Expression>(paramInfos.Length);
-            for (int i = 0; i < paramInfos.Length; i++)
+            for (var i = 0; i < paramInfos.Length; i++)
             {
                 var paramInfo = paramInfos[i];
                 var valueObj = Expression.ArrayIndex(parametersParameter, Expression.Constant(i));

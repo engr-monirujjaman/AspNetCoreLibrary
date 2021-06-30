@@ -67,7 +67,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
 
         public virtual Task ConsumeAsync()
         {
-            Task startTask = TryStartAsync();
+            var startTask = TryStartAsync();
             if (!startTask.IsCompletedSuccessfully)
             {
                 return ConsumeAwaited(startTask);
@@ -198,7 +198,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
         {
             if (!readAwaitable.IsCompleted)
             {
-                ValueTask<FlushResult> continueTask = TryProduceContinueAsync();
+                var continueTask = TryProduceContinueAsync();
                 if (!continueTask.IsCompletedSuccessfully)
                 {
                     return StartTimingReadAwaited(continueTask, readAwaitable, cancellationToken);

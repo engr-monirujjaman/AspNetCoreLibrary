@@ -139,9 +139,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            var other = obj as NameValueHeaderValue;
-
-            if (other == null)
+            if (obj is not NameValueHeaderValue other)
             {
                 return false;
             }
@@ -373,7 +371,7 @@ namespace Microsoft.Net.Http.Headers
             current = current + HttpRuleParser.GetWhitespaceLength(input, current);
 
             // Parse the value, i.e. <value> in name/value string "<name>=<value>"
-            int valueLength = GetValueLength(input, current);
+            var valueLength = GetValueLength(input, current);
 
             // Value after the '=' may be empty
             // Use parameterless ctor to avoid double-parsing of name and value, i.e. skip public ctor validation.
@@ -487,11 +485,6 @@ namespace Microsoft.Net.Http.Headers
             {
                 throw new FormatException(string.Format(CultureInfo.InvariantCulture, "The header value is invalid: '{0}'", value));
             }
-        }
-
-        private static NameValueHeaderValue CreateNameValue()
-        {
-            return new NameValueHeaderValue();
         }
     }
 }

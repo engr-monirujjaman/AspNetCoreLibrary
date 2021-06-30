@@ -8,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Internal;
 using Microsoft.Net.Http.Headers;
-using System.Linq;
 
 namespace Microsoft.AspNetCore.Http
 {
@@ -178,7 +177,7 @@ namespace Microsoft.AspNetCore.Http
         {
             // Do NOT make this readonly, or MoveNext will not work
             private AdaptiveCapacityDictionary<string, string>.Enumerator _dictionaryEnumerator;
-            private bool _notEmpty;
+            private readonly bool _notEmpty;
 
             internal Enumerator(AdaptiveCapacityDictionary<string, string>.Enumerator dictionaryEnumerator)
             {
@@ -202,7 +201,7 @@ namespace Microsoft.AspNetCore.Http
                     if (_notEmpty)
                     {
                         var current = _dictionaryEnumerator.Current;
-                        return new KeyValuePair<string, string>(current.Key, (string)current.Value!);
+                        return new KeyValuePair<string, string>(current.Key, current.Value!);
                     }
                     return default(KeyValuePair<string, string>);
                 }

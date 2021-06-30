@@ -20,13 +20,13 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http3
         {
             KestrelEventSource.Log.RequestQueuedStop(this, AspNetCore.Http.HttpProtocol.Http3);
 
-            if (_requestHeaderParsingState == Http3Stream.RequestHeaderParsingState.Ready)
+            if (_requestHeaderParsingState == RequestHeaderParsingState.Ready)
             {
                 _ = ProcessRequestAsync(_application);
             }
             else
             {
-                _ = base.ProcessRequestsAsync(_application);
+                _ = ProcessRequestsAsync(_application);
             }
         }
 

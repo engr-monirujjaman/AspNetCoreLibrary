@@ -107,7 +107,7 @@ namespace System.Buffers
                 MemoryPoolThrowHelper.ThrowInvalidOperationException_DoubleDispose();
             }
 
-            bool allBlocksReturned = false;
+            var allBlocksReturned = false;
             try
             {
                 lock (_syncObj)

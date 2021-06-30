@@ -315,9 +315,8 @@ namespace Microsoft.AspNetCore.Routing.Matching
 
         private static void AddLiteralNode(bool includeLabel, List<DfaNode> nextParents, DfaNode parent, string literal)
         {
-            DfaNode next = null;
             if (parent.Literals == null ||
-                !parent.Literals.TryGetValue(literal, out next))
+                !parent.Literals.TryGetValue(literal, out var next))
             {
                 next = new DfaNode()
                 {
@@ -580,8 +579,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
                         continue;
                     }
 
-                    var parameterPart = segment.Parts[0] as RoutePatternParameterPart;
-                    if (parameterPart == null)
+                    if (segment.Parts[0] is not RoutePatternParameterPart parameterPart)
                     {
                         continue;
                     }
@@ -678,8 +676,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
                     return true;
                 }
 
-                var parameterPart = segment.Parts[0] as RoutePatternParameterPart;
-                if (parameterPart == null)
+                if (segment.Parts[0] is not RoutePatternParameterPart parameterPart)
                 {
                     // It's a literal
                     return true;

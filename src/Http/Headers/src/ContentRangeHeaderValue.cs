@@ -145,9 +145,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            var other = obj as ContentRangeHeaderValue;
-
-            if (other == null)
+            if (obj is not ContentRangeHeaderValue other)
             {
                 return false;
             }
@@ -265,10 +263,7 @@ namespace Microsoft.Net.Http.Headers
 
             // Read range values <from> and <to> in '<unit> <from>-<to>/<length>'
             var fromStartIndex = current;
-            var fromLength = 0;
-            var toStartIndex = 0;
-            var toLength = 0;
-            if (!TryGetRangeLength(input, ref current, out fromLength, out toStartIndex, out toLength))
+            if (!TryGetRangeLength(input, ref current, out var fromLength, out var toStartIndex, out var toLength))
             {
                 return 0;
             }
@@ -289,8 +284,7 @@ namespace Microsoft.Net.Http.Headers
 
             // We may not have a length (e.g. 'bytes 1-2/*'). But if we do, parse the length now.
             var lengthStartIndex = current;
-            var lengthLength = 0;
-            if (!TryGetLengthLength(input, ref current, out lengthLength))
+            if (!TryGetLengthLength(input, ref current, out var lengthLength))
             {
                 return 0;
             }

@@ -1121,7 +1121,7 @@ namespace Microsoft.AspNetCore.Routing
             {
                 Assert.True(match);
                 Assert.Equal(expected.Count, values.Count);
-                foreach (string key in values.Keys)
+                foreach (var key in values.Keys)
                 {
                     Assert.Equal(expected[key], values[key]);
                 }

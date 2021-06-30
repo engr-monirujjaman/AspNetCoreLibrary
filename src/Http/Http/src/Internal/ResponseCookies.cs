@@ -156,8 +156,8 @@ namespace Microsoft.AspNetCore.Http
             }
 
             var encodedKeyPlusEquals = (_enableCookieNameEncoding ? Uri.EscapeDataString(key) : key) + "=";
-            bool domainHasValue = !string.IsNullOrEmpty(options.Domain);
-            bool pathHasValue = !string.IsNullOrEmpty(options.Path);
+            var domainHasValue = !string.IsNullOrEmpty(options.Domain);
+            var pathHasValue = !string.IsNullOrEmpty(options.Path);
 
             Func<string, string, CookieOptions, bool> rejectPredicate;
             if (domainHasValue && pathHasValue)

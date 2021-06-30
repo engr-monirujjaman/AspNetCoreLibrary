@@ -53,7 +53,7 @@ namespace Microsoft.AspNetCore.Http
         /// </returns>
         public static bool IsHttp09(string protocol)
         {
-            return object.ReferenceEquals(Http09, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http09, protocol);
+            return ReferenceEquals(Http09, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http09, protocol);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Microsoft.AspNetCore.Http
         /// </returns>
         public static bool IsHttp10(string protocol)
         {
-            return object.ReferenceEquals(Http10, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http10, protocol);
+            return ReferenceEquals(Http10, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http10, protocol);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Microsoft.AspNetCore.Http
         /// </returns>
         public static bool IsHttp11(string protocol)
         {
-            return object.ReferenceEquals(Http11, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http11, protocol);
+            return ReferenceEquals(Http11, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http11, protocol);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Microsoft.AspNetCore.Http
         /// </returns>
         public static bool IsHttp2(string protocol)
         {
-            return object.ReferenceEquals(Http2, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http2, protocol);
+            return ReferenceEquals(Http2, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http2, protocol);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Microsoft.AspNetCore.Http
         /// </returns>
         public static bool IsHttp3(string protocol)
         {
-            return object.ReferenceEquals(Http3, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http3, protocol);
+            return ReferenceEquals(Http3, protocol) || StringComparer.OrdinalIgnoreCase.Equals(Http3, protocol);
         }
 
         /// <summary>

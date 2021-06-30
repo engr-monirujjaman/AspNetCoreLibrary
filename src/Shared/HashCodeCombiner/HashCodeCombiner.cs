@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.Internal
             else
             {
                 var count = 0;
-                foreach (object? o in e)
+                foreach (var o in e)
                 {
                     Add(o);
                     count++;

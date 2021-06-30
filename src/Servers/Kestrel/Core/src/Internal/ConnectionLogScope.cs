@@ -36,7 +36,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            for (int i = 0; i < Count; ++i)
+            for (var i = 0; i < Count; ++i)
             {
                 yield return this[i];
             }

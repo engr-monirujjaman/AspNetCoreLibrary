@@ -22,8 +22,8 @@ namespace Microsoft.AspNetCore.Routing.Matching
                 return 0;
             }
 
-            int count = 0;
-            int start = 1; // Paths always start with a leading /
+            var count = 0;
+            var start = 1; // Paths always start with a leading /
             int end;
             var span = path.AsSpan(start);
             while ((end = span.IndexOf('/')) >= 0 && count < segments.Length)

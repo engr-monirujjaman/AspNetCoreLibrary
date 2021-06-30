@@ -51,7 +51,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
                 charA == charB ||
 
                 // Equal when converted to-lower AND they are letters
-                ((charA | AsciiToLower) == (charB | AsciiToLower) && (uint)((charA | AsciiToLower) - 'a') <= (uint)('z' - 'a'));
+                ((charA | AsciiToLower) == (charB | AsciiToLower) && (charA | AsciiToLower) - 'a' <= 'z' - 'a');
         }
 
         public static bool IsAscii(string text)

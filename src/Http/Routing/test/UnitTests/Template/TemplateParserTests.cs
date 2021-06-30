@@ -843,7 +843,7 @@ namespace Microsoft.AspNetCore.Routing.Template.Tests
                             return false;
                         }
 
-                        for (int j = 0; j < x.Segments[i].Parts.Count; j++)
+                        for (var j = 0; j < x.Segments[i].Parts.Count; j++)
                         {
                             if (!Equals(x.Segments[i].Parts[j], y.Segments[i].Parts[j]))
                             {

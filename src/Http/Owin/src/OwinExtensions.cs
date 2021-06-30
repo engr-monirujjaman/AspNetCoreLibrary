@@ -148,8 +148,7 @@ namespace Microsoft.AspNetCore.Builder
                 {
                     // Use the existing HttpContext if there is one.
                     HttpContext context;
-                    object obj;
-                    if (env.TryGetValue(typeof(HttpContext).FullName, out obj))
+                    if (env.TryGetValue(typeof(HttpContext).FullName, out var obj))
                     {
                         context = (HttpContext)obj;
                         context.Features.Set<IOwinEnvironmentFeature>(new OwinEnvironmentFeature() { Environment = env });

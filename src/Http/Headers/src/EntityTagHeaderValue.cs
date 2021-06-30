@@ -248,8 +248,7 @@ namespace Microsoft.Net.Http.Headers
                 }
 
                 var tagStartIndex = current;
-                var tagLength = 0;
-                if (HttpRuleParser.GetQuotedStringLength(input, current, out tagLength) != HttpParseResult.Parsed)
+                if (HttpRuleParser.GetQuotedStringLength(input, current, out var tagLength) != HttpParseResult.Parsed)
                 {
                     return 0;
                 }

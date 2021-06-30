@@ -24,8 +24,8 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2
 
         public bool TryPop([NotNullWhen(true)] out Http2Stream? result)
         {
-            int size = _size - 1;
-            Http2StreamAsValueType[] array = _array;
+            var size = _size - 1;
+            var array = _array;
 
             if ((uint)size >= (uint)array.Length)
             {
@@ -41,8 +41,8 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2
 
         public bool TryPeek([NotNullWhen(true)] out Http2Stream? result)
         {
-            int size = _size - 1;
-            Http2StreamAsValueType[] array = _array;
+            var size = _size - 1;
+            var array = _array;
 
             if ((uint)size >= (uint)array.Length)
             {
@@ -57,8 +57,8 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2
         // Pushes an item to the top of the stack.
         public void Push(Http2Stream item)
         {
-            int size = _size;
-            Http2StreamAsValueType[] array = _array;
+            var size = _size;
+            var array = _array;
 
             if ((uint)size < (uint)array.Length)
             {
@@ -82,8 +82,8 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2
 
         public void RemoveExpired(long now)
         {
-            int size = _size;
-            Http2StreamAsValueType[] array = _array;
+            var size = _size;
+            var array = _array;
 
             var removeCount = CalculateRemoveCount(now, size, array);
             if (removeCount == 0)

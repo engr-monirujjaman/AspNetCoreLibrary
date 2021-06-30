@@ -14,7 +14,7 @@ namespace Microsoft.AspNetCore.Routing.Internal
     {
         private DfaGraphWriter CreateGraphWriter()
         {
-            ServiceCollection services = new ServiceCollection();
+            var services = new ServiceCollection();
             services.AddLogging();
             services.AddRouting();
 

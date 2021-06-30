@@ -165,7 +165,7 @@ namespace Microsoft.AspNetCore.HttpOverrides
             // Gather expected headers.
             string[]? forwardedFor = null, forwardedProto = null, forwardedHost = null;
             bool checkFor = false, checkProto = false, checkHost = false;
-            int entryCount = 0;
+            var entryCount = 0;
 
             var request = context.Request;
             var requestHeaders = context.Request.Headers;
@@ -210,7 +210,7 @@ namespace Microsoft.AspNetCore.HttpOverrides
 
             // Group the data together.
             var sets = new SetOfForwarders[entryCount];
-            for (int i = 0; i < sets.Length; i++)
+            for (var i = 0; i < sets.Length; i++)
             {
                 // They get processed in reverse order, right to left.
                 var set = new SetOfForwarders();
@@ -238,8 +238,8 @@ namespace Microsoft.AspNetCore.HttpOverrides
             };
 
             var checkKnownIps = _options.KnownNetworks.Count > 0 || _options.KnownProxies.Count > 0;
-            bool applyChanges = false;
-            int entriesConsumed = 0;
+            var applyChanges = false;
+            var entriesConsumed = 0;
 
             for (; entriesConsumed < sets.Length; entriesConsumed++)
             {

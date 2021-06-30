@@ -22,8 +22,6 @@ namespace Microsoft.AspNetCore.Owin
 
         private KeyValuePair<string, string[]> Convert(KeyValuePair<string, StringValues> item) => new KeyValuePair<string, string[]>(item.Key, item.Value);
 
-        private StringValues Convert(string[] item) => item;
-
         private string[] Convert(StringValues item) => item;
 
         string[] IDictionary<string, string[]>.this[string key]
@@ -68,8 +66,7 @@ namespace Microsoft.AspNetCore.Owin
 
         bool IDictionary<string, string[]>.TryGetValue(string key, out string[] value)
         {
-            StringValues temp;
-            if (Inner.TryGetValue(key, out temp))
+            if (Inner.TryGetValue(key, out var temp))
             {
                 value = temp;
                 return true;

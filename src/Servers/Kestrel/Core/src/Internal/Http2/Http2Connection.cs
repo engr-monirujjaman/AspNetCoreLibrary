@@ -9,11 +9,9 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipelines;
 using System.Net.Http.HPack;
-using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Net.Http;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -236,7 +234,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2
 
                     try
                     {
-                        bool frameReceived = false;
+                        var frameReceived = false;
                         while (Http2FrameReader.TryReadFrame(ref buffer, _incomingFrame, _serverSettings.MaxFrameSize, out var framePayload))
                         {
                             frameReceived = true;

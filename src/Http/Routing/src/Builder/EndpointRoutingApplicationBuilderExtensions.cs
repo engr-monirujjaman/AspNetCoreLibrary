@@ -135,7 +135,7 @@ namespace Microsoft.AspNetCore.Builder
 
             // This check handles the case where Map or something else that forks the pipeline is called between the two
             // routing middleware.
-            if (!object.ReferenceEquals(app, endpointRouteBuilder.ApplicationBuilder))
+            if (!ReferenceEquals(app, endpointRouteBuilder.ApplicationBuilder))
             {
                 var message =
                     $"The {nameof(EndpointRoutingMiddleware)} and {nameof(EndpointMiddleware)} must be added to the same {nameof(IApplicationBuilder)} instance. " +

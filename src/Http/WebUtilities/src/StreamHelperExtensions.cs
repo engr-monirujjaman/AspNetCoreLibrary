@@ -14,7 +14,7 @@ namespace Microsoft.AspNetCore.WebUtilities
     /// </summary>
     public static class StreamHelperExtensions
     {
-        private const int _maxReadBufferSize = 1024 * 4;
+        private const int MaxReadBufferSize = 1024 * 4;
 
         /// <summary>
         /// Reads the specified <paramref name="stream"/> to the end.
@@ -59,7 +59,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         public static async Task DrainAsync(this Stream stream, ArrayPool<byte> bytePool, long? limit, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var buffer = bytePool.Rent(_maxReadBufferSize);
+            var buffer = bytePool.Rent(MaxReadBufferSize);
             long total = 0;
             try
             {

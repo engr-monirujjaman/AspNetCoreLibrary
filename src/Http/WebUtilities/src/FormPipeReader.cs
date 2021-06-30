@@ -34,8 +34,8 @@ namespace Microsoft.AspNetCore.WebUtilities
         private static ReadOnlySpan<byte> UTF8AndEncoded => new byte[] { (byte)'&' };
 
         // Used for other encodings
-        private byte[]? _otherEqualEncoding;
-        private byte[]? _otherAndEncoding;
+        private readonly byte[]? _otherEqualEncoding;
+        private readonly byte[]? _otherAndEncoding;
 
         private readonly PipeReader _pipeReader;
         private readonly Encoding _encoding;
@@ -241,7 +241,6 @@ namespace Microsoft.AspNetCore.WebUtilities
             bool isFinalBlock)
         {
             var sequenceReader = new SequenceReader<byte>(buffer);
-            ReadOnlySequence<byte> keyValuePair;
 
             var consumed = sequenceReader.Position;
             var consumedBytes = default(long);
@@ -250,7 +249,7 @@ namespace Microsoft.AspNetCore.WebUtilities
 
             while (!sequenceReader.End)
             {
-                if (!sequenceReader.TryReadTo(out keyValuePair, andDelimiter))
+                if (!sequenceReader.TryReadTo(out             ReadOnlySequence<byte> keyValuePair, andDelimiter))
                 {
                     if (!isFinalBlock)
                     {
@@ -352,7 +351,7 @@ namespace Microsoft.AspNetCore.WebUtilities
 
                 try
                 {
-                    Span<byte> buffer = byteArray.AsSpan(0, (int)ros.Length);
+                    var buffer = byteArray.AsSpan(0, (int)ros.Length);
                     ros.CopyTo(buffer);
                     return GetDecodedString(buffer);
                 }

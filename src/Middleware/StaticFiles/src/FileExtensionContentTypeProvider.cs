@@ -455,7 +455,7 @@ namespace Microsoft.AspNetCore.StaticFiles
                 return null;
             }
 
-            int index = path.LastIndexOf('.');
+            var index = path.LastIndexOf('.');
             if (index < 0)
             {
                 return null;

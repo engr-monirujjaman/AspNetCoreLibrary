@@ -566,7 +566,7 @@ InvalidContentDispositionValue +
         {
             var stream = new MemoryStream(size);
             var bytes = Encoding.ASCII.GetBytes("HelloWorld_ABCDEFGHIJKLMNOPQRSTUVWXYZ.abcdefghijklmnopqrstuvwxyz,0123456789;");
-            int written = 0;
+            var written = 0;
             while (written < size)
             {
                 var toWrite = Math.Min(size - written, bytes.Length);
@@ -611,7 +611,7 @@ MultipartFormField +
             var loops = 0;
             while (readA > 0)
             {
-                for (int i = 0; i < readA; i++)
+                for (var i = 0; i < readA; i++)
                 {
                     if (bytesA[i] != bytesB[i])
                     {

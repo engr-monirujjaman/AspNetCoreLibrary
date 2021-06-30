@@ -295,11 +295,11 @@ namespace Microsoft.AspNetCore.Routing.Matching
             // We don't bother returning a 405 when the CORS preflight method doesn't exist.
             // The developer calling the API will see it as a CORS error, which is fine because
             // there isn't an endpoint to check for a CORS policy.
-            if (!edges.TryGetValue(new EdgeKey(AnyMethod, false), out var matches))
+            if (!edges.TryGetValue(new EdgeKey(AnyMethod, false), out _))
             {
                 // Methods sorted for testability.
                 var endpoint = CreateRejectionEndpoint(allHttpMethods);
-                matches = new List<Endpoint>() { endpoint, };
+                var matches = new List<Endpoint>() { endpoint, };
                 edges[new EdgeKey(AnyMethod, false)] = matches;
             }
 
@@ -312,7 +312,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
 
             return policyNodeEdges;
 
-            (IReadOnlyList<string> httpMethods, bool acceptCorsPreflight) GetHttpMethods(Endpoint e)
+            static (IReadOnlyList<string> httpMethods, bool acceptCorsPreflight) GetHttpMethods(Endpoint e)
             {
                 var metadata = e.Metadata.GetMetadata<IHttpMethodMetadata>();
                 return metadata == null ? (Array.Empty<string>(), false) : (metadata.HttpMethods, metadata.AcceptCorsPreflight);
@@ -353,7 +353,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
                 }
             }
 
-            int corsPreflightExitDestination = exitDestination;
+            var corsPreflightExitDestination = exitDestination;
             if (corsPreflightDestinations != null && corsPreflightDestinations.TryGetValue(AnyMethod, out var matchesAnyVerb))
             {
                 // If we have endpoints that match any HTTP method, use that as the exit.
@@ -426,7 +426,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
             for (var i = 0; i < methods.Length; i++)
             {
                 // This is a fast path for when everything is using static HttpMethods instances.
-                if (object.ReferenceEquals(methods[i], httpMethod))
+                if (ReferenceEquals(methods[i], httpMethod))
                 {
                     return true;
                 }

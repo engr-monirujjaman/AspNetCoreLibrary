@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Xunit.Sdk;
 
 namespace Microsoft.AspNetCore.Routing.Matching
@@ -74,7 +73,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
                 throw new XunitException("RouteValues is null.");
             }
 
-            if (!object.ReferenceEquals(expected, httpContext.GetEndpoint()))
+            if (!ReferenceEquals(expected, httpContext.GetEndpoint()))
             {
                 throw new XunitException(
                     $"Was expected to match '{expected.DisplayName}' but matched " +

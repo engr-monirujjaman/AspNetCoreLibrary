@@ -2021,14 +2021,14 @@ namespace Microsoft.AspNetCore.Routing.Tests
             dict.Add("key3", "value3");
 
             // Assert 1
-            var storage = Assert.IsType<KeyValuePair<string, object?>[]>(dict._arrayStorage);
+            Assert.IsType<KeyValuePair<string, object?>[]>(dict._arrayStorage);
             Assert.Equal(3, dict.Count);
 
             // Act
             dict.Remove("key2");
 
             // Assert 2
-            storage = Assert.IsType<KeyValuePair<string, object?>[]>(dict._arrayStorage);
+            var storage = Assert.IsType<KeyValuePair<string, object?>[]>(dict._arrayStorage);
             Assert.Equal(2, dict.Count);
             Assert.Equal("key", storage[0].Key);
             Assert.Equal("value", storage[0].Value);
@@ -2120,7 +2120,9 @@ namespace Microsoft.AspNetCore.Routing.Tests
 
         private class Visibility
         {
+#pragma warning disable IDE0051 // Remove unused private members
             private string? PrivateYo { get; set; }
+#pragma warning restore IDE0051 // Remove unused private members
 
             internal int ItsInternalDealWithIt { get; set; }
 
@@ -2134,7 +2136,9 @@ namespace Microsoft.AspNetCore.Routing.Tests
 
         private class SetterOnly
         {
+#pragma warning disable IDE0052 // Remove unread private members
             private bool _coolSetOnly;
+#pragma warning restore IDE0052 // Remove unread private members
 
             public bool CoolSetOnly { set { _coolSetOnly = value; } }
         }

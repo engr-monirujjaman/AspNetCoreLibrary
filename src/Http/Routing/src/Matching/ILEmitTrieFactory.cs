@@ -388,7 +388,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         private static ushort GetUInt16Key(string text, int index)
         {
             Debug.Assert(index + 1 <= text.Length);
-            return (ushort)char.ToLowerInvariant(text[index]);
+            return char.ToLowerInvariant(text[index]);
         }
 
         // We require a special build-time define since this is a testing/debugging

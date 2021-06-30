@@ -52,8 +52,7 @@ namespace Microsoft.AspNetCore.Hosting
 
         public static void ApplicationError(this ILogger logger, EventId eventId, string message, Exception exception)
         {
-            var reflectionTypeLoadException = exception as ReflectionTypeLoadException;
-            if (reflectionTypeLoadException != null)
+            if (exception is ReflectionTypeLoadException reflectionTypeLoadException)
             {
                 foreach (var ex in reflectionTypeLoadException.LoaderExceptions)
                 {
@@ -167,7 +166,7 @@ namespace Microsoft.AspNetCore.Hosting
 
             public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
             {
-                for (int i = 0; i < Count; ++i)
+                for (var i = 0; i < Count; ++i)
                 {
                     yield return this[i];
                 }

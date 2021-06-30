@@ -72,7 +72,7 @@ namespace Microsoft.AspNetCore.Internal
             Assert.Equal(contentLength, httpResponse.ContentLength);
             Assert.Equal(path, sendFileFeature.Name);
             Assert.Equal(startResult, sendFileFeature.Offset);
-            Assert.Equal((long?)contentLength, sendFileFeature.Length);
+            Assert.Equal(contentLength, sendFileFeature.Length);
         }
 
         [Fact]

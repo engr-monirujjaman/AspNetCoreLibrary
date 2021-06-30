@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -108,13 +107,13 @@ namespace Microsoft.AspNetCore.WebUtilities
             var headers = await ReadHeadersAsync(cancellationToken);
             _boundary.ExpectLeadingCrlf = true;
             _currentStream = new MultipartReaderStream(_stream, _boundary) { LengthLimit = BodyLengthLimit };
-            long? baseStreamOffset = _stream.CanSeek ? (long?)_stream.Position : null;
+            var baseStreamOffset = _stream.CanSeek ? (long?)_stream.Position : null;
             return new MultipartSection() { Headers = headers, Body = _currentStream, BaseStreamOffset = baseStreamOffset };
         }
 
         private async Task<Dictionary<string, StringValues>> ReadHeadersAsync(CancellationToken cancellationToken)
         {
-            int totalSize = 0;
+            var totalSize = 0;
             var accumulator = new KeyValueAccumulator();
             var line = await _stream.ReadLineAsync(HeadersLengthLimit - totalSize, cancellationToken);
             while (!string.IsNullOrEmpty(line))
@@ -124,7 +123,7 @@ namespace Microsoft.AspNetCore.WebUtilities
                     throw new InvalidDataException($"Multipart headers length limit {HeadersLengthLimit} exceeded.");
                 }
                 totalSize += line.Length;
-                int splitIndex = line.IndexOf(':');
+                var splitIndex = line.IndexOf(':');
                 if (splitIndex <= 0)
                 {
                     throw new InvalidDataException($"Invalid header line: {line}");

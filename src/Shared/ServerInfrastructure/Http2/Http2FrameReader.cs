@@ -224,7 +224,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2
             var settingsCount = data.Length / SettingSize;
 
             var settings = new Http2PeerSetting[settingsCount];
-            for (int i = 0; i < settings.Length; i++)
+            for (var i = 0; i < settings.Length; i++)
             {
                 settings[i] = ReadSetting(data);
                 data = data.Slice(SettingSize);

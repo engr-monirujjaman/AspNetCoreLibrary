@@ -25,14 +25,11 @@ namespace Microsoft.AspNetCore.Owin
 
         private StringValues Convert(string[] item) => item;
 
-        private string[] Convert(StringValues item) => item;
-
         StringValues IHeaderDictionary.this[string key]
         {
             get
             {
-                string[] values;
-                return Inner.TryGetValue(key, out values) ? values : null;
+                return Inner.TryGetValue(key, out var values) ? values : null;
             }
             set { Inner[key] = value; }
         }
@@ -47,17 +44,15 @@ namespace Microsoft.AspNetCore.Owin
         {
             get
             {
-                long value;
 
-                string[] rawValue;
-                if (!Inner.TryGetValue(HeaderNames.ContentLength, out rawValue))
+                if (!Inner.TryGetValue(HeaderNames.ContentLength, out var rawValue))
                 {
                     return null;
                 }
 
                 if (rawValue.Length == 1 &&
                     !string.IsNullOrEmpty(rawValue[0]) &&
-                    HeaderUtilities.TryParseNonNegativeInt64(new StringSegment(rawValue[0]).Trim(), out value))
+                    HeaderUtilities.TryParseNonNegativeInt64(new StringSegment(rawValue[0]).Trim(), out var value))
                 {
                     return value;
                 }
@@ -113,8 +108,7 @@ namespace Microsoft.AspNetCore.Owin
 
         bool IDictionary<string, StringValues>.TryGetValue(string key, out StringValues value)
         {
-            string[] temp;
-            if (Inner.TryGetValue(key, out temp))
+            if (Inner.TryGetValue(key, out var temp))
             {
                 value = temp;
                 return true;

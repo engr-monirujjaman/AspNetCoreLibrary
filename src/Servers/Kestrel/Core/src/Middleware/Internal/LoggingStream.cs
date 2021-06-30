@@ -79,28 +79,28 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            int read = _inner.Read(buffer, offset, count);
+            var read = _inner.Read(buffer, offset, count);
             Log("Read", new ReadOnlySpan<byte>(buffer, offset, read));
             return read;
         }
 
         public override int Read(Span<byte> destination)
         {
-            int read = _inner.Read(destination);
+            var read = _inner.Read(destination);
             Log("Read", destination.Slice(0, read));
             return read;
         }
 
-        public async override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            int read = await _inner.ReadAsync(buffer.AsMemory(offset, count), cancellationToken);
+            var read = await _inner.ReadAsync(buffer.AsMemory(offset, count), cancellationToken);
             Log("ReadAsync", new ReadOnlySpan<byte>(buffer, offset, read));
             return read;
         }
 
         public override async ValueTask<int> ReadAsync(Memory<byte> destination, CancellationToken cancellationToken = default)
         {
-            int read = await _inner.ReadAsync(destination, cancellationToken);
+            var read = await _inner.ReadAsync(destination, cancellationToken);
             Log("ReadAsync", destination.Span.Slice(0, read));
             return read;
         }
@@ -160,7 +160,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
             var charBuilder = new StringBuilder();
 
             // Write the hex
-            for (int i = 0; i < buffer.Length; i++)
+            for (var i = 0; i < buffer.Length; i++)
             {
                 builder.Append(buffer[i].ToString("X2", CultureInfo.InvariantCulture));
                 builder.Append(' ');

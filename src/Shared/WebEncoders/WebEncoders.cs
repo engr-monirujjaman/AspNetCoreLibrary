@@ -354,7 +354,7 @@ namespace Microsoft.Extensions.Internal
                 return string.Empty;
             }
 
-            int bufferSize = GetArraySizeRequiredToEncode(input.Length);
+            var bufferSize = GetArraySizeRequiredToEncode(input.Length);
 
             char[]? bufferToReturnToPool = null;
             Span<char> buffer = bufferSize <= StackAllocThreshold
@@ -383,7 +383,7 @@ namespace Microsoft.Extensions.Internal
 
             // Use base64url encoding with no padding characters. See RFC 4648, Sec. 5.
 
-            Convert.TryToBase64Chars(input, output, out int charsWritten);
+            Convert.TryToBase64Chars(input, output, out var charsWritten);
 
             // Fix up '+' -> '-' and '/' -> '_'. Drop padding characters.
             for (var i = 0; i < charsWritten; i++)

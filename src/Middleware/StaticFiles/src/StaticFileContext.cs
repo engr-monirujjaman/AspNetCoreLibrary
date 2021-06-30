@@ -4,7 +4,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -118,11 +117,11 @@ namespace Microsoft.AspNetCore.StaticFiles
             {
                 _length = _fileInfo.Length;
 
-                DateTimeOffset last = _fileInfo.LastModified;
+                var last = _fileInfo.LastModified;
                 // Truncate to the second.
                 _lastModified = new DateTimeOffset(last.Year, last.Month, last.Day, last.Hour, last.Minute, last.Second, last.Offset).ToUniversalTime();
 
-                long etagHash = _lastModified.ToFileTime() ^ _length;
+                var etagHash = _lastModified.ToFileTime() ^ _length;
                 _etag = new EntityTagHeaderValue('\"' + Convert.ToString(etagHash, 16) + '\"');
             }
             return _fileInfo.Exists;
@@ -183,7 +182,7 @@ namespace Microsoft.AspNetCore.StaticFiles
             var ifModifiedSince = requestHeaders.IfModifiedSince;
             if (ifModifiedSince.HasValue && ifModifiedSince <= now)
             {
-                bool modified = ifModifiedSince < _lastModified;
+                var modified = ifModifiedSince < _lastModified;
                 _ifModifiedSinceState = modified ? PreconditionState.ShouldProcess : PreconditionState.NotModified;
             }
 
@@ -191,7 +190,7 @@ namespace Microsoft.AspNetCore.StaticFiles
             var ifUnmodifiedSince = requestHeaders.IfUnmodifiedSince;
             if (ifUnmodifiedSince.HasValue && ifUnmodifiedSince <= now)
             {
-                bool unmodified = ifUnmodifiedSince >= _lastModified;
+                var unmodified = ifUnmodifiedSince >= _lastModified;
                 _ifUnmodifiedSinceState = unmodified ? PreconditionState.ShouldProcess : PreconditionState.PreconditionFailed;
             }
         }
@@ -272,8 +271,8 @@ namespace Microsoft.AspNetCore.StaticFiles
 
         private static PreconditionState GetMaxPreconditionState(params PreconditionState[] states)
         {
-            PreconditionState max = PreconditionState.Unspecified;
-            for (int i = 0; i < states.Length; i++)
+            var max = PreconditionState.Unspecified;
+            for (var i = 0; i < states.Length; i++)
             {
                 if (states[i] > max)
                 {

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Primitives;
-using NuGet.Frameworks;
 using Xunit;
 
 namespace Microsoft.Net.Http.Headers
@@ -537,9 +536,9 @@ namespace Microsoft.Net.Http.Headers
         [Fact]
         public void TryParseList_NullOrEmptyArray_ReturnsFalse()
         {
-            Assert.False(MediaTypeHeaderValue.TryParseList(null, out var results));
-            Assert.False(MediaTypeHeaderValue.TryParseList(new string[0], out results));
-            Assert.False(MediaTypeHeaderValue.TryParseList(new string[] { "" }, out results));
+            Assert.False(MediaTypeHeaderValue.TryParseList(null, out _));
+            Assert.False(MediaTypeHeaderValue.TryParseList(new string[0], out _));
+            Assert.False(MediaTypeHeaderValue.TryParseList(new string[] { "" }, out _));
         }
 
         [Fact]
@@ -681,7 +680,7 @@ namespace Microsoft.Net.Http.Headers
                 "application/xml;q=0.9,image/webp,*/*;q=0.8",
                 "application/xml;q=0 4"
             };
-            Assert.False(MediaTypeHeaderValue.TryParseStrictList(inputs, out var results));
+            Assert.False(MediaTypeHeaderValue.TryParseStrictList(inputs, out _));
         }
 
         [Theory]

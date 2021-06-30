@@ -127,7 +127,7 @@ namespace Microsoft.Net.Http.Headers
             }
             foreach (var value in values)
             {
-                int index = 0;
+                var index = 0;
 
                 while (!string.IsNullOrEmpty(value) && index < value.Length)
                 {

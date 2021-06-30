@@ -402,7 +402,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Https.Internal
 
         private SslDuplexPipe CreateSslDuplexPipe(IDuplexPipe transport, MemoryPool<byte> memoryPool)
         {
-            StreamPipeReaderOptions inputPipeOptions = new StreamPipeReaderOptions
+            var inputPipeOptions = new StreamPipeReaderOptions
             (
                 pool: memoryPool,
                 bufferSize: memoryPool.GetMinimumSegmentSize(),

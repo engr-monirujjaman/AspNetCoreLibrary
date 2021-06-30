@@ -49,7 +49,7 @@ namespace Microsoft.Net.Http.Headers
             : base(CreateInnerList(isReadOnly, other))
         {
             _validator = DefaultValidator;
-            foreach (T item in Items)
+            foreach (var item in Items)
             {
                 _validator(item);
             }

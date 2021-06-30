@@ -9,7 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.Extensions.Primitives;
 
@@ -226,9 +225,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as ContentDispositionHeaderValue;
-
-            if (other == null)
+            if (obj is not ContentDispositionHeaderValue other)
             {
                 return false;
             }
@@ -295,7 +292,7 @@ namespace Microsoft.Net.Http.Headers
             if ((current < input.Length) && (input[current] == ';'))
             {
                 current++; // skip delimiter.
-                int parameterLength = NameValueHeaderValue.GetNameValueListLength(input, current, ';',
+                var parameterLength = NameValueHeaderValue.GetNameValueListLength(input, current, ';',
                     contentDispositionHeader.Parameters);
 
                 parsedValue = contentDispositionHeader;
@@ -356,8 +353,7 @@ namespace Microsoft.Net.Http.Headers
                 {
                     dateString = dateString.Subsegment(1, dateString.Length - 2);
                 }
-                DateTimeOffset date;
-                if (HttpRuleParser.TryStringToDate(dateString, out date))
+                if (HttpRuleParser.TryStringToDate(dateString, out var date))
                 {
                     return date;
                 }
@@ -436,7 +432,7 @@ namespace Microsoft.Net.Http.Headers
             }
             else
             {
-                var processedValue = StringSegment.Empty;
+                StringSegment processedValue;
                 if (parameter.EndsWith("*", StringComparison.Ordinal))
                 {
                     processedValue = Encode5987(value);
@@ -502,10 +498,10 @@ namespace Microsoft.Net.Http.Headers
             if (RequiresEncoding(result))
             {
                 var builder = new StringBuilder(result.Length);
-                for (int i = 0; i < result.Length; i++)
+                for (var i = 0; i < result.Length; i++)
                 {
                     var c = result[i];
-                    if ((int)c > 0x7f || (int)c < 0x20)
+                    if (c > 0x7f || c < 0x20)
                     {
                         c = '_'; // Replace out-of-range characters
                     }
@@ -531,9 +527,9 @@ namespace Microsoft.Net.Http.Headers
         {
             Contract.Assert(input != null);
 
-            for (int i = 0; i < input.Length; i++)
+            for (var i = 0; i < input.Length; i++)
             {
-                if ((int)input[i] > 0x7f || (int)input[i] < 0x20)
+                if (input[i] > 0x7f || input[i] < 0x20)
                 {
                     return true;
                 }
@@ -610,7 +606,7 @@ namespace Microsoft.Net.Http.Headers
         private static string Encode5987(StringSegment input)
         {
             var builder = new StringBuilder("UTF-8\'\'");
-            for (int i = 0; i < input.Length; i++)
+            for (var i = 0; i < input.Length; i++)
             {
                 var c = input[i];
                 // attr-char = ALPHA / DIGIT / "!" / "#" / "$" / "&" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
@@ -618,7 +614,7 @@ namespace Microsoft.Net.Http.Headers
                 if (c > 0x7F) // Encodes as multiple utf-8 bytes
                 {
                     var bytes = Encoding.UTF8.GetBytes(c.ToString());
-                    foreach (byte b in bytes)
+                    foreach (var b in bytes)
                     {
                         HexEscape(builder, (char)b);
                     }
@@ -768,10 +764,10 @@ namespace Microsoft.Net.Http.Headers
             }
 
             var res = (digit <= '9')
-                ? ((int)digit - (int)'0')
+                ? (digit - '0')
                 : (((digit <= 'F')
-                ? ((int)digit - (int)'A')
-                : ((int)digit - (int)'a'))
+                ? (digit - 'A')
+                : (digit - 'a'))
                    + 10);
 
             if (!(((next >= '0') && (next <= '9'))
@@ -782,10 +778,10 @@ namespace Microsoft.Net.Http.Headers
             }
 
             return (byte)((res << 4) + ((next <= '9')
-                    ? ((int)next - (int)'0')
+                    ? (next - '0')
                     : (((next <= 'F')
-                        ? ((int)next - (int)'A')
-                        : ((int)next - (int)'a'))
+                        ? (next - 'A')
+                        : (next - 'a'))
                        + 10)));
         }
     }

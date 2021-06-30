@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing.Patterns;
 using System.Collections.Generic;
 using Xunit;
@@ -202,11 +201,8 @@ namespace Microsoft.AspNetCore.Routing
                     metadata: new object[] { new SuppressLinkGenerationMetadata(), }),
             };
 
-            Endpoints = endpoints;
             LinkGenerator = CreateLinkGenerator(endpoints.ToArray());
         }
-
-        private IReadOnlyList<Endpoint> Endpoints { get; }
 
         private LinkGenerator LinkGenerator { get; }
 

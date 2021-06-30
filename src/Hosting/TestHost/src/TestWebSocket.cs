@@ -48,7 +48,7 @@ namespace Microsoft.AspNetCore.TestHost
             get { return _subProtocol; }
         }
 
-        public async override Task CloseAsync(WebSocketCloseStatus closeStatus, string? statusDescription, CancellationToken cancellationToken)
+        public override async Task CloseAsync(WebSocketCloseStatus closeStatus, string? statusDescription, CancellationToken cancellationToken)
         {
             ThrowIfDisposed();
 
@@ -71,7 +71,7 @@ namespace Microsoft.AspNetCore.TestHost
             }
         }
 
-        public async override Task CloseOutputAsync(WebSocketCloseStatus closeStatus, string? statusDescription, CancellationToken cancellationToken)
+        public override async Task CloseOutputAsync(WebSocketCloseStatus closeStatus, string? statusDescription, CancellationToken cancellationToken)
         {
             ThrowIfDisposed();
             ThrowIfOutputClosed();
@@ -119,7 +119,7 @@ namespace Microsoft.AspNetCore.TestHost
             ValidateSegment(buffer);
             // TODO: InvalidOperationException if any receives are currently in progress.
 
-            Message? receiveMessage = _receiveMessage;
+            var receiveMessage = _receiveMessage;
             _receiveMessage = null;
             if (receiveMessage == null)
             {
@@ -143,8 +143,8 @@ namespace Microsoft.AspNetCore.TestHost
             }
             else
             {
-                int count = Math.Min(buffer.Count, receiveMessage.Buffer.Count);
-                bool endOfMessage = count == receiveMessage.Buffer.Count;
+                var count = Math.Min(buffer.Count, receiveMessage.Buffer.Count);
+                var endOfMessage = count == receiveMessage.Buffer.Count;
                 Array.Copy(receiveMessage.Buffer.Array!, receiveMessage.Buffer.Offset, buffer.Array!, buffer.Offset, count);
                 if (!endOfMessage)
                 {
@@ -264,7 +264,7 @@ namespace Microsoft.AspNetCore.TestHost
                 _messageQueue = new Queue<Message>();
             }
 
-            public async virtual Task<Message> ReceiveAsync(CancellationToken cancellationToken)
+            public virtual async Task<Message> ReceiveAsync(CancellationToken cancellationToken)
             {
                 if (_disposed)
                 {

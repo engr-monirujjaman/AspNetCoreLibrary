@@ -219,7 +219,7 @@ namespace Microsoft.Net.Http.Headers
                 "text7,text8;q=0.5",
                 " text9 , text10 ; q = 0.5 ",
             };
-            IList<StringWithQualityHeaderValue> results = StringWithQualityHeaderValue.ParseList(inputs);
+            var results = StringWithQualityHeaderValue.ParseList(inputs);
 
             var expectedResults = new[]
             {
@@ -256,7 +256,7 @@ namespace Microsoft.Net.Http.Headers
                 "text7,text8;q=0.5",
                 " text9 , text10 ; q = 0.5 ",
             };
-            IList<StringWithQualityHeaderValue> results = StringWithQualityHeaderValue.ParseStrictList(inputs);
+            var results = StringWithQualityHeaderValue.ParseStrictList(inputs);
 
             var expectedResults = new[]
             {
@@ -464,7 +464,7 @@ namespace Microsoft.Net.Http.Headers
                 "text7,text8;q=0.5",
                 " text9 , text10 ; q = 0.5 ",
             };
-            Assert.False(StringWithQualityHeaderValue.TryParseStrictList(inputs, out var results));
+            Assert.False(StringWithQualityHeaderValue.TryParseStrictList(inputs, out _));
         }
 
         #region Helper methods

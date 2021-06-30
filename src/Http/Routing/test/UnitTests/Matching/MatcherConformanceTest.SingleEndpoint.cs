@@ -112,7 +112,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task NotMatch_SingleLiteralSegment(string path)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher("/simple");
+            var (matcher, _) = CreateMatcher("/simple");
             var httpContext = CreateContext(path);
 
             // Act
@@ -183,7 +183,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task NotMatch_MultipleLiteralSegments(string template, string path)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher(template);
+            var (matcher, _) = CreateMatcher(template);
             var httpContext = CreateContext(path);
 
             // Act
@@ -266,7 +266,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task NotMatch_SingleParameter(string path)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher("/{p}");
+            var (matcher, _) = CreateMatcher("/{p}");
             var httpContext = CreateContext(path);
 
             // Act
@@ -316,7 +316,7 @@ namespace Microsoft.AspNetCore.Routing.Matching
         public virtual async Task NotMatch_MultipleParameters(string template, string path)
         {
             // Arrange
-            var (matcher, endpoint) = CreateMatcher(template);
+            var (matcher, _) = CreateMatcher(template);
             var httpContext = CreateContext(path);
 
             // Act

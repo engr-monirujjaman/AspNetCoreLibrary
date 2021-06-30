@@ -104,9 +104,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as RangeHeaderValue;
-
-            if (other == null)
+            if (obj is not RangeHeaderValue other)
             {
                 return false;
             }
@@ -170,7 +168,7 @@ namespace Microsoft.Net.Http.Headers
                 return 0;
             }
 
-            RangeHeaderValue result = new RangeHeaderValue();
+            var result = new RangeHeaderValue();
             result._unit = input.Subsegment(startIndex, unitLength);
             var current = startIndex + unitLength;
             current = current + HttpRuleParser.GetWhitespaceLength(input, current);

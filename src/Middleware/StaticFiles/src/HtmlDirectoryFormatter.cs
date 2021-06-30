@@ -58,7 +58,7 @@ namespace Microsoft.AspNetCore.StaticFiles
                 return Task.CompletedTask;
             }
 
-            PathString requestPath = context.Request.PathBase + context.Request.Path;
+            var requestPath = context.Request.PathBase + context.Request.Path;
 
             var builder = new StringBuilder();
 
@@ -115,7 +115,7 @@ namespace Microsoft.AspNetCore.StaticFiles
                 @"
     <header><h1>{0} <a href=""/"">/</a>", HtmlEncode(Resources.HtmlDir_IndexOf));
 
-            string cumulativePath = "/";
+            var cumulativePath = "/";
             foreach (var segment in requestPath.Value!.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 cumulativePath = cumulativePath + segment + "/";
@@ -213,8 +213,8 @@ namespace Microsoft.AspNetCore.StaticFiles
   </section>
 </body>
 </html>");
-            string data = builder.ToString();
-            byte[] bytes = Encoding.UTF8.GetBytes(data);
+            var data = builder.ToString();
+            var bytes = Encoding.UTF8.GetBytes(data);
             context.Response.ContentLength = bytes.Length;
             return context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
         }

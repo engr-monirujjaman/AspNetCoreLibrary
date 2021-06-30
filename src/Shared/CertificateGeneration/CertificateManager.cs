@@ -34,7 +34,7 @@ namespace Microsoft.AspNetCore.Certificates.Generation
             new WindowsCertificateManager() :
 #pragma warning restore CA1416 // Validate platform compatibility
             OperatingSystem.IsMacOS() ?
-                new MacOSCertificateManager() as CertificateManager :
+                new MacOSCertificateManager() :
                 new UnixCertificateManager();
 
         public static CertificateManagerEventSource Log { get; set; } = new CertificateManagerEventSource();
@@ -715,7 +715,7 @@ namespace Microsoft.AspNetCore.Certificates.Generation
             var result = request.CreateSelfSigned(notBefore, notAfter);
             return result;
 
-            RSA CreateKeyMaterial(int minimumKeySize)
+            static RSA CreateKeyMaterial(int minimumKeySize)
             {
                 var rsa = RSA.Create(minimumKeySize);
                 if (rsa.KeySize < minimumKeySize)

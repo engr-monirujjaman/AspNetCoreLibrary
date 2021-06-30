@@ -192,8 +192,7 @@ namespace Microsoft.AspNetCore.Http.Headers
 
             public override bool Equals(object obj)
             {
-                var other = obj as TestHeaderValue;
-                return other != null;
+                return obj is TestHeaderValue;
             }
 
             public override int GetHashCode()

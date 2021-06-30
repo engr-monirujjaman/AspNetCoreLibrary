@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -126,14 +125,12 @@ namespace Microsoft.Net.Http.Headers
         [InlineData("-9999999999999999999")] // 19-digit numbers outside the Int64 range.
         public void TryParse_DifferentInvalidScenarios_AllReturnFalse(string input)
         {
-            RangeHeaderValue result;
-            Assert.False(RangeHeaderValue.TryParse("byte=" + input, out result));
+            Assert.False(RangeHeaderValue.TryParse("byte=" + input, out _));
         }
 
         private static void CheckValidTryParse(string input, long? expectedFrom, long? expectedTo)
         {
-            RangeHeaderValue result;
-            Assert.True(RangeHeaderValue.TryParse("byte=" + input, out result), input);
+            Assert.True(RangeHeaderValue.TryParse("byte=" + input, out var result), input);
 
             var ranges = result.Ranges.ToArray();
             Assert.Single(ranges);
@@ -146,13 +143,12 @@ namespace Microsoft.Net.Http.Headers
 
         private static void CheckValidTryParse(string input, params Tuple<long?, long?>[] expectedRanges)
         {
-            RangeHeaderValue result;
-            Assert.True(RangeHeaderValue.TryParse("byte=" + input, out result), input);
+            Assert.True(RangeHeaderValue.TryParse("byte=" + input, out var result), input);
 
             var ranges = result.Ranges.ToArray();
             Assert.Equal(expectedRanges.Length, ranges.Length);
 
-            for (int i = 0; i < expectedRanges.Length; i++)
+            for (var i = 0; i < expectedRanges.Length; i++)
             {
                 Assert.Equal(expectedRanges[i].Item1, ranges[i].From);
                 Assert.Equal(expectedRanges[i].Item2, ranges[i].To);

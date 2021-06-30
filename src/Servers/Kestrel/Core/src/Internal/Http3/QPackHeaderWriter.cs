@@ -12,13 +12,13 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http3
     {
         public static bool BeginEncode(IEnumerator<KeyValuePair<string, string>> enumerator, Span<byte> buffer, ref int totalHeaderSize, out int length)
         {
-            bool hasValue = enumerator.MoveNext();
+            var hasValue = enumerator.MoveNext();
             Debug.Assert(hasValue == true);
 
             buffer[0] = 0;
             buffer[1] = 0;
 
-            bool doneEncode = Encode(enumerator, buffer.Slice(2), ref totalHeaderSize, out length);
+            var doneEncode = Encode(enumerator, buffer.Slice(2), ref totalHeaderSize, out length);
 
             // Add two for the first two bytes.
             length += 2;
@@ -27,17 +27,17 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http3
 
         public static bool BeginEncode(int statusCode, IEnumerator<KeyValuePair<string, string>> enumerator, Span<byte> buffer, ref int totalHeaderSize, out int length)
         {
-            bool hasValue = enumerator.MoveNext();
+            var hasValue = enumerator.MoveNext();
             Debug.Assert(hasValue == true);
 
             // https://quicwg.org/base-drafts/draft-ietf-quic-qpack.html#header-prefix
             buffer[0] = 0;
             buffer[1] = 0;
 
-            int statusCodeLength = EncodeStatusCode(statusCode, buffer.Slice(2));
+            var statusCodeLength = EncodeStatusCode(statusCode, buffer.Slice(2));
             totalHeaderSize += 42; // name (:status) + value (xxx) + overhead (32)
 
-            bool done = Encode(enumerator, buffer.Slice(statusCodeLength + 2), throwIfNoneEncoded: false, ref totalHeaderSize, out int headersLength);
+            var done = Encode(enumerator, buffer.Slice(statusCodeLength + 2), throwIfNoneEncoded: false, ref totalHeaderSize, out var headersLength);
             length = statusCodeLength + headersLength + 2;
 
             return done;
@@ -56,7 +56,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http3
             {
                 var current = enumerator.Current;
 
-                if (!QPackEncoder.EncodeLiteralHeaderFieldWithoutNameReference(current.Key, current.Value, buffer.Slice(length), out int headerLength))
+                if (!QPackEncoder.EncodeLiteralHeaderFieldWithoutNameReference(current.Key, current.Value, buffer.Slice(length), out var headerLength))
                 {
                     if (length == 0 && throwIfNoneEncoded)
                     {
@@ -92,7 +92,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http3
                     buffer[0] = 0b01011111;
                     buffer[1] = 0b00110000;
 
-                    ReadOnlySpan<byte> statusBytes = System.Net.Http.HPack.StatusCodes.ToStatusBytes(statusCode);
+                    var statusBytes = System.Net.Http.HPack.StatusCodes.ToStatusBytes(statusCode);
                     buffer[2] = (byte)statusBytes.Length;
                     statusBytes.CopyTo(buffer.Slice(3));
 

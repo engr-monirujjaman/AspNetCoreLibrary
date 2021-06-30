@@ -69,7 +69,7 @@ namespace System.IO.Pipelines
             }
             else
             {
-                byte[] poolArray = (byte[])_memoryOwner;
+                var poolArray = (byte[])_memoryOwner;
                 ArrayPool<byte>.Shared.Return(poolArray);
             }
 

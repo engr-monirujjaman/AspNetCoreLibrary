@@ -57,9 +57,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
 
         public async ValueTask<ConnectionContext> ConnectAsync(EndPoint endpoint, CancellationToken cancellationToken = default)
         {
-            var ipEndPoint = endpoint as IPEndPoint;
-
-            if (ipEndPoint is null)
+            if (endpoint is not IPEndPoint ipEndPoint)
             {
                 throw new NotSupportedException("The SocketConnectionFactory only supports IPEndPoints for now.");
             }

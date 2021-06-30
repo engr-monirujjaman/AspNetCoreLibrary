@@ -27,8 +27,7 @@ namespace Microsoft.AspNetCore.WebUtilities
                 _accumulator = new Dictionary<string, StringValues>(StringComparer.OrdinalIgnoreCase);
             }
 
-            StringValues values;
-            if (_accumulator.TryGetValue(key, out values))
+            if (_accumulator.TryGetValue(key, out var values))
             {
                 if (values.Count == 0)
                 {

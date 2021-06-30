@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using Microsoft.AspNetCore.Hosting.Builder;
@@ -202,7 +201,7 @@ namespace Microsoft.AspNetCore.Hosting
                 throw;
             }
 
-            IServiceProvider GetProviderFromFactory(IServiceCollection collection)
+            static IServiceProvider GetProviderFromFactory(IServiceCollection collection)
             {
                 var provider = collection.BuildServiceProvider();
                 var factory = provider.GetService<IServiceProviderFactory<IServiceCollection>>();

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing.Constraints;
-using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.AspNetCore.Routing.TestObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -665,7 +664,7 @@ namespace Microsoft.AspNetCore.Routing
                 values: new RouteValueDictionary(new { p1 = "abcd" }),
                 ambientValues: DefaultLinkGenerator.GetAmbientValues(httpContext),
                 options: null,
-                result: out var result);
+                result: out _);
 
             // Assert
             Assert.False(success);
@@ -715,7 +714,7 @@ namespace Microsoft.AspNetCore.Routing
                 values: new RouteValueDictionary(new { p1 = "abcd" }),
                 ambientValues: DefaultLinkGenerator.GetAmbientValues(httpContext),
                 options: null,
-                result: out var result);
+                result: out _);
 
             // Assert
             Assert.False(success);
@@ -966,7 +965,7 @@ namespace Microsoft.AspNetCore.Routing
                 values: new RouteValueDictionary(new { action = "Index", controller = "Home", id = "not-an-integer" }),
                 ambientValues: DefaultLinkGenerator.GetAmbientValues(httpContext),
                 options: null,
-                result: out var result);
+                result: out _);
             
             // Assert
             Assert.False(success);
@@ -1044,7 +1043,7 @@ namespace Microsoft.AspNetCore.Routing
                 values: new RouteValueDictionary(new { action = "Index", controller = "Home", id = "not-an-integer" }),
                 ambientValues: DefaultLinkGenerator.GetAmbientValues(httpContext),
                 options: null,
-                result: out var result);
+                result: out _);
 
             // Assert
             Assert.False(success);
@@ -1098,7 +1097,7 @@ namespace Microsoft.AspNetCore.Routing
                 values: new RouteValueDictionary(new { action = "Index", controller = "Home", id = 50 }),
                 ambientValues: DefaultLinkGenerator.GetAmbientValues(httpContext),
                 options: null,
-                result: out var result);
+                result: out _);
 
             // Assert
             Assert.False(success);
@@ -1541,7 +1540,7 @@ namespace Microsoft.AspNetCore.Routing
                 values: new RouteValueDictionary(new { c = "Products", a = "List" }),
                 ambientValues: DefaultLinkGenerator.GetAmbientValues(httpContext),
                 options: null,
-                result: out var result);
+                result: out _);
 
             // Assert
             Assert.False(success);
@@ -1649,7 +1648,7 @@ namespace Microsoft.AspNetCore.Routing
                 values: new RouteValueDictionary(explicitValues),
                 ambientValues: DefaultLinkGenerator.GetAmbientValues(httpContext),
                 options: null,
-                result: out var result);
+                result: out _);
 
             // Assert
             Assert.False(success);

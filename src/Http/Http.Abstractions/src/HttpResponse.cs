@@ -14,8 +14,8 @@ namespace Microsoft.AspNetCore.Http
     /// </summary>
     public abstract class HttpResponse
     {
-        private static readonly Func<object, Task> _callbackDelegate = callback => ((Func<Task>)callback)();
-        private static readonly Func<object, Task> _disposeDelegate = state =>
+        private static readonly Func<object, Task> CallbackDelegate = callback => ((Func<Task>)callback)();
+        private static readonly Func<object, Task> DisposeDelegate = state =>
         {
             // Prefer async dispose over dispose
             if (state is IAsyncDisposable asyncDisposable)
@@ -98,7 +98,7 @@ namespace Microsoft.AspNetCore.Http
         /// response first.
         /// </remarks>
         /// <param name="callback">The delegate to execute.</param>
-        public virtual void OnStarting(Func<Task> callback) => OnStarting(_callbackDelegate, callback);
+        public virtual void OnStarting(Func<Task> callback) => OnStarting(CallbackDelegate, callback);
 
         /// <summary>
         /// Adds a delegate to be invoked after the response has finished being sent to the client.
@@ -111,19 +111,19 @@ namespace Microsoft.AspNetCore.Http
         /// Registers an object for disposal by the host once the request has finished processing.
         /// </summary>
         /// <param name="disposable">The object to be disposed.</param>
-        public virtual void RegisterForDispose(IDisposable disposable) => OnCompleted(_disposeDelegate, disposable);
+        public virtual void RegisterForDispose(IDisposable disposable) => OnCompleted(DisposeDelegate, disposable);
 
         /// <summary>
         /// Registers an object for asynchronous disposal by the host once the request has finished processing.
         /// </summary>
         /// <param name="disposable">The object to be disposed asynchronously.</param>
-        public virtual void RegisterForDisposeAsync(IAsyncDisposable disposable) => OnCompleted(_disposeDelegate, disposable);
+        public virtual void RegisterForDisposeAsync(IAsyncDisposable disposable) => OnCompleted(DisposeDelegate, disposable);
 
         /// <summary>
         /// Adds a delegate to be invoked after the response has finished being sent to the client.
         /// </summary>
         /// <param name="callback">The delegate to invoke.</param>
-        public virtual void OnCompleted(Func<Task> callback) => OnCompleted(_callbackDelegate, callback);
+        public virtual void OnCompleted(Func<Task> callback) => OnCompleted(CallbackDelegate, callback);
 
         /// <summary>
         /// Returns a temporary redirect response (HTTP 302) to the client.

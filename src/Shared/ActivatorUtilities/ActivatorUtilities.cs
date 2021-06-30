@@ -3,32 +3,23 @@
 
 #nullable disable warnings
 #nullable enable annotations
+
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+#if !NETCOREAPP
 using System.Runtime.ExceptionServices;
-
-#if ActivatorUtilities_In_DependencyInjection
-using Microsoft.Extensions.Internal;
-
-namespace Microsoft.Extensions.DependencyInjection
-#else
-namespace Microsoft.Extensions.Internal
 #endif
+
+namespace Microsoft.Extensions.Internal
 {
     /// <summary>
     /// Helper code for the various activator services.
     /// </summary>
 
-#if ActivatorUtilities_In_DependencyInjection
-    public
-#else
     // Do not take a dependency on this class unless you are explicitly trying to avoid taking a
     // dependency on Microsoft.AspNetCore.DependencyInjection.Abstractions.
-    internal
-#endif
-    static class ActivatorUtilities
+    internal static class ActivatorUtilities
     {
         private static readonly MethodInfo GetServiceInfo =
             GetMethodInfo<Func<IServiceProvider, Type, Type, bool, object>>((sp, t, r, c) => GetService(sp, t, r, c));
@@ -42,7 +33,7 @@ namespace Microsoft.Extensions.Internal
         /// <returns>An activated object of type instanceType</returns>
         public static object CreateInstance(IServiceProvider provider, Type instanceType, params object[] parameters)
         {
-            int bestLength = -1;
+            var bestLength = -1;
             var seenPreferred = false;
 
             ConstructorMatcher bestMatcher = default;
@@ -101,7 +92,7 @@ namespace Microsoft.Extensions.Internal
         /// </returns>
         public static ObjectFactory CreateFactory(Type instanceType, Type[] argumentTypes)
         {
-            FindApplicableConstructor(instanceType, argumentTypes, out ConstructorInfo constructor, out int?[] parameterMap);
+            FindApplicableConstructor(instanceType, argumentTypes, out var constructor, out var parameterMap);
 
             var provider = Expression.Parameter(typeof(IServiceProvider), "provider");
             var argumentArray = Expression.Parameter(typeof(object[]), "argumentArray");
@@ -234,7 +225,7 @@ namespace Microsoft.Extensions.Internal
         {
             foreach (var constructor in instanceType.GetConstructors())
             {
-                if (TryCreateParameterMap(constructor.GetParameters(), argumentTypes, out int?[] tempParameterMap))
+                if (TryCreateParameterMap(constructor.GetParameters(), argumentTypes, out var tempParameterMap))
                 {
                     if (matchingConstructor != null)
                     {
@@ -266,7 +257,7 @@ namespace Microsoft.Extensions.Internal
                         ThrowMultipleCtorsMarkedWithAttributeException();
                     }
 
-                    if (!TryCreateParameterMap(constructor.GetParameters(), argumentTypes, out int?[] tempParameterMap))
+                    if (!TryCreateParameterMap(constructor.GetParameters(), argumentTypes, out var tempParameterMap))
                     {
                         ThrowMarkedCtorDoesNotTakeAllProvidedArguments();
                     }

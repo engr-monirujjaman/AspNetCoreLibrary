@@ -465,7 +465,7 @@ namespace Microsoft.Extensions.Internal
 
                 // Walk up the hierarchy until we find the type that actually declares this
                 // PropertyInfo.
-                Type? currentType = type;
+                var currentType = type;
                 while (currentType != null && currentType != declaringType)
                 {
                     // We've found a 'more proximal' public definition

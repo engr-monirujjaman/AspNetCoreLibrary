@@ -1,6 +1,5 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 // LICENSING NOTE: This file is from the dotnet corefx repository.
 // 
@@ -112,7 +111,7 @@ namespace Microsoft.AspNetCore.Routing
 
             Debug.Assert(_array != null); // Nonzero _count should imply this
 
-            T[] result = _array;
+            var result = _array;
             if (_count < result.Length)
             {
                 // Avoid a bit of overhead (method call, some branches, extra codegen)
@@ -149,17 +148,17 @@ namespace Microsoft.AspNetCore.Routing
         {
             Debug.Assert(minimum > Capacity);
 
-            int capacity = Capacity;
-            int nextCapacity = capacity == 0 ? DefaultCapacity : 2 * capacity;
+            var capacity = Capacity;
+            var nextCapacity = capacity == 0 ? DefaultCapacity : 2 * capacity;
 
-            if ((uint)nextCapacity > (uint)MaxCoreClrArrayLength)
+            if ((uint)nextCapacity > MaxCoreClrArrayLength)
             {
                 nextCapacity = Math.Max(capacity + 1, MaxCoreClrArrayLength);
             }
 
             nextCapacity = Math.Max(nextCapacity, minimum);
 
-            T[] next = new T[nextCapacity];
+            var next = new T[nextCapacity];
             if (_count > 0)
             {
                 Array.Copy(_array, 0, next, 0, _count);

@@ -88,21 +88,21 @@ namespace Microsoft.AspNetCore.Http
             var context = new DefaultHttpContext(new FeatureCollection());
             Assert.NotNull(context.User);
             Assert.Single(context.User.Identities);
-            Assert.True(object.ReferenceEquals(context.User, context.User));
+            Assert.True(ReferenceEquals(context.User, context.User));
             Assert.False(context.User.Identity.IsAuthenticated);
             Assert.True(string.IsNullOrEmpty(context.User.Identity.AuthenticationType));
 
             context.User = null;
             Assert.NotNull(context.User);
             Assert.Single(context.User.Identities);
-            Assert.True(object.ReferenceEquals(context.User, context.User));
+            Assert.True(ReferenceEquals(context.User, context.User));
             Assert.False(context.User.Identity.IsAuthenticated);
             Assert.True(string.IsNullOrEmpty(context.User.Identity.AuthenticationType));
 
             context.User = new ClaimsPrincipal();
             Assert.NotNull(context.User);
             Assert.Empty(context.User.Identities);
-            Assert.True(object.ReferenceEquals(context.User, context.User));
+            Assert.True(ReferenceEquals(context.User, context.User));
             Assert.Null(context.User.Identity);
 
             context.User = new ClaimsPrincipal(new ClaimsIdentity("SomeAuthType"));
@@ -215,8 +215,6 @@ namespace Microsoft.AspNetCore.Http
                 .BuildServiceProvider();
 
             var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-            DisposableThing instance = null;
-
             var context = new DefaultHttpContext();
             context.ServiceScopeFactory = scopeFactory;
             var responseFeature = new TestHttpResponseFeature();
@@ -225,8 +223,7 @@ namespace Microsoft.AspNetCore.Http
             Assert.NotNull(context.RequestServices);
             Assert.Single(responseFeature.CompletedCallbacks);
 
-            instance = context.RequestServices.GetRequiredService<DisposableThing>();
-
+            var instance = context.RequestServices.GetRequiredService<DisposableThing>();
             var callback = responseFeature.CompletedCallbacks[0];
             await callback.callback(callback.state);
 
@@ -242,8 +239,6 @@ namespace Microsoft.AspNetCore.Http
                 .BuildServiceProvider());
 
             var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-            DisposableThing instance = null;
-
             var context = new DefaultHttpContext();
             context.ServiceScopeFactory = scopeFactory;
             var responseFeature = new TestHttpResponseFeature();
@@ -252,8 +247,7 @@ namespace Microsoft.AspNetCore.Http
             Assert.NotNull(context.RequestServices);
             Assert.Single(responseFeature.CompletedCallbacks);
 
-            instance = context.RequestServices.GetRequiredService<DisposableThing>();
-
+            var instance = context.RequestServices.GetRequiredService<DisposableThing>();
             var callback = responseFeature.CompletedCallbacks[0];
             await callback.callback(callback.state);
 
@@ -367,12 +361,6 @@ namespace Microsoft.AspNetCore.Http
             }
         }
 
-        private HttpContext CreateContext()
-        {
-            var context = new DefaultHttpContext();
-            return context;
-        }
-
         private class DisposableThing : IDisposable
         {
             public bool Disposed { get; set; }
@@ -405,7 +393,7 @@ namespace Microsoft.AspNetCore.Http
 
         private class TestSession : ISession
         {
-            private Dictionary<string, byte[]> _store
+            private readonly Dictionary<string, byte[]> _store
                 = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
 
             public string Id { get; set; }

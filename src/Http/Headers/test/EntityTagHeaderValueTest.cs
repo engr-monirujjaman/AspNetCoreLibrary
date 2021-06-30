@@ -264,9 +264,9 @@ namespace Microsoft.Net.Http.Headers
         [Fact]
         public void TryParseList_NullOrEmptyArray_ReturnsFalse()
         {
-            Assert.False(EntityTagHeaderValue.TryParseList(null, out var results));
-            Assert.False(EntityTagHeaderValue.TryParseList(new string[0], out results));
-            Assert.False(EntityTagHeaderValue.TryParseList(new string[] { "" }, out results));
+            Assert.False(EntityTagHeaderValue.TryParseList(null, out _));
+            Assert.False(EntityTagHeaderValue.TryParseList(new string[0], out _));
+            Assert.False(EntityTagHeaderValue.TryParseList(new string[] { "" }, out _));
         }
 
         [Fact]
@@ -284,7 +284,7 @@ namespace Microsoft.Net.Http.Headers
                 "\"tag\", \"tag\"",
                 "W/\"tag\"",
             };
-            IList<EntityTagHeaderValue> results = EntityTagHeaderValue.ParseList(inputs);
+            var results = EntityTagHeaderValue.ParseList(inputs);
 
             var expectedResults = new[]
             {
@@ -317,7 +317,7 @@ namespace Microsoft.Net.Http.Headers
                 "\"tag\", \"tag\"",
                 "W/\"tag\"",
             };
-            IList<EntityTagHeaderValue> results = EntityTagHeaderValue.ParseStrictList(inputs);
+            var results = EntityTagHeaderValue.ParseStrictList(inputs);
 
             var expectedResults = new[]
             {
@@ -492,7 +492,7 @@ namespace Microsoft.Net.Http.Headers
                 "\"tag\", \"tag\"",
                 "W/\"tag\"",
             };
-            Assert.False(EntityTagHeaderValue.TryParseStrictList(inputs, out var results));
+            Assert.False(EntityTagHeaderValue.TryParseStrictList(inputs, out _));
         }
 
         private void CheckValidParse(string? input, EntityTagHeaderValue expectedResult)

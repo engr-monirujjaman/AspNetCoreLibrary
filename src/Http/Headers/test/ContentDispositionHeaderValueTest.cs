@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Xunit;
@@ -93,7 +92,7 @@ namespace Microsoft.Net.Http.Headers
             var contentDisposition = new ContentDispositionHeaderValue("inline");
 
             // Note that uppercase letters are used. Comparison should happen case-insensitive.
-            NameValueHeaderValue name = new NameValueHeaderValue("NAME", "old_name");
+            var name = new NameValueHeaderValue("NAME", "old_name");
             contentDisposition.Parameters.Add(name);
             Assert.Equal(1, contentDisposition.Parameters.Count);
             Assert.Equal("NAME", contentDisposition.Parameters.First().Name);
@@ -252,8 +251,8 @@ namespace Microsoft.Net.Http.Headers
         [Fact]
         public void Dates_AddDateParameterThenUseProperty_ParametersEntryIsOverwritten()
         {
-            string validDateString = "\"Tue, 15 Nov 1994 08:12:31 GMT\"";
-            DateTimeOffset validDate = DateTimeOffset.Parse("Tue, 15 Nov 1994 08:12:31 GMT", CultureInfo.InvariantCulture);
+            var validDateString = "\"Tue, 15 Nov 1994 08:12:31 GMT\"";
+            var validDate = DateTimeOffset.Parse("Tue, 15 Nov 1994 08:12:31 GMT", CultureInfo.InvariantCulture);
 
             var contentDisposition = new ContentDispositionHeaderValue("inline");
 
@@ -279,7 +278,7 @@ namespace Microsoft.Net.Http.Headers
         [Fact]
         public void Dates_InvalidDates_PropertyFails()
         {
-            string invalidDateString = "\"Tue, 15 Nov 94 08:12 GMT\"";
+            var invalidDateString = "\"Tue, 15 Nov 94 08:12 GMT\"";
 
             var contentDisposition = new ContentDispositionHeaderValue("inline");
 

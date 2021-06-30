@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Extensions.Primitives;
 
@@ -475,9 +474,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as MediaTypeHeaderValue;
-
-            if (other == null)
+            if (obj is not MediaTypeHeaderValue other)
             {
                 return false;
             }
@@ -571,7 +568,7 @@ namespace Microsoft.Net.Http.Headers
             }
 
             // Caller must remove leading whitespace. If not, we'll return 0.
-            var mediaTypeLength = MediaTypeHeaderValue.GetMediaTypeExpressionLength(input, startIndex, out var mediaType);
+            var mediaTypeLength = GetMediaTypeExpressionLength(input, startIndex, out var mediaType);
 
             if (mediaTypeLength == 0)
             {
@@ -580,7 +577,7 @@ namespace Microsoft.Net.Http.Headers
 
             var current = startIndex + mediaTypeLength;
             current = current + HttpRuleParser.GetWhitespaceLength(input, current);
-            MediaTypeHeaderValue? mediaTypeHeader = null;
+            MediaTypeHeaderValue? mediaTypeHeader;
 
             // If we're not done and we have a parameter delimiter, then we have a list of parameters.
             if ((current < input.Length) && (input[current] == ';'))

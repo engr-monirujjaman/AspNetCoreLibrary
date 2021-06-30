@@ -56,8 +56,7 @@ namespace Microsoft.Extensions.StackTrace.Sources
         {
             // ReflectionTypeLoadException is special because the details are in
             // the LoaderExceptions property
-            var typeLoadException = ex as ReflectionTypeLoadException;
-            if (typeLoadException != null)
+            if (ex is ReflectionTypeLoadException typeLoadException)
             {
                 var typeLoadExceptions = new List<Exception>();
                 foreach (var loadException in typeLoadException.LoaderExceptions)

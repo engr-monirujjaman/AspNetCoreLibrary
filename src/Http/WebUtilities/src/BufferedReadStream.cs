@@ -207,7 +207,7 @@ namespace Microsoft.AspNetCore.WebUtilities
             // Drain buffer
             if (_bufferCount > 0)
             {
-                int toCopy = Math.Min(_bufferCount, count);
+                var toCopy = Math.Min(_bufferCount, count);
                 Buffer.BlockCopy(_buffer, _bufferOffset, buffer, offset, toCopy);
                 _bufferOffset += toCopy;
                 _bufferCount -= toCopy;
@@ -225,12 +225,12 @@ namespace Microsoft.AspNetCore.WebUtilities
         }
 
         /// <inheritdoc/>
-        public async override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken)
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken)
         {
             // Drain buffer
             if (_bufferCount > 0)
             {
-                int toCopy = Math.Min(_bufferCount, buffer.Length);
+                var toCopy = Math.Min(_bufferCount, buffer.Length);
                 _buffer.AsMemory(_bufferOffset, toCopy).CopyTo(buffer);
                 _bufferOffset += toCopy;
                 _bufferCount -= toCopy;
@@ -295,7 +295,7 @@ namespace Microsoft.AspNetCore.WebUtilities
                     }
                     _bufferOffset = 0;
                 }
-                int read = _inner.Read(_buffer, _bufferOffset + _bufferCount, _buffer.Length - _bufferCount - _bufferOffset);
+                var read = _inner.Read(_buffer, _bufferOffset + _bufferCount, _buffer.Length - _bufferCount - _bufferOffset);
                 _bufferCount += read;
                 if (read == 0)
                 {
@@ -328,7 +328,7 @@ namespace Microsoft.AspNetCore.WebUtilities
                     }
                     _bufferOffset = 0;
                 }
-                int read = await _inner.ReadAsync(_buffer.AsMemory(_bufferOffset + _bufferCount, _buffer.Length - _bufferCount - _bufferOffset), cancellationToken);
+                var read = await _inner.ReadAsync(_buffer.AsMemory(_bufferOffset + _bufferCount, _buffer.Length - _bufferCount - _bufferOffset), cancellationToken);
                 _bufferCount += read;
                 if (read == 0)
                 {
@@ -426,7 +426,7 @@ namespace Microsoft.AspNetCore.WebUtilities
         private static void ValidateBuffer(byte[] buffer, int offset, int count)
         {
             // Delegate most of our validation.
-            var ignored = new ArraySegment<byte>(buffer, offset, count);
+            var _ = new ArraySegment<byte>(buffer, offset, count);
             if (count == 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(count), "The value must be greater than zero.");

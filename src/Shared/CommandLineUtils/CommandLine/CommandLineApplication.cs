@@ -139,7 +139,7 @@ namespace Microsoft.Extensions.CommandLineUtils
         }
         public int Execute(params string[] args)
         {
-            CommandLineApplication command = this;
+            var command = this;
             CommandOption option = null;
             IEnumerator<CommandArgument> arguments = null;
             var argumentsAssigned = false;

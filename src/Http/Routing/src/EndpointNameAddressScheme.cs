@@ -91,7 +91,7 @@ namespace Microsoft.AspNetCore.Routing
 
             throw new InvalidOperationException(builder.ToString());
 
-            string? GetEndpointName(Endpoint endpoint)
+            static string? GetEndpointName(Endpoint endpoint)
             {
                 if (endpoint.Metadata.GetMetadata<ISuppressLinkGenerationMetadata>()?.SuppressLinkGeneration == true)
                 {

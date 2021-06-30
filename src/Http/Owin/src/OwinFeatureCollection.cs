@@ -9,7 +9,6 @@ using System.IO;
 using System.IO.Pipelines;
 using System.Net;
 using System.Net.WebSockets;
-using System.Reflection;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
@@ -65,12 +64,7 @@ namespace Microsoft.AspNetCore.Owin
 
         T Prop<T>(string key)
         {
-            object value;
-            if (Environment.TryGetValue(key, out value) && value is T)
-            {
-                return (T)value;
-            }
-            return default(T);
+            return Environment.TryGetValue(key, out var value) && value is T t ? t : default;
         }
 
         void Prop(string key, object value)
@@ -234,8 +228,7 @@ namespace Microsoft.AspNetCore.Owin
 
         Task IHttpResponseBodyFeature.SendFileAsync(string path, long offset, long? length, CancellationToken cancellation)
         {
-            object obj;
-            if (Environment.TryGetValue(OwinConstants.SendFiles.SendAsync, out obj))
+            if (Environment.TryGetValue(OwinConstants.SendFiles.SendAsync, out var obj))
             {
                 var func = (SendFileFunc)obj;
                 return func(path, offset, length, cancellation);
@@ -247,9 +240,8 @@ namespace Microsoft.AspNetCore.Owin
         {
             get
             {
-                object obj;
                 if (string.Equals("https", ((IHttpRequestFeature)this).Scheme, StringComparison.OrdinalIgnoreCase)
-                    && (Environment.TryGetValue(OwinConstants.CommonKeys.LoadClientCertAsync, out obj)
+                    && (Environment.TryGetValue(OwinConstants.CommonKeys.LoadClientCertAsync, out var obj)
                         || Environment.TryGetValue(OwinConstants.CommonKeys.ClientCertificate, out obj))
                     && obj != null)
                 {
@@ -310,15 +302,13 @@ namespace Microsoft.AspNetCore.Owin
         {
             get
             {
-                object obj;
-                return Environment.TryGetValue(OwinConstants.WebSocket.AcceptAlt, out obj);
+                return Environment.TryGetValue(OwinConstants.WebSocket.AcceptAlt, out _);
             }
         }
 
         Task<WebSocket> IHttpWebSocketFeature.AcceptAsync(WebSocketAcceptContext context)
         {
-            object obj;
-            if (!Environment.TryGetValue(OwinConstants.WebSocket.AcceptAlt, out obj))
+            if (!Environment.TryGetValue(OwinConstants.WebSocket.AcceptAlt, out var obj))
             {
                 throw new NotSupportedException("WebSockets are not supported"); // TODO: LOC
             }

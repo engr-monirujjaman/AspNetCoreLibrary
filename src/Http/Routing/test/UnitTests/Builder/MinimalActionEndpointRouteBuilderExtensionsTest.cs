@@ -6,10 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Builder
@@ -32,7 +30,7 @@ namespace Microsoft.AspNetCore.Builder
             var builder = new DefaultEndpointRouteBuilder(new ApplicationBuilder(new EmptyServiceProvdier()));
 
             [HttpMethod("ATTRIBUTE")]
-            void TestAction()
+            static void TestAction()
             {
             }
 

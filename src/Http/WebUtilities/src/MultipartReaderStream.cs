@@ -226,10 +226,8 @@ namespace Microsoft.AspNetCore.WebUtilities
             var bufferedData = _innerStream.BufferedData;
 
             // scan for a boundary match, full or partial.
-            int matchOffset;
-            int matchCount;
             int read;
-            if (SubMatch(bufferedData, _boundary.BoundaryBytes, out matchOffset, out matchCount))
+            if (SubMatch(bufferedData, _boundary.BoundaryBytes, out var matchOffset, out var matchCount))
             {
                 // We found a possible match, return any data before it.
                 if (matchOffset > bufferedData.Offset)
@@ -276,7 +274,6 @@ namespace Microsoft.AspNetCore.WebUtilities
         private bool SubMatch(ArraySegment<byte> segment1, byte[] matchBytes, out int matchOffset, out int matchCount)
         {
             // clear matchCount to zero
-            matchCount = 0;
 
             // case 1: does segment1 fully contain matchBytes?
             {

@@ -112,19 +112,19 @@ namespace System.Buffers
                 throw new InvalidOperationException();
             }
 
-            int i = 0;
+            var i = 0;
 
             BufferSegment? last = null;
             BufferSegment? first = null;
 
             do
             {
-                byte[] s = inputs[i];
-                int length = s.Length;
-                int dataOffset = length;
+                var s = inputs[i];
+                var length = s.Length;
+                var dataOffset = length;
                 var chars = new byte[length * 2];
 
-                for (int j = 0; j < length; j++)
+                for (var j = 0; j < length; j++)
                 {
                     chars[dataOffset + j] = s[j];
                 }

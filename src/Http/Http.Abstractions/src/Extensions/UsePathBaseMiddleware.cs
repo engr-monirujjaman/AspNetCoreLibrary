@@ -48,10 +48,8 @@ namespace Microsoft.AspNetCore.Builder.Extensions
                 throw new ArgumentNullException(nameof(context));
             }
 
-            PathString matchedPath;
-            PathString remainingPath;
 
-            if (context.Request.Path.StartsWithSegments(_pathBase, out matchedPath, out remainingPath))
+            if (context.Request.Path.StartsWithSegments(_pathBase, out var matchedPath, out var remainingPath))
             {
                 var originalPath = context.Request.Path;
                 var originalPathBase = context.Request.PathBase;

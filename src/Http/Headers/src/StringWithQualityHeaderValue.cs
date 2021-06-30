@@ -81,9 +81,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as StringWithQualityHeaderValue;
-
-            if (other == null)
+            if (obj is not StringWithQualityHeaderValue other)
             {
                 return false;
             }
@@ -203,7 +201,7 @@ namespace Microsoft.Net.Http.Headers
                 return 0;
             }
 
-            StringWithQualityHeaderValue result = new StringWithQualityHeaderValue();
+            var result = new StringWithQualityHeaderValue();
             result._value = input.Subsegment(startIndex, valueLength);
             var current = startIndex + valueLength;
             current = current + HttpRuleParser.GetWhitespaceLength(input, current);

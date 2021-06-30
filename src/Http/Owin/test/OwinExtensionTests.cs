@@ -24,7 +24,7 @@ namespace Microsoft.AspNetCore.Owin
 
     public class OwinExtensionTests
     {
-        static AppFunc notFound = env => new Task(() => { env["owin.ResponseStatusCode"] = 404; });
+        static readonly AppFunc notFound = env => new Task(() => { env["owin.ResponseStatusCode"] = 404; });
 
         [Fact]
         public async Task OwinConfigureServiceProviderAddsServices()
@@ -63,8 +63,8 @@ namespace Microsoft.AspNetCore.Owin
             IServiceProvider expectedServiceProvider = new ServiceCollection().BuildServiceProvider();
             IServiceProvider serviceProvider = null;
             FakeService fakeService = null;
-            bool builderExecuted = false;
-            bool applicationExecuted = false;
+            var builderExecuted = false;
+            var applicationExecuted = false;
 
             var builder = build.UseBuilder(applicationBuilder =>
             {
@@ -97,8 +97,8 @@ namespace Microsoft.AspNetCore.Owin
             AddMiddleware build = list.Add;
             IServiceProvider serviceProvider = null;
             FakeService fakeService = null;
-            bool builderExecuted = false;
-            bool applicationExecuted = false;
+            var builderExecuted = false;
+            var applicationExecuted = false;
 
             var builder = build.UseBuilder(applicationBuilder =>
             {

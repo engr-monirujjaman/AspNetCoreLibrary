@@ -730,8 +730,6 @@ namespace Microsoft.AspNetCore.Routing.Tree
             string p3)
         {
             // Arrange
-            var expectedRouteGroup = CreateRouteGroup(0, template);
-
             var builder = CreateBuilder();
             MapInboundEntry(builder, template);
             var route = builder.Build();
@@ -775,8 +773,6 @@ namespace Microsoft.AspNetCore.Routing.Tree
             string request)
         {
             // Arrange
-            var expectedRouteGroup = CreateRouteGroup(0, template);
-
             var builder = CreateBuilder();
             MapInboundEntry(builder, template);
             var route = builder.Build();
@@ -1426,7 +1422,6 @@ namespace Microsoft.AspNetCore.Routing.Tree
             MapOutboundEntry(builder, "api/Store/{action}/{id:int}", new { action = "Index", controller = "Store" });
             var route = builder.Build();
 
-            var next = new StubRouter();
             var context = CreateVirtualPathContext(new { action = "Index", controller = "Store", id = "heyyyy" });
 
             // Act
@@ -1902,7 +1897,7 @@ namespace Microsoft.AspNetCore.Routing.Tree
         {
             // Arrange
             var builder = CreateBuilder();
-            var entry = MapOutboundEntry(
+            MapOutboundEntry(
                 builder,
                 "Help/Store",
                 requiredValues: new { area = (string)null, action = "Edit", controller = "Store" });
@@ -1924,7 +1919,7 @@ namespace Microsoft.AspNetCore.Routing.Tree
         {
             // Arrange
             var builder = CreateBuilder();
-            var entry = MapOutboundEntry(
+            MapOutboundEntry(
                 builder,
                 "Help/Store",
                 requiredValues: new { area = (string)null, action = "Edit", controller = "Store" });
@@ -1946,7 +1941,7 @@ namespace Microsoft.AspNetCore.Routing.Tree
         {
             // Arrange
             var builder = CreateBuilder();
-            var entry = MapOutboundEntry(
+            MapOutboundEntry(
                 builder,
                 "Help/Store",
                 requiredValues: new { foo = "", action = "Edit", controller = "Store" });
@@ -1968,7 +1963,7 @@ namespace Microsoft.AspNetCore.Routing.Tree
         {
             // Arrange
             var builder = CreateBuilder();
-            var entry = MapOutboundEntry(
+            MapOutboundEntry(
                 builder,
                 "Help/Store",
                 requiredValues: new { foo = "", action = "Edit", controller = "Store" });
@@ -2073,7 +2068,7 @@ namespace Microsoft.AspNetCore.Routing.Tree
         {
             var objectPoolProvider = new DefaultObjectPoolProvider();
             var objectPolicy = new UriBuilderContextPooledObjectPolicy();
-            var objectPool = objectPoolProvider.Create<UriBuildingContext>(objectPolicy);
+            var objectPool = objectPoolProvider.Create(objectPolicy);
 
             var constraintResolver = CreateConstraintResolver();
             var builder = new TreeRouteBuilder(

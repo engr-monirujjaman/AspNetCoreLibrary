@@ -71,7 +71,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            ValueTask<int> vt = ReadAsyncInternal(new Memory<byte>(buffer, offset, count), default);
+            var vt = ReadAsyncInternal(new Memory<byte>(buffer, offset, count), default);
             return vt.IsCompleted ?
                 vt.Result :
                 vt.AsTask().GetAwaiter().GetResult();

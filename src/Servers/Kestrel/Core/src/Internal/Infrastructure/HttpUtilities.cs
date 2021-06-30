@@ -41,7 +41,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
             var knownMethods = _knownMethods;
             var length = knownMethods.Length;
             var invalidHttpMethod = new Tuple<ulong, ulong, HttpMethod, int>(_mask8Chars, 0ul, HttpMethod.Custom, 0);
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 if (knownMethods[i] == null)
                 {

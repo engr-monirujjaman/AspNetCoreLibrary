@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.Hosting
 {

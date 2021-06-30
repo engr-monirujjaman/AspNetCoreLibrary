@@ -137,8 +137,7 @@ namespace Microsoft.AspNetCore.Http
         {
             var source = new PathString(sourcePath);
             var test = new PathString(testPath);
-
-            var result = source.StartsWithSegments(test, out var remaining);
+            var result = source.StartsWithSegments(test, out _);
 
             Assert.Equal(expectedResult, result);
         }
@@ -179,8 +178,7 @@ namespace Microsoft.AspNetCore.Http
         {
             var source = new PathString(sourcePath);
             var test = new PathString(testPath);
-
-            var result = source.StartsWithSegments(test, comparison, out var remaining);
+            var result = source.StartsWithSegments(test, comparison, out _);
 
             Assert.Equal(expectedResult, result);
         }
@@ -217,7 +215,7 @@ namespace Microsoft.AspNetCore.Http
         public void PathStringConvertsOnlyToAndFromString()
         {
             var converter = TypeDescriptor.GetConverter(typeof(PathString));
-            PathString result = (PathString)converter.ConvertFromInvariantString("/foo");
+            var result = (PathString)converter.ConvertFromInvariantString("/foo");
             Assert.Equal("/foo", result.ToString());
             Assert.Equal("/foo", converter.ConvertTo(result, typeof(string)));
             Assert.True(converter.CanConvertFrom(typeof(string)));

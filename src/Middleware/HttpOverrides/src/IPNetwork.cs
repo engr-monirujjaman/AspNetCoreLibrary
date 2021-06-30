@@ -54,7 +54,7 @@ namespace Microsoft.AspNetCore.HttpOverrides
             }
 
             var addressBytes = address.GetAddressBytes();
-            for (int i = 0; i < PrefixBytes.Length && Mask[i] != 0; i++)
+            for (var i = 0; i < PrefixBytes.Length && Mask[i] != 0; i++)
             {
                 if ((PrefixBytes[i] & Mask[i]) != (addressBytes[i] & Mask[i]))
                 {
@@ -68,8 +68,8 @@ namespace Microsoft.AspNetCore.HttpOverrides
         private byte[] CreateMask()
         {
             var mask = new byte[PrefixBytes.Length];
-            int remainingBits = PrefixLength;
-            int i = 0;
+            var remainingBits = PrefixLength;
+            var i = 0;
             while (remainingBits >= 8)
             {
                 mask[i] = 0xFF;

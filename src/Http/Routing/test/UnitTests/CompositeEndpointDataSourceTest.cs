@@ -4,9 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.AspNetCore.Routing.TestObjects;
 using Microsoft.Extensions.Primitives;
@@ -110,9 +108,6 @@ namespace Microsoft.AspNetCore.Routing
             var endpoint1 = CreateEndpoint("/a");
             var dataSource1 = new DynamicEndpointDataSource(endpoint1);
             var compositeDataSource = new CompositeEndpointDataSource(new[] { dataSource1 });
-
-            // Act1
-            var endpoints = compositeDataSource.Endpoints;
 
             // Assert1
             var changeToken1 = compositeDataSource.GetChangeToken();

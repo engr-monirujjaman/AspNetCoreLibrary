@@ -225,7 +225,7 @@ namespace Microsoft.AspNetCore.Routing.Patterns
                 var segment = segments[i];
                 for (var j = 0; j < segment.Parts.Count; j++)
                 {
-                    if (object.ReferenceEquals(parameter, segment.Parts[j]))
+                    if (ReferenceEquals(parameter, segment.Parts[j]))
                     {
                         // Found it!
                         var updatedParameter = RoutePatternFactory.ParameterPart(parameter.Name, @default: null, parameter.ParameterKind, parameter.ParameterPolicies);

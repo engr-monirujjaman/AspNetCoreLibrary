@@ -31,7 +31,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.Internal
         {
             while (true)
             {
-                while (_workItems.TryDequeue(out Work item))
+                while (_workItems.TryDequeue(out var item))
                 {
                     item.Callback(item.State);
                 }

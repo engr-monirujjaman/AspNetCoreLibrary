@@ -34,8 +34,8 @@ namespace Microsoft.AspNetCore.Owin
     /// </summary>
     public class WebSocketAcceptAdapter
     {
-        private IDictionary<string, object> _env;
-        private WebSocketAcceptAlt _accept;
+        private readonly IDictionary<string, object> _env;
+        private readonly WebSocketAcceptAlt _accept;
         private AppFunc _callback;
         private IDictionary<string, object> _options;
 
@@ -66,8 +66,7 @@ namespace Microsoft.AspNetCore.Owin
         {
             return async environment =>
             {
-                object accept;
-                if (environment.TryGetValue(OwinConstants.WebSocket.AcceptAlt, out accept) && accept is WebSocketAcceptAlt)
+                if (environment.TryGetValue(OwinConstants.WebSocket.AcceptAlt, out var accept) && accept is WebSocketAcceptAlt)
                 {
                     var adapter = new WebSocketAcceptAdapter(environment, (WebSocketAcceptAlt)accept);
 
@@ -76,8 +75,7 @@ namespace Microsoft.AspNetCore.Owin
                     if ((int)environment[OwinConstants.ResponseStatusCode] == 101 && adapter._callback != null)
                     {
                         WebSocketAcceptContext acceptContext = null;
-                        object obj;
-                        if (adapter._options != null && adapter._options.TryGetValue(typeof(WebSocketAcceptContext).FullName, out obj))
+                        if (adapter._options != null && adapter._options.TryGetValue(typeof(WebSocketAcceptContext).FullName, out var obj))
                         {
                             acceptContext = obj as WebSocketAcceptContext;
                         }

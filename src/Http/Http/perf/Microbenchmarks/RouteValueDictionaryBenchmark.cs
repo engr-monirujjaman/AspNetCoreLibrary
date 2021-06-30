@@ -94,7 +94,7 @@ namespace Microsoft.AspNetCore.Routing
         [Benchmark]
         public void TryAdd_Properties_AtCapacity_KeyDoesNotExist()
         {
-            var propertyValues = new RouteValueDictionary(new { action = "Index", controller = "Home", id = "17", area = "root" });
+            _ = new RouteValueDictionary(new { action = "Index", controller = "Home", id = "17", area = "root" });
             _propertyValues.TryAdd("name", "Service");
         }
 
@@ -108,7 +108,7 @@ namespace Microsoft.AspNetCore.Routing
         [Benchmark]
         public void TryAdd_Properties_NotAtCapacity_KeyDoesNotExist()
         {
-            var propertyValues = new RouteValueDictionary(new { action = "Index", controller = "Home", id = "17" });
+            _ = new RouteValueDictionary(new { action = "Index", controller = "Home", id = "17" });
             _propertyValues.TryAdd("name", "Service");
         }
 

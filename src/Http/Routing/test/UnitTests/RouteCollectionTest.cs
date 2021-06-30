@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Logging.Testing;
-using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
@@ -512,7 +510,7 @@ namespace Microsoft.AspNetCore.Routing
 
         private static RouteCollection GetNestedRouteCollection(string[] routeNames)
         {
-            int index = Random.Shared.Next(0, routeNames.Length - 1);
+            var index = Random.Shared.Next(0, routeNames.Length - 1);
             var first = routeNames.Take(index).ToArray();
             var second = routeNames.Skip(index).ToArray();
 

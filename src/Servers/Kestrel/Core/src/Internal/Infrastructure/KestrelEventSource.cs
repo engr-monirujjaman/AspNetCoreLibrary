@@ -318,7 +318,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure
             fixed (char* arg4Ptr = arg4)
             fixed (char* arg5Ptr = arg5)
             {
-                EventData* data = stackalloc EventData[EventDataCount];
+                var data = stackalloc EventData[EventDataCount];
 
                 data[0] = new EventData
                 {

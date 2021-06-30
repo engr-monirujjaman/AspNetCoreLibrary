@@ -34,8 +34,7 @@ namespace Microsoft.AspNetCore.Owin
         {
             get
             {
-                object obj;
-                if (_options != null && _options.TryGetValue(OwinConstants.WebSocket.SubProtocol, out obj))
+                if (_options != null && _options.TryGetValue(OwinConstants.WebSocket.SubProtocol, out var obj))
                 {
                     return (string)obj;
                 }

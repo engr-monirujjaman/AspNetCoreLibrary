@@ -85,9 +85,7 @@ namespace Microsoft.Net.Http.Headers
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            var other = obj as RangeConditionHeaderValue;
-
-            if (other == null)
+            if (obj is not RangeConditionHeaderValue other)
             {
                 return false;
             }
@@ -149,7 +147,7 @@ namespace Microsoft.Net.Http.Headers
             var current = startIndex;
 
             // Caller must remove leading whitespaces.
-            DateTimeOffset date = DateTimeOffset.MinValue;
+            var date = DateTimeOffset.MinValue;
             EntityTagHeaderValue? entityTag = null;
 
             // Entity tags are quoted strings optionally preceded by "W/". By looking at the first two character we

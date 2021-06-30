@@ -62,7 +62,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
         [Fact]
         public async Task PredicateTrue_BranchTaken()
         {
-            HttpContext context = CreateRequest();
+            var context = CreateRequest();
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.MapWhen(TruePredicate, UseSuccess);
             var app = builder.Build();
@@ -74,7 +74,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
         [Fact]
         public async Task PredicateTrueAction_BranchTaken()
         {
-            HttpContext context = CreateRequest();
+            var context = CreateRequest();
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.MapWhen(TruePredicate, UseSuccess);
             var app = builder.Build();
@@ -86,7 +86,7 @@ namespace Microsoft.AspNetCore.Builder.Extensions
         [Fact]
         public async Task PredicateFalseAction_PassThrough()
         {
-            HttpContext context = CreateRequest();
+            var context = CreateRequest();
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.MapWhen(FalsePredicate, UseNotImplemented);
             builder.Run(Success);
@@ -102,13 +102,13 @@ namespace Microsoft.AspNetCore.Builder.Extensions
             var builder = new ApplicationBuilder(serviceProvider: null!);
             builder.MapWhen(TruePredicate, map1 =>
             {
-                map1.MapWhen((Predicate)FalsePredicate, UseNotImplemented);
-                map1.MapWhen((Predicate)TruePredicate, map2 => map2.MapWhen((Predicate)TruePredicate, UseSuccess));
+                map1.MapWhen(FalsePredicate, UseNotImplemented);
+                map1.MapWhen(TruePredicate, map2 => map2.MapWhen(TruePredicate, UseSuccess));
                 map1.Run(NotImplemented);
             });
             var app = builder.Build();
 
-            HttpContext context = CreateRequest();
+            var context = CreateRequest();
             await app.Invoke(context);
             Assert.Equal(200, context.Response.StatusCode);
         }
