@@ -70,13 +70,6 @@ namespace Microsoft.AspNetCore.SignalR.Internal
                     HasSyntheticArguments = true;
                     return false;
                 }
-                else if (serviceProviderIsService?.IsService(p.ParameterType) == true)
-                {
-                    Debug.Assert(index < 32);
-                    _isServiceArgument |= (1 << index);
-                    HasSyntheticArguments = true;
-                    return false;
-                }
                 else if (ReflectionHelper.IsStreamingType(p.ParameterType, mustBeDirectType: true))
                 {
                     if (StreamingParameters == null)
@@ -85,6 +78,13 @@ namespace Microsoft.AspNetCore.SignalR.Internal
                     }
 
                     StreamingParameters.Add(p.ParameterType.GetGenericArguments()[0]);
+                    HasSyntheticArguments = true;
+                    return false;
+                }
+                else if (serviceProviderIsService?.IsService(p.ParameterType) == true)
+                {
+                    Debug.Assert(index < 32);
+                    _isServiceArgument |= (1 << index);
                     HasSyntheticArguments = true;
                     return false;
                 }
