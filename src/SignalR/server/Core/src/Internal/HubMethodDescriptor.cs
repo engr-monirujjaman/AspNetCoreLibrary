@@ -27,6 +27,7 @@ namespace Microsoft.AspNetCore.SignalR.Internal
 
         private readonly MethodInfo? _makeCancelableEnumeratorMethodInfo;
         private Func<object, CancellationToken, IAsyncEnumerator<object>>? _makeCancelableEnumerator;
+        // bitset to store which parameters come from DI
         private int _isServiceArgument;
 
         public HubMethodDescriptor(ObjectMethodExecutor methodExecutor, IServiceProviderIsService? serviceProviderIsService, IEnumerable<IAuthorizeData> policies)
@@ -83,7 +84,11 @@ namespace Microsoft.AspNetCore.SignalR.Internal
                 }
                 else if (serviceProviderIsService?.IsService(p.ParameterType) == true)
                 {
-                    Debug.Assert(index < 32);
+                    if (index >= 32)
+                    {
+                        throw new InvalidOperationException(
+                            "Hub methods can't use services from DI in the parameters after the 32nd parameter.");
+                    }
                     _isServiceArgument |= (1 << index);
                     HasSyntheticArguments = true;
                     return false;
