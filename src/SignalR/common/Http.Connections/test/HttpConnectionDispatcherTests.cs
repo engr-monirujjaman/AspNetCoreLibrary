@@ -1308,7 +1308,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
                     await ws.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
                 }
 
-                manager.CloseConnections();
+                await manager.CloseConnections();
 
                 await request1.DefaultTimeout();
             }
@@ -1372,7 +1372,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
 
                 Assert.False(request2.IsCompleted);
 
-                manager.CloseConnections();
+                await manager.CloseConnections();
 
                 await request2;
             }
@@ -1431,7 +1431,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
 
                 Assert.Equal(HttpConnectionStatus.Active, connection.Status);
 
-                manager.CloseConnections();
+                await manager.CloseConnections();
 
                 await request1.DefaultTimeout();
                 await request2.DefaultTimeout();

@@ -14,5 +14,13 @@ namespace Microsoft.AspNetCore.Http.Connections
         /// Gets or sets the interval used by the server to timeout idle connections.
         /// </summary>
         public TimeSpan? DisconnectTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the delay after shutdown is triggered before connections are closed.
+        /// </summary>
+        /// <remarks>
+        /// The Server or Host may forcefully close connections before this delay completes.
+        /// </remarks>
+        public TimeSpan? ShutdownDelay { get; set; }
     }
 }

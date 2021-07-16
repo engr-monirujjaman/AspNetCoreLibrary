@@ -268,7 +268,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
                     }
                 });
 
-                connectionManager.CloseConnections();
+                await connectionManager.CloseConnections();
 
                 await connection.DisposeAsync();
             }
@@ -387,7 +387,8 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
             using (StartVerifiableLog())
             {
                 var appLifetime = new TestApplicationLifetime();
-                var connectionManager = CreateConnectionManager(LoggerFactory, appLifetime);
+                var connectionManager = CreateConnectionManager(LoggerFactory, appLifetime,
+                    new ConnectionOptions() { ShutdownDelay = TimeSpan.Zero });
 
                 appLifetime.Start();
 
@@ -408,7 +409,8 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
                 var appLifetime = new TestApplicationLifetime();
                 appLifetime.Start();
 
-                var connectionManager = CreateConnectionManager(LoggerFactory, appLifetime);
+                var connectionManager = CreateConnectionManager(LoggerFactory, appLifetime,
+                    new ConnectionOptions() { ShutdownDelay = TimeSpan.Zero });
 
                 var connection = connectionManager.CreateConnection();
 
@@ -419,10 +421,36 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
             }
         }
 
-        private static HttpConnectionManager CreateConnectionManager(ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime = null)
+        [Fact]
+        public void ShutdownDelayHasDefaultValue()
+        {
+            var connectionManager = CreateConnectionManager(LoggerFactory);
+            Assert.Equal(TimeSpan.FromSeconds(1), connectionManager.ShutdownDelay);
+        }
+
+        [Fact]
+        public async Task ShutdownDelayDoesNotCloseConnections()
+        {
+            using (StartVerifiableLog())
+            {
+                var connectionManager = CreateConnectionManager(LoggerFactory,
+                    options: new ConnectionOptions() { ShutdownDelay = TimeSpan.FromSeconds(10) });
+
+                var connection = connectionManager.CreateConnection();
+
+                _ = connectionManager.CloseConnections();
+
+                var result = await connection.Application.Output.FlushAsync();
+                // Shutdown delay prevents close from being called on the connection
+                Assert.False(result.IsCompleted);
+            }
+        }
+
+        private static HttpConnectionManager CreateConnectionManager(ILoggerFactory loggerFactory,
+            IHostApplicationLifetime lifetime = null, ConnectionOptions options = null)
         {
             lifetime = lifetime ?? new EmptyApplicationLifetime();
-            return new HttpConnectionManager(loggerFactory, lifetime, Options.Create(new ConnectionOptions()));
+            return new HttpConnectionManager(loggerFactory, lifetime, Options.Create(options ?? new ConnectionOptions()));
         }
 
         [Flags]
