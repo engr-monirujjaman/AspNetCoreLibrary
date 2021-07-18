@@ -90,6 +90,7 @@ namespace Microsoft.AspNetCore.Builder
             // Run these immediately so that they are observable by the imperative code
             configureDelegate(_context, _services);
 
+            _operations.Add(b => b.ConfigureServices(configureDelegate));
             return this;
         }
 
