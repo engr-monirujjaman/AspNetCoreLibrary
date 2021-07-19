@@ -18,15 +18,15 @@ namespace Microsoft.AspNetCore.Builder
         private readonly WebHostEnvironment _environment;
         private readonly ConfigurationManager _configuration;
         private readonly Dictionary<string, string?> _settings = new(StringComparer.OrdinalIgnoreCase);
-        private readonly IServiceCollection _services;
+        private readonly ConfigureHostBuilder _hostBuilder;
 
         private readonly WebHostBuilderContext _context;
 
-        internal ConfigureWebHostBuilder(ConfigurationManager configuration, WebHostEnvironment environment, IServiceCollection services)
+        internal ConfigureWebHostBuilder(ConfigurationManager configuration, WebHostEnvironment environment, ConfigureHostBuilder hostBuilder)
         {
             _configuration = configuration;
             _environment = environment;
-            _services = services;
+            _hostBuilder = hostBuilder;
 
             _context = new WebHostBuilderContext
             {
@@ -52,8 +52,12 @@ namespace Microsoft.AspNetCore.Builder
         /// <inheritdoc />
         public IWebHostBuilder ConfigureServices(Action<WebHostBuilderContext, IServiceCollection> configureServices)
         {
-            // Run these immediately so that they are observable by the imperative code
-            configureServices(_context, _services);
+            _hostBuilder.ConfigureServices((context, services) =>
+            {
+                configureServices(_context, services);
+            });
+            //// Run these immediately so that they are observable by the imperative code
+            //configureServices(_context, _services);
             return this;
         }
 

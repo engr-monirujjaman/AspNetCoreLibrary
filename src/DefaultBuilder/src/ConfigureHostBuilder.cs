@@ -22,11 +22,11 @@ namespace Microsoft.AspNetCore.Builder
 
         private readonly WebHostEnvironment _environment;
         private readonly ConfigurationManager _configuration;
-        private readonly IServiceCollection _services;
+        private readonly WebApplicationServiceCollection _services;
 
         private readonly HostBuilderContext _context;
 
-        internal ConfigureHostBuilder(ConfigurationManager configuration, WebHostEnvironment environment, IServiceCollection services)
+        internal ConfigureHostBuilder(ConfigurationManager configuration, WebHostEnvironment environment, WebApplicationServiceCollection services)
         {
             _configuration = configuration;
             _environment = environment;
@@ -87,11 +87,34 @@ namespace Microsoft.AspNetCore.Builder
         /// <inheritdoc />
         public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
         {
+            AddServiceOptions();
+
+            _services.StopTracking();
+
             // Run these immediately so that they are observable by the imperative code
             configureDelegate(_context, _services);
 
+            _services.StartTracking();
+
+            // Still defer because we want to replay these after we have the final state
             _operations.Add(b => b.ConfigureServices(configureDelegate));
             return this;
+        }
+
+        private void AddServiceOptions()
+        {
+            var operations = _services.GetOperations();
+
+            if (operations.Count > 0)
+            {
+                _operations.Add(b => b.ConfigureServices(services =>
+                {
+                    foreach (var operation in operations)
+                    {
+                        operation(services);
+                    }
+                }));
+            }
         }
 
         /// <inheritdoc />
@@ -120,6 +143,8 @@ namespace Microsoft.AspNetCore.Builder
 
         internal void RunDeferredCallbacks(IHostBuilder hostBuilder)
         {
+            AddServiceOptions();
+
             foreach (var operation in _operations)
             {
                 operation(hostBuilder);

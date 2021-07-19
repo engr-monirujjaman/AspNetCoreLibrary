@@ -14,10 +14,13 @@ namespace Microsoft.AspNetCore
     internal class WebApplicationServiceCollection : IServiceCollection
     {
         private readonly IServiceCollection _serviceCollection;
+        private readonly List<Action<IServiceCollection>> _operations = new();
+        private bool _trackOperations;
 
-        public WebApplicationServiceCollection(ServiceCollection serviceCollection)
+        public WebApplicationServiceCollection()
         {
-            _serviceCollection = serviceCollection;
+            _serviceCollection = new ServiceCollection();
+            _trackOperations = true;
         }
 
         public ServiceDescriptor this[int index] { get => _serviceCollection[index]; set => _serviceCollection[index] = value; }
@@ -29,11 +32,21 @@ namespace Microsoft.AspNetCore
         public void Add(ServiceDescriptor item)
         {
             _serviceCollection.Add(item);
+
+            if (_trackOperations)
+            {
+                _operations.Add(sc => sc.Add(item));
+            }
         }
 
         public void Clear()
         {
             _serviceCollection.Clear();
+
+            if (_trackOperations)
+            {
+                _operations.Add(sc => sc.Clear());
+            }
         }
 
         public bool Contains(ServiceDescriptor item)
@@ -59,21 +72,57 @@ namespace Microsoft.AspNetCore
         public void Insert(int index, ServiceDescriptor item)
         {
             _serviceCollection.Insert(index, item);
+
+            if (_trackOperations)
+            {
+                _operations.Add(sc => sc.Insert(index, item));
+            }
         }
 
         public bool Remove(ServiceDescriptor item)
         {
-            return _serviceCollection.Remove(item);
+            var removed = _serviceCollection.Remove(item);
+            if (_trackOperations)
+            {
+                _operations.Add(sc => sc.Remove(item));
+            }
+            return removed;
         }
 
         public void RemoveAt(int index)
         {
             _serviceCollection.RemoveAt(index);
+            if (_trackOperations)
+            {
+                _operations.Add(sc => sc.RemoveAt(index));
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public List<Action<IServiceCollection>> GetOperations()
+        {
+            if (_operations.Count == 0)
+            {
+                return _operations;
+            }
+            // Copy the list
+            var operations = _operations.ToList();
+            _operations.Clear();
+            return operations;
+        }
+
+        public void StartTracking()
+        {
+            _trackOperations = true;
+        }
+
+        public void StopTracking()
+        {
+            _trackOperations = false;
         }
     }
 }

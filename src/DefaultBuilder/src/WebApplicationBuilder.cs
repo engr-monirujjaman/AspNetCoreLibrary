@@ -22,9 +22,12 @@ namespace Microsoft.AspNetCore.Builder
         private readonly ConfigureWebHostBuilder _deferredWebHostBuilder;
         private readonly WebHostEnvironment _environment;
         private WebApplication? _builtApplication;
+        private readonly WebApplicationServiceCollection _services = new();
 
         internal WebApplicationBuilder(Assembly? callingAssembly, string[]? args = null)
         {
+            Services = _services;
+
             // HACK: MVC and Identity do this horrible thing to get the hosting environment as an instance
             // from the service collection before it is built. That needs to be fixed...
             Environment = _environment = new WebHostEnvironment(callingAssembly);
@@ -41,8 +44,8 @@ namespace Microsoft.AspNetCore.Builder
             bootstrapBuilder.RunConfigurationCallbacks();
 
             Logging = new LoggingBuilder(Services);
-            WebHost = _deferredWebHostBuilder = new ConfigureWebHostBuilder(Configuration, _environment, Services);
-            Host = _deferredHostBuilder = new ConfigureHostBuilder(Configuration, _environment, Services);
+            Host = _deferredHostBuilder = new ConfigureHostBuilder(Configuration, _environment, _services);
+            WebHost = _deferredWebHostBuilder = new ConfigureWebHostBuilder(Configuration, _environment, _deferredHostBuilder);
 
             // Register Configuration as IConfiguration so updates can be observed even after the WebApplication is built.
             Services.AddSingleton<IConfiguration>(Configuration);
@@ -72,7 +75,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         /// A collection of services for the application to compose. This is useful for adding user provided or framework provided services.
         /// </summary>
-        public IServiceCollection Services { get; } = new ServiceCollection();
+        public IServiceCollection Services { get; }
 
         /// <summary>
         /// A collection of configuration providers for the application to compose. This is useful for adding new configuration sources and providers.
@@ -102,10 +105,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns>A configured <see cref="WebApplication"/>.</returns>
         public WebApplication Build()
         {
-            // We call ConfigureWebHostDefaults AGAIN because config might be added like "ForwardedHeaders_Enabled"
-            // which can add even more services. If not for that, we probably call _hostBuilder.ConfigureWebHost(ConfigureWebHost)
-            // instead in order to avoid duplicate service registration.
-            _hostBuilder.ConfigureWebHostDefaults(ConfigureWebHost);
+            _hostBuilder.ConfigureWebHost(ConfigureWebHost);
             return _builtApplication = new WebApplication(_hostBuilder.Build());
         }
 
@@ -187,24 +187,6 @@ namespace Microsoft.AspNetCore.Builder
                 }
 
                 builder.AddConfiguration(Configuration, shouldDisposeConfiguration: true);
-            });
-
-            genericWebHostBuilder.ConfigureServices((context, services) =>
-            {
-                // We've only added services configured by the GenericWebHostBuilder and WebHost.ConfigureWebDefaults
-                // at this point. HostBuilder news up a new ServiceCollection in HostBuilder.Build() we haven't seen
-                // until now, so we cannot clear these services even though some are redundant because
-                // we called ConfigureWebHostDefaults on both the _deferredHostBuilder and _hostBuilder.
-
-                // Ideally, we'd only call _hostBuilder.ConfigureWebHost(ConfigureWebHost) instead of
-                // _hostBuilder.ConfigureWebHostDefaults(ConfigureWebHost) to avoid some duplicate service descriptors,
-                // but we want to add services in the WebApplicationBuilder constructor so code can inspect
-                // WebApplicationBuilder.Services. At the same time, we want to be able which services are loaded
-                // to react to config changes (e.g. ForwardedHeadersStartupFilter).
-                foreach (var s in Services)
-                {
-                    services.Add(s);
-                }
             });
 
             genericWebHostBuilder.Configure(ConfigureApplication);
