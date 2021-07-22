@@ -29,6 +29,7 @@ namespace SignalRSamples
                     .UseSetting(WebHostDefaults.PreventHostingStartupKey, "true")
                     .ConfigureLogging((c, factory) =>
                     {
+                        factory.SetMinimumLevel(LogLevel.Debug);
                         factory.AddConfiguration(c.Configuration.GetSection("Logging"));
                         factory.AddConsole();
                     })

@@ -16,11 +16,11 @@ namespace Microsoft.AspNetCore.Http.Connections
         public TimeSpan? DisconnectTimeout { get; set; }
 
         /// <summary>
-        /// Gets or sets the delay after shutdown is triggered before connections are closed.
+        /// Gets or sets the function to run after application shutdown is triggered and before connections are closed.
         /// </summary>
         /// <remarks>
-        /// The Server or Host may forcefully close connections before this delay completes.
+        /// The Server or Host may forcefully close connections before this task completes.
         /// </remarks>
-        public TimeSpan? ShutdownDelay { get; set; }
+        public Func<Task>? ShutdownCallback { get; set; }
     }
 }

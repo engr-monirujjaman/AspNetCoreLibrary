@@ -12,12 +12,19 @@ namespace SignalRSamples.Hubs
 {
     public class Streaming : Hub
     {
+        private readonly ShutdownNotification _sn;
+
+        public Streaming(ShutdownNotification sn)
+        {
+            _sn = sn;
+        }
+
         public async IAsyncEnumerable<int> AsyncEnumerableCounter(int count, double delay)
         {
             for (var i = 0; i < count; i++)
             {
                 yield return i;
-                await Task.Delay((int)delay);
+                await Task.Delay((int)delay, _sn.Token);
             }
         }
 
@@ -36,13 +43,18 @@ namespace SignalRSamples.Hubs
 
             Task.Run(async () =>
             {
-                for (var i = 0; i < count; i++)
+                try
                 {
-                    await channel.Writer.WriteAsync(i);
-                    await Task.Delay(delay);
+                    for (var i = 0; i < count; i++)
+                    {
+                        await channel.Writer.WriteAsync(i, _sn.Token);
+                        await Task.Delay(delay, _sn.Token);
+                    }
                 }
-
-                channel.Writer.TryComplete();
+                finally
+                {
+                    channel.Writer.TryComplete();
+                }
             });
 
             return channel.Reader;

@@ -27,7 +27,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Internal
         private readonly long _disconnectTimeoutTicks;
         private readonly ConnectionOptions _connectionOptions;
 
-        internal TimeSpan ShutdownDelay => _connectionOptions.ShutdownDelay ?? ConnectionOptionsSetup.DefaultShutdownDelay;
+        internal Func<Task>? ShutdownDelay => _connectionOptions.ShutdownCallback;
 
         public HttpConnectionManager(ILoggerFactory loggerFactory, IHostApplicationLifetime appLifetime, IOptions<ConnectionOptions> connectionOptions)
         {
@@ -180,10 +180,12 @@ namespace Microsoft.AspNetCore.Http.Connections.Internal
 
         public async Task CloseConnections()
         {
-            if (ShutdownDelay != TimeSpan.Zero)
+            if (ShutdownDelay is not null)
             {
                 // Delay to let users react to application shutdown before we close the SignalR connections
-                await Task.Delay(ShutdownDelay);
+                // Review: dispatch (to avoid any sync-over-async operations) and Task.WhenAny(userTask, Task.Delay())?
+                // or just let them do whatever and the server can close connections
+                await ShutdownDelay();
             }
 
             // Stop firing the timer

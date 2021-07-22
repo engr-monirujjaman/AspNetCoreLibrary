@@ -16,8 +16,6 @@ namespace Microsoft.AspNetCore.Http.Connections
         /// </summary>
         public static TimeSpan DefaultDisconectTimeout = TimeSpan.FromSeconds(15);
 
-        internal static readonly TimeSpan DefaultShutdownDelay = TimeSpan.FromSeconds(1);
-
         /// <summary>
         /// Sets default values for options if they have not been set yet.
         /// </summary>
@@ -27,11 +25,6 @@ namespace Microsoft.AspNetCore.Http.Connections
             if (options.DisconnectTimeout is null)
             {
                 options.DisconnectTimeout = DefaultDisconectTimeout;
-            }
-
-            if (options.ShutdownDelay is null)
-            {
-                options.ShutdownDelay = DefaultShutdownDelay;
             }
         }
     }
