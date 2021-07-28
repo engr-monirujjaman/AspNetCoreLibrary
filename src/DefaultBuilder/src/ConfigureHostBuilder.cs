@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,13 +19,13 @@ namespace Microsoft.AspNetCore.Builder
         /// <inheritdoc />
         public IDictionary<object, object> Properties { get; } = new Dictionary<object, object>();
 
-        private readonly WebHostEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly ConfigurationManager _configuration;
         private readonly IServiceCollection _services;
 
         private readonly HostBuilderContext _context;
 
-        internal ConfigureHostBuilder(ConfigurationManager configuration, WebHostEnvironment environment, IServiceCollection services)
+        internal ConfigureHostBuilder(ConfigurationManager configuration, IWebHostEnvironment environment, IServiceCollection services)
         {
             _configuration = configuration;
             _environment = environment;
@@ -47,7 +48,8 @@ namespace Microsoft.AspNetCore.Builder
         {
             // Run these immediately so that they are observable by the imperative code
             configureDelegate(_context, _configuration);
-            _environment.ApplyConfigurationSettings(_configuration);
+
+            // _environment.ApplyConfigurationSettings(_configuration);
 
             return this;
         }
@@ -68,10 +70,11 @@ namespace Microsoft.AspNetCore.Builder
         public IHostBuilder ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
         {
             // Run these immediately so that they are observable by the imperative code
-            configureDelegate(_configuration);
-            _environment.ApplyConfigurationSettings(_configuration);
+            // configureDelegate(_configuration);
 
-            return this;
+            // Configuring host configuration isn't supported since it's baked.
+            throw new NotSupportedException();
+            // return this;
         }
 
         /// <inheritdoc />

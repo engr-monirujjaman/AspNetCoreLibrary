@@ -21,41 +21,30 @@ namespace Microsoft.AspNetCore.Builder
 
         private readonly HostBuilder _hostBuilder = new();
         private readonly BootstrapHostBuilder _bootstrapHostBuilder;
-        private readonly WebHostEnvironment _environment;
         private readonly WebApplicationServiceCollection _services = new();
-
-        // This is effectively readonly because it is always set inline by the ConfigureWebHostDefaults callback in the ctor.
-        private IWebHostBuilder _capturedWebHostBuilder = default!;
 
         private WebApplication? _builtApplication;
 
         internal WebApplicationBuilder(Assembly? callingAssembly, string[]? args = null)
         {
             Services = _services;
-            // HACK: MVC and Identity do this horrible thing to get the hosting environment as an instance
-            // from the service collection before it is built. That needs to be fixed...
-            Environment = _environment = new WebHostEnvironment(callingAssembly);
-
-            Configuration.SetBasePath(_environment.ContentRootPath);
 
             // Run methods to configure both generic and web host defaults early to populate config from appsettings.json
             // environment variables (both DOTNET_ and ASPNETCORE_ prefixed) and other possible default sources to prepopulate
             // the correct defaults.
-            _bootstrapHostBuilder = new BootstrapHostBuilder(Configuration, _environment, Services);
+            _bootstrapHostBuilder = new BootstrapHostBuilder(Configuration, Services);
             _bootstrapHostBuilder.ConfigureDefaults(args);
             _bootstrapHostBuilder.ConfigureWebHostDefaults(webHostBuilder =>
             {
                 // Runs inline.
                 webHostBuilder.Configure(ConfigureApplication);
 
-                // Store this so we can apply settings from _environment during build.
-                _capturedWebHostBuilder = webHostBuilder;
+                // We need to override the application name since the call to Configure will set it to
+                // be the calling assembly's name.
+                webHostBuilder.UseSetting(WebHostDefaults.ApplicationKey, (callingAssembly ?? Assembly.GetEntryAssembly())?.GetName()?.Name ?? string.Empty);
             });
-            _bootstrapHostBuilder.RunDefaultCallbacks(_hostBuilder);
 
-            Logging = new LoggingBuilder(Services);
-            WebHost = new ConfigureWebHostBuilder(Configuration, _environment, Services);
-            Host = new ConfigureHostBuilder(Configuration, _environment, Services);
+            _bootstrapHostBuilder.RunDefaultCallbacks(_hostBuilder);
 
             // This is important because GenericWebHostBuilder does the following and we want to preserve the WebHostBuilderContext:
             // context.Properties[typeof(WebHostBuilderContext)] = webHostBuilderContext;
@@ -64,6 +53,14 @@ namespace Microsoft.AspNetCore.Builder
             {
                 _hostBuilder.Properties[key] = value;
             }
+
+            // Get the IWebHostEnvironment from the WebHostBuilderContext.
+            // This also matches the instance in the IServiceCollection.
+            Environment = ((WebHostBuilderContext)_bootstrapHostBuilder.Properties[typeof(WebHostBuilderContext)]).HostingEnvironment;
+
+            Logging = new LoggingBuilder(Services);
+            WebHost = new ConfigureWebHostBuilder(Configuration, Environment, Services);
+            Host = new ConfigureHostBuilder(Configuration, Environment, Services);
         }
 
         /// <summary>
@@ -104,9 +101,6 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns>A configured <see cref="WebApplication"/>.</returns>
         public WebApplication Build()
         {
-            // Apply changes made to WebApplicationBuilder.Environment directly before building.
-            _environment.ApplyEnvironmentSettings(_capturedWebHostBuilder, _hostBuilder);
-
             // Copy the configuration sources into the final IConfigurationBuilder
             _hostBuilder.ConfigureHostConfiguration(builder =>
             {
