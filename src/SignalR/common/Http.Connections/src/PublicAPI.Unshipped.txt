@@ -1,7 +1,7 @@
 #nullable enable
 *REMOVED*Microsoft.AspNetCore.Http.Connections.Features.IHttpContextFeature.HttpContext.get -> Microsoft.AspNetCore.Http.HttpContext!
-Microsoft.AspNetCore.Http.Connections.ConnectionOptions.ShutdownCallback.get -> System.Func<System.Threading.Tasks.Task!>?
-Microsoft.AspNetCore.Http.Connections.ConnectionOptions.ShutdownCallback.set -> void
+Microsoft.AspNetCore.Http.Connections.Features.IBeforeShutdown
+Microsoft.AspNetCore.Http.Connections.Features.IBeforeShutdown.Register(System.Func<System.Threading.Tasks.Task!>! func) -> System.IDisposable!
 Microsoft.AspNetCore.Http.Connections.Features.IHttpContextFeature.HttpContext.get -> Microsoft.AspNetCore.Http.HttpContext?
 Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.CloseOnAuthenticationExpiration.get -> bool
 Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.CloseOnAuthenticationExpiration.set -> void
