@@ -41,6 +41,9 @@ namespace Microsoft.AspNetCore.Http.Connections.Internal
             private static readonly Action<ILogger, string, Exception?> _authenticationExpired =
                 LoggerMessage.Define<string>(LogLevel.Debug, new EventId(11, "AuthenticationExpired"), "Connection {TransportConnectionId} closing because the authentication token has expired.");
 
+            private static readonly Action<ILogger, Exception?> _errorFromShutdownCallbacks =
+                LoggerMessage.Define(LogLevel.Debug, new EventId(12, "ErrorFromShutdownCallbacks"), "Exception(s) were thrown from callbacks run on shutdown.");
+
             public static void CreatedNewConnection(ILogger logger, string connectionId)
             {
                 _createdNewConnection(logger, connectionId, null);
@@ -84,6 +87,11 @@ namespace Microsoft.AspNetCore.Http.Connections.Internal
             public static void AuthenticationExpired(ILogger logger, string connectionId)
             {
                 _authenticationExpired(logger, connectionId, null);
+            }
+
+            public static void ErrorFromShutdownCallbacks(ILogger logger, Exception ex)
+            {
+                _errorFromShutdownCallbacks(logger, ex);
             }
         }
     }

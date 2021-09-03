@@ -1308,7 +1308,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
                     await ws.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
                 }
 
-                await manager.CloseConnections(new DefaultBeforeShutdown());
+                await manager.CloseConnections();
 
                 await request1.DefaultTimeout();
             }
@@ -1372,7 +1372,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
 
                 Assert.False(request2.IsCompleted);
 
-                await manager.CloseConnections(new DefaultBeforeShutdown());
+                await manager.CloseConnections();
 
                 await request2;
             }
@@ -1431,7 +1431,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
 
                 Assert.Equal(HttpConnectionStatus.Active, connection.Status);
 
-                await manager.CloseConnections(new DefaultBeforeShutdown());
+                await manager.CloseConnections();
 
                 await request1.DefaultTimeout();
                 await request2.DefaultTimeout();
@@ -3176,7 +3176,7 @@ namespace Microsoft.AspNetCore.Http.Connections.Tests
             var connectionOptions = new ConnectionOptions();
             connectionOptions.DisconnectTimeout = disconnectTimeout;
             return new HttpConnectionManager(loggerFactory ?? new LoggerFactory(), new EmptyApplicationLifetime(),
-                Options.Create(connectionOptions), new DefaultBeforeShutdown());
+                Options.Create(connectionOptions));
         }
 
         private string GetContentAsString(Stream body)

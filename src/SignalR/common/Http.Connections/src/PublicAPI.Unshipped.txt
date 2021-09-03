@@ -2,7 +2,6 @@
 *REMOVED*Microsoft.AspNetCore.Http.Connections.Features.IHttpContextFeature.HttpContext.get -> Microsoft.AspNetCore.Http.HttpContext!
 Microsoft.AspNetCore.Http.Connections.Features.IBeforeShutdown
 Microsoft.AspNetCore.Http.Connections.Features.IBeforeShutdown.Register(System.Func<System.Threading.Tasks.Task!>! callback) -> System.IDisposable!
-Microsoft.AspNetCore.Http.Connections.Features.IBeforeShutdown.TriggerAsync() -> System.Threading.Tasks.Task!
 Microsoft.AspNetCore.Http.Connections.Features.IHttpContextFeature.HttpContext.get -> Microsoft.AspNetCore.Http.HttpContext?
 Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.CloseOnAuthenticationExpiration.get -> bool
 Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.CloseOnAuthenticationExpiration.set -> void
