@@ -25,7 +25,7 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.HotReload
 
         internal static async Task InitializeAsync()
         {
-            _hotReloadAgent = new HotReloadAgent(m => Debug.WriteLine(m));
+            _hotReloadAgent = new HotReloadAgent(m => Console.WriteLine(m));
 
             // Attempt to read previously applied hot reload deltas. dotnet-watch and VS will serve the script that can provide results from local-storage and
             // the injected middleware if present.
@@ -39,6 +39,8 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.HotReload
         [JSInvokable(nameof(ApplyHotReloadDelta))]
         public static void ApplyHotReloadDelta(string moduleIdString, byte[] metadataDelta, byte[] ilDeta)
         {
+            Console.WriteLine("Received hot reload deltas. Calling ApplyDeltas on agent.");
+
             var moduleId = Guid.Parse(moduleIdString);
 
             _updateDeltas[0].ModuleId = moduleId;

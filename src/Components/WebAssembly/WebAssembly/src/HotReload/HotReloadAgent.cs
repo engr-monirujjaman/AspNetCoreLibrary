@@ -53,6 +53,8 @@ namespace Microsoft.Extensions.HotReload
 
         private UpdateHandlerActions GetMetadataUpdateHandlerActions()
         {
+            Console.WriteLine("Begin GetMetadataUpdateHandlerActions");
+
             // We need to execute MetadataUpdateHandlers in a well-defined order. For v1, the strategy that is used is to topologically
             // sort assemblies so that handlers in a dependency are executed before the dependent (e.g. the reflection cache action
             // in System.Private.CoreLib is executed before System.Text.Json clears it's own cache.)
@@ -108,13 +110,17 @@ namespace Microsoft.Extensions.HotReload
                     $"Allowed methods are ClearCache, UpdateApplication");
             }
 
+
             Action<Type[]?> CreateAction(MethodInfo update)
             {
+                Console.WriteLine($"Found handler {update}");
+
                 Action<Type[]?> action = update.CreateDelegate<Action<Type[]?>>();
                 return types =>
                 {
                     try
                     {
+                        Console.WriteLine($"Calling metadataupdate handler {update}.");
                         action(types);
                     }
                     catch (Exception ex)
@@ -147,6 +153,7 @@ namespace Microsoft.Extensions.HotReload
 
         internal static List<Assembly> TopologicalSort(Assembly[] assemblies)
         {
+            Console.WriteLine("Topoligically sorting assemblies before discovering metadata update handlers.");
             var sortedAssemblies = new List<Assembly>(assemblies.Length);
 
             var visited = new HashSet<string>(StringComparer.Ordinal);
@@ -158,6 +165,8 @@ namespace Microsoft.Extensions.HotReload
 
             static void Visit(Assembly[] assemblies, Assembly assembly, List<Assembly> sortedAssemblies, HashSet<string> visited)
             {
+                Console.WriteLine($"Visiting {assembly}.");
+
                 var assemblyIdentifier = assembly.GetName().Name!;
                 if (!visited.Add(assemblyIdentifier))
                 {
@@ -181,14 +190,10 @@ namespace Microsoft.Extensions.HotReload
 
         public void ApplyDeltas(IReadOnlyList<UpdateDelta> deltas)
         {
+            Console.WriteLine("Called ApplyDeltas");
+
             try
             {
-                // Defer discovering the receiving deltas until the first hot reload delta.
-                // This should give enough opportunity for AppDomain.GetAssemblies() to be sufficiently populated.
-                _handlerActions ??= GetMetadataUpdateHandlerActions();
-                var handlerActions = _handlerActions;
-
-
                 for (var i = 0; i < deltas.Count; i++)
                 {
                     var item = deltas[i];
@@ -196,6 +201,7 @@ namespace Microsoft.Extensions.HotReload
                     {
                         if (TryGetModuleId(assembly) is Guid moduleId && moduleId == item.ModuleId)
                         {
+                            Console.WriteLine($"Calling ApplyUpdate on {assembly}.");
                             MetadataUpdater.ApplyUpdate(assembly, item.MetadataDelta, item.ILDelta, ReadOnlySpan<byte>.Empty);
                         }
                     }
@@ -207,6 +213,12 @@ namespace Microsoft.Extensions.HotReload
 
                 Type[]? updatedTypes = GetMetadataUpdateTypes(deltas);
 
+                 // Defer discovering the receiving deltas until the first hot reload delta.
+                // This should give enough opportunity for AppDomain.GetAssemblies() to be sufficiently populated.
+                _handlerActions ??= GetMetadataUpdateHandlerActions();
+                var handlerActions = _handlerActions;
+
+                Console.WriteLine($"Calling metadataupdate handlers.");
                 handlerActions.ClearCache.ForEach(a => a(updatedTypes));
                 handlerActions.UpdateApplication.ForEach(a => a(updatedTypes));
 
