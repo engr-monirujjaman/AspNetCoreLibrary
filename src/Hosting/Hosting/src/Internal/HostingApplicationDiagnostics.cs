@@ -26,6 +26,11 @@ namespace Microsoft.AspNetCore.Hosting
         private const string DeprecatedDiagnosticsEndRequestKey = "Microsoft.AspNetCore.Hosting.EndRequest";
         private const string DiagnosticsUnhandledExceptionKey = "Microsoft.AspNetCore.Hosting.UnhandledException";
 
+        private const string HttpSchemeActivityTag = "http.scheme";
+        private const string HttpHostActivityTag = "http.host";
+        private const string HttpTargetActivityTag = "http.target";
+        private const string HttpStatusCodeActivityTag = "http.status_code";
+
         private readonly ActivitySource _activitySource;
         private readonly DiagnosticListener _diagnosticListener;
         private readonly DistributedContextPropagator _propagator;
@@ -159,6 +164,9 @@ namespace Microsoft.AspNetCore.Hosting
             // Always stop activity if it was started
             if (activity is not null)
             {
+                // Add required tags before stopping
+                activity.AddTag(HttpStatusCodeActivityTag, httpContext.Response.StatusCode);
+
                 StopActivity(httpContext, activity, context.HasDiagnosticListener);
             }
 
@@ -318,6 +326,11 @@ namespace Microsoft.AspNetCore.Hosting
                     }
                 }
             }
+
+            // Add requisite tags before starting
+            activity.AddTag(HttpSchemeActivityTag, httpContext.Request.Scheme);
+            activity.AddTag(HttpHostActivityTag, httpContext.Request.Host);
+            activity.AddTag(HttpTargetActivityTag, httpContext.Request.Path);
 
             _diagnosticListener.OnActivityImport(activity, httpContext);
 
