@@ -126,6 +126,7 @@ namespace RunTests
                 Console.WriteLine($"Installing Playwright Browsers to {Environment.GetEnvironmentVariable("PLAYWRIGHT_BROWSERS_PATH")}");
 
                 // Workaround https://github.com/microsoft/playwright-dotnet/blob/main/src/Playwright.CLI/Program.cs#L55-L65
+                DisplayContents(Options.HELIX_WORKITEM_ROOT);
                 var tempProjectPath = Path.Combine("Options.HELIX_WORKITEM_ROOT", "TempProj.csproj");
                 File.CreateFile(tempProjectPath);
 
