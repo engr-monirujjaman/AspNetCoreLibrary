@@ -124,11 +124,14 @@ namespace RunTests
                     cancellationToken: new CancellationTokenSource(TimeSpan.FromMinutes(2)).Token);
 
                 Console.WriteLine($"Installing Playwright Browsers to {Environment.GetEnvironmentVariable("PLAYWRIGHT_BROWSERS_PATH")}");
-
-                // Workaround https://github.com/microsoft/playwright-dotnet/blob/main/src/Playwright.CLI/Program.cs#L55-L65
                 DisplayContents(Options.HELIX_WORKITEM_ROOT);
+
                 var tempProjectPath = Path.Combine("Options.HELIX_WORKITEM_ROOT", "TempProj.csproj");
-                File.CreateFile(tempProjectPath);
+                using (var fs = File.Create(tempProjectPath))
+                {
+                    var info = new UTF8Encoding(true).GetBytes("Temp file to workaround https://github.com/microsoft/playwright-dotnet/blob/main/src/Playwright.CLI/Program.cs#L55-L65.");
+                    fs.Write(info, 0, info.Length);
+                }
 
                 await ProcessUtil.RunAsync($"playwright",
                     "install",
