@@ -2,3 +2,5 @@
 dist/Debug/
 dist/Release/blazor.webassembly.js
 dist/Release/blazor.webview.js
+declarations/
+tsdoc-metadata.json

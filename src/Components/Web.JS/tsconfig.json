@@ -1,13 +1,29 @@
 {
-  "compilerOptions": {
-    "moduleResolution": "node",
-    "noImplicitAny": false,
-    "noEmitOnError": true,
-    "removeComments": false,
-    "sourceMap": true,
-    "target": "es2019",
-    "module": "es2020",
-    "lib": ["es2019", "dom"],
-    "strict": true
-  }
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "noImplicitAny": false,
+        "noEmitOnError": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "declarationDir": "declarations",
+        "target": "es2019",
+        "module": "es2020",
+        "lib": [
+            "es2019",
+            "dom"
+        ],
+        "strict": true,
+        "outDir": "dist"
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "dist/**",
+        "tests/**",
+        "@types/**",
+        "node_modules/**"
+    ]
 }
