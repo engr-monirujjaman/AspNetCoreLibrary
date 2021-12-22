@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 ENV StressRunDuration=0
 ARG DEBIAN_FRONTEND=noninteractive
@@ -12,7 +12,7 @@ RUN apt-get update \
     nodejs \
     git
 
-ARG gitBranch=main
+ARG gitBranch=prkrishn/aot-tests
 
 WORKDIR /src
 ADD https://api.github.com/repos/dotnet/aspnetcore/git/ref/heads/${gitBranch} /aspnetcore.commit
@@ -24,12 +24,17 @@ RUN git init \
     && git remote add origin https://github.com/aspnet/aspnetcore
 
 RUN ./restore.sh
-RUN .dotnet/dotnet publish -c Release --no-restore -o /app ./src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
-RUN chmod +x /app/Wasm.Performance.Driver
+RUN .dotnet/dotnet publish -c Release --no-restore -o /out/app ./src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
+RUN chmod +x /out/app/Wasm.Performance.Driver
 
-WORKDIR /app
+RUN .dotnet/dotnet workload install wasm-tools
+RUN .dotnet/dotnet publish -c Release -o /out/aot-app ./src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj /p:RunAOTCompilation=true
+RUN chmod +x /out/aot-app/Wasm.Performance.Driver
+
+WORKDIR /out/
 FROM selenium/standalone-chrome:latest as final
-COPY --from=build ./app ./
+
+COPY --from=build ./out ./out
 COPY ./exec.sh ./
 
 ENTRYPOINT [ "bash", "./exec.sh" ]

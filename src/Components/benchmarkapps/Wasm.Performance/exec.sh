@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 /opt/bin/start-selenium-standalone.sh&
-./Wasm.Performance.Driver $StressRunDuration
-
+./app/Wasm.Performance.Driver $StressRunDuration&
+./aot-app/Wasm.Performance.Driver $StressRunDuration
