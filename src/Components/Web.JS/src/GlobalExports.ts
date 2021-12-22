@@ -39,11 +39,11 @@ interface IBlazor {
     attachRootComponentToElement?: (arg0: any, arg1: any, arg2: any, arg3: any) => void;
     registeredComponents?: {
       getRegisteredComponentsCount: () => number,
-      getId: (index) => number,
-      getAssembly: (id) => System_String,
-      getTypeName: (id) => System_String,
-      getParameterDefinitions: (id) => System_String,
-      getParameterValues: (id) => any,
+      getId: (index: number) => number,
+      getAssembly: (id: number) => System_String,
+      getTypeName: (id: number) => System_String,
+      getParameterDefinitions: (id: number) => System_String,
+      getParameterValues: (id: number) => any,
     };
     renderBatch?: (browserRendererId: number, batchAddress: Pointer) => void,
     getConfig?: (dotNetFileName: System_String) => System_Object | undefined,
